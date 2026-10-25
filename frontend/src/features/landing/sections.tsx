@@ -54,7 +54,7 @@ export function LandingHero({
         <div className="flex flex-wrap items-center gap-3">
           <Button size="lg" onClick={onStart}>
             <MessageSquareText aria-hidden="true" className="size-4" />
-            Start with my goal
+            Explore opportunities
           </Button>
           <Button size="lg" variant="outline" onClick={onUpload}>
             <Upload aria-hidden="true" className="size-4" />

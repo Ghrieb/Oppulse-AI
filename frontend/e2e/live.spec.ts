@@ -100,7 +100,7 @@ test.describe('the live service', () => {
     await page.goto('/home');
 
     await page.goto('/profile');
-    await expect(page.getByRole('heading', { name: 'Profile passport' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My profile' })).toBeVisible();
     await page.getByRole('button', { name: 'Languages and certificates' }).click();
     await page.getByRole('button', { name: /English \(CEFR\)/ }).click();
 

@@ -47,13 +47,13 @@ test('a visitor can understand Oppulse before registering', async ({ page }) => 
       name: /Find the opportunities worth your time/i,
     }),
   ).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Start with my goal' }).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Explore opportunities' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Upload my CV' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Analyse an opportunity' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Explore opportunities/i }).first()).toBeVisible();
 
-  // The capability strip states honestly what is live and what is simulated.
-  await expect(page.getByText('What works right now')).toBeVisible();
-  await expect(page.getByText('Simulated').first()).toBeVisible();
+  await expect(page.getByText('Evidence attached to every important claim')).toBeVisible();
+  await expect(page.getByText('What works right now')).toHaveCount(0);
 
   expect(errors, `Console errors during the landing page:\n${errors.join('\n')}`).toEqual([]);
 });
@@ -62,7 +62,7 @@ test('starting with a goal routes through registration to onboarding', async ({ 
   const errors = collectConsoleErrors(page, { allowUnauthorized: true });
 
   await page.goto('/');
-  await page.getByRole('button', { name: 'Start with my goal' }).first().click();
+  await page.getByRole('button', { name: 'Start with my goal' }).last().click();
 
   // A signed-out visitor is sent to register, and the destination is kept.
   await expect(page).toHaveURL(/\/auth\/sign-up/);
@@ -80,13 +80,11 @@ test('starting with a goal routes through registration to onboarding', async ({ 
   expect(errors, `Console errors:\n${errors.join('\n')}`).toEqual([]);
 });
 
-test('the demo student walks through the real onboarding flow', async ({ page }) => {
+test('a signed-in student walks through the real onboarding flow', async ({ page }) => {
   const errors = collectConsoleErrors(page, { allowUnauthorized: true });
 
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Explore the demo workspace' }).click();
-
-  await expect(page).toHaveURL(/\/onboarding/);
+  await signIn(page);
+  await page.goto('/onboarding');
   await expect(page.getByRole('heading', { name: 'How would you like to start?' })).toBeVisible();
 
   // The demo profile already answers three questions, so the agent skips them.
@@ -224,7 +222,7 @@ test('a student can complete the primary journey', async ({ page }) => {
 test('a protected route sends a signed-out visitor to sign in and back again', async ({ page }) => {
   const errors = collectConsoleErrors(page, { allowUnauthorized: true });
 
-  await page.goto('/opportunities');
+  await page.goto('/documents');
   await expect(page).toHaveURL(/\/auth\/sign-in\?next=/);
 
   await page.getByLabel('Email address').fill('sara.benali@example.edu');
@@ -232,8 +230,8 @@ test('a protected route sends a signed-out visitor to sign in and back again', a
   await page.getByRole('button', { name: 'Sign in' }).click();
 
   // The intended destination is restored.
-  await expect(page).toHaveURL(/\/opportunities/);
-  await expect(page.getByRole('heading', { name: 'Opportunities' })).toBeVisible();
+  await expect(page).toHaveURL(/\/documents/);
+  await expect(page.getByRole('heading', { name: 'My documents' })).toBeVisible();
 
   expect(errors, `Console errors:\n${errors.join('\n')}`).toEqual([]);
 });
@@ -248,7 +246,7 @@ test('confirming a fact in the passport resolves the requirement it was blocking
   // The passport opens on the profile, with the completeness ring and the
   // section navigation.
   await page.goto('/profile');
-  await expect(page.getByRole('heading', { name: 'Profile passport' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'My profile' })).toBeVisible();
   await expect(page.getByText('Profile completeness')).toBeVisible();
 
   // Find the fact that is holding a requirement up.
@@ -293,9 +291,12 @@ test('the opportunities list makes no image requests', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Opportunities' })).toBeVisible();
   await page.waitForTimeout(1500);
 
-  // The institution identity is generated, so a list of results costs
-  // nothing: no logo, no banner, no third-party request.
-  expect(imageRequests, `Unexpected image requests:\n${imageRequests.join('\n')}`).toEqual([]);
+  // Institution identity is generated locally. The shared shell logo is the
+  // only expected image request on this route.
+  expect(
+    imageRequests.filter((url) => !url.endsWith('/brand/oppulse-mark-white.svg')),
+    `Unexpected image requests:\n${imageRequests.join('\n')}`,
+  ).toEqual([]);
 });
 
 test('every primary route renders without console errors', async ({ page }) => {

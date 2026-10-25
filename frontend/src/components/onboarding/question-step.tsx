@@ -121,13 +121,11 @@ export function QuestionStep({
   if (question.kind === 'countries') {
     // The choice is confirmed with Continue, so ticking a country does not
     // move the student on before they have finished.
-    const chosen = Array.isArray(value) ? value : [];
-
     return (
       <div className="flex flex-col gap-4">
         <p className="text-sm text-text-muted">{question.helper}</p>
 
-        <CountrySelect value={chosen} onChange={setSelectedCountries} />
+        <CountrySelect value={selectedCountries} onChange={setSelectedCountries} />
 
         <div className="flex flex-wrap items-center gap-2">
           <Button
