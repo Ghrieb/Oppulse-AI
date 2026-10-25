@@ -5,7 +5,7 @@ import { TopBar } from './top-bar';
 import { MobileAskButton, MobileNavDrawer } from './mobile-nav';
 import { CommandPalette } from './command-palette';
 import { CapabilityBanner } from './connection-status';
-import { OfflineBanner, PrototypeBanner } from '@/components/feedback/banners';
+import { OfflineBanner } from '@/components/feedback/banners';
 import { PRODUCT_MODE } from '@/lib/api/config';
 import { useAlerts } from '@/lib/queries';
 
@@ -37,7 +37,7 @@ export function AppShell() {
       <div className="lg:pl-64">
         <TopBar onOpenMenu={() => setDrawerOpen(true)} onOpenCommand={() => setCommandOpen(true)} />
         <OfflineBanner />
-        {PRODUCT_MODE === 'student_testing' ? <CapabilityBanner /> : <PrototypeBanner />}
+        {PRODUCT_MODE === 'student_testing' ? <CapabilityBanner /> : null}
 
         <main id="main-content" className="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6">
           <Outlet />

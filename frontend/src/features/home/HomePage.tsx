@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Bot } from 'lucide-react';
-import { AgentPanel } from './AgentPanel';
+import { Link2, Target, UserPlus } from 'lucide-react';
 import { OpportunityRail } from './OpportunityRail';
 import { OpportunityDetailPanel } from './OpportunityDetailPanel';
 import { ActivityPanel } from './ActivityPanel';
@@ -9,6 +8,12 @@ import { SummaryPanels } from './SummaryPanels';
 import { MissionStrip } from '@/components/actions/mission-strip';
 import { NextBestAction } from '@/components/actions/next-best-action';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { OppulseAvatar } from '@/components/agent/oppulse-avatar';
+import { ActionChips } from '@/components/agent/action-chips';
+import { AgentComposer } from '@/components/agent/agent-composer';
+import { AgentConversation } from '@/components/agent/agent-conversation';
+import { useAgent } from '@/lib/agent-context';
 import { useToast } from '@/lib/hooks/use-toast';
 import {
   useCancelRun,
@@ -31,6 +36,7 @@ import {
  * student act, not to display everything the database holds.
  */
 export function HomePage() {
+  const { send, pending, messages } = useAgent();
   const { data: session } = useSession();
   const { data: opportunities } = useOpportunities();
   const { data: missions } = useMissions();
@@ -99,16 +105,71 @@ export function HomePage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <header className="flex flex-col gap-2">
-        <h1 className="flex items-center gap-2 text-page-title font-semibold tracking-tight text-text">
-          <Bot aria-hidden="true" className="size-7 text-primary" />
-          Hi {firstName}!
-        </h1>
-        <p className="max-w-3xl text-sm text-text-muted">
-          Research opportunities, check them against your confirmed profile, and turn the promising
-          ones into an application plan. Everything below is grounded in retrieved sources.
-        </p>
-      </header>
+      <section className="relative overflow-hidden rounded-panel border border-primary/15 bg-gradient-to-br from-[#edf2ff] via-surface to-[#eef9ff] px-5 py-6 shadow-[0_18px_50px_-36px_rgb(47_115_201/0.55)] sm:px-8 sm:py-7">
+        <div className="pointer-events-none absolute -right-10 -bottom-16 size-64 rounded-full bg-primary/5 blur-3xl" />
+        <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:items-center">
+          <div className="flex items-start gap-4">
+            <OppulseAvatar
+              size="lg"
+              className="mt-1 shadow-[0_10px_24px_-12px_rgb(91_75_242/0.7)]"
+            />
+            <div className="flex flex-col gap-2">
+              <p className="text-meta font-semibold tracking-[0.14em] text-primary uppercase">
+                Your research workspace
+              </p>
+              <h1 className="text-page-title font-semibold tracking-tight text-text">
+                Hi {firstName}!
+              </h1>
+              <p className="max-w-xl text-sm leading-relaxed text-text-muted">
+                I’m Oppulse, your opportunity agent. I’ll help you find scholarships, explore
+                programmes, check your eligibility and turn the right ones into applications.
+              </p>
+            </div>
+          </div>
+          <div className="rounded-panel border border-white/80 bg-white/75 p-3 shadow-[0_8px_24px_-20px_rgb(11_23_48/0.5)] backdrop-blur-sm">
+            <AgentComposer
+              onSend={send}
+              pending={pending}
+              placeholder="What opportunity are we looking for today?"
+            />
+          </div>
+        </div>
+        <div className="relative mt-5 flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={pending}
+            onClick={() => void send('Find fully funded opportunities suited to me.')}
+          >
+            <Target aria-hidden="true" className="size-4 text-primary" />
+            Find opportunities for me
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={pending}
+            onClick={() => void send('Analyse this opportunity link:')}
+          >
+            <Link2 aria-hidden="true" className="size-4 text-info" />
+            Analyse a link
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={pending}
+            onClick={() => void send('Help me prepare an application.')}
+          >
+            <UserPlus aria-hidden="true" className="size-4 text-success" />
+            Prepare an application
+          </Button>
+          <ActionChips />
+        </div>
+        {messages.length > 0 ? (
+          <div className="relative mt-5 max-w-3xl rounded-panel border border-white/80 bg-white/70 p-4">
+            <AgentConversation />
+          </div>
+        ) : null}
+      </section>
 
       <MissionStrip
         mission={mission}
@@ -201,7 +262,6 @@ export function HomePage() {
         }
       >
         <div className="flex min-w-0 flex-col gap-4">
-          <AgentPanel />
           <OpportunityRail selectedId={activeId} onSelect={selectOpportunity} />
         </div>
         {isClosed ? (
