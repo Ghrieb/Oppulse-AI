@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 import { AssistantBlocks } from './assistant-blocks';
+import { OppulseAvatar } from './oppulse-avatar';
 import { useAgent } from '@/lib/agent-context';
 import { cn } from '@/lib/cn';
 
@@ -34,22 +35,26 @@ export function AgentConversation({
             </div>
           </div>
         ) : (
-          <div key={message.id} className="flex max-w-[95%] flex-col gap-2">
-            {message.blocks && message.blocks.length > 0 ? (
-              <AssistantBlocks blocks={message.blocks} />
-            ) : message.content ? (
-              <div className="rounded-panel rounded-bl-sm bg-surface-subtle px-4 py-2.5 text-sm text-text">
-                {message.content}
-              </div>
-            ) : null}
+          <div key={message.id} className="flex max-w-[95%] items-start gap-2">
+            <OppulseAvatar size="sm" />
+            <div className="min-w-0 flex-1">
+              {message.blocks && message.blocks.length > 0 ? (
+                <AssistantBlocks blocks={message.blocks} />
+              ) : message.content ? (
+                <div className="rounded-panel rounded-bl-sm bg-surface-subtle px-4 py-2.5 text-sm text-text">
+                  {message.content}
+                </div>
+              ) : null}
+            </div>
           </div>
         ),
       )}
 
       {pending ? (
         <div className="flex items-center gap-2 text-meta text-text-muted">
+          <OppulseAvatar size="sm" />
           <Loader2 aria-hidden="true" className="size-4 animate-spin" />
-          Oppulse is working on it.
+          <span>Oppulse is working on your request.</span>
         </div>
       ) : null}
 

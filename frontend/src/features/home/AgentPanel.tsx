@@ -1,12 +1,14 @@
-import { Bot, Link2, Target, UserPlus } from 'lucide-react';
+import { Link2, Target, UserPlus } from 'lucide-react';
 import { ActionChips } from '@/components/agent/action-chips';
 import { AgentConversation } from '@/components/agent/agent-conversation';
 import { AgentComposer } from '@/components/agent/agent-composer';
 import { ApprovalBoundaryNote } from '@/components/agent/assistant-blocks';
 import { ContextStrip } from '@/components/agent/context-strip';
+import { OppulseAvatar } from '@/components/agent/oppulse-avatar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useAgent } from '@/lib/agent-context';
+import { useSession } from '@/lib/queries';
 
 /**
  * The agent on the home workspace.
@@ -17,22 +19,21 @@ import { useAgent } from '@/lib/agent-context';
  */
 export function AgentPanel() {
   const { send, pending } = useAgent();
+  const { data: session } = useSession();
+  const firstName = session?.user.fullName.split(' ')[0] ?? 'there';
 
   return (
     <Card className="flex min-h-[32rem] flex-col overflow-hidden">
       <div className="flex flex-col gap-3 border-b border-border p-5">
         <div className="flex items-start gap-3">
-          <span
-            aria-hidden="true"
-            className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/12 text-primary"
-          >
-            <Bot className="size-5" />
-          </span>
+          <OppulseAvatar />
           <div className="flex flex-col gap-1">
-            <h2 className="text-card-title font-semibold text-text">Your opportunity agent</h2>
+            <h2 className="text-card-title font-semibold text-text">
+              Oppulse, your opportunity agent
+            </h2>
             <p className="text-sm text-text-muted">
-              I can search for opportunities, analyse one you have found, check your eligibility,
-              and help you prepare the application.
+              Hi {firstName}! I’ll help you find programmes that fit your goals, understand the
+              requirements, and turn promising ones into an application plan.
             </p>
           </div>
         </div>
@@ -81,7 +82,7 @@ export function AgentPanel() {
         <AgentComposer
           onSend={send}
           pending={pending}
-          placeholder="Ask me anything… (e.g. compare these programmes)"
+          placeholder="Find programmes, analyse a call, or ask a question…"
           contextSlot={<ContextStrip />}
         />
         <ApprovalBoundaryNote />

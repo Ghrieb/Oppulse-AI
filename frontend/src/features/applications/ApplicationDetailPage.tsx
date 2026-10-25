@@ -11,12 +11,11 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, StatCard } from '@/components/ui/card';
 import { Progress } from '@/components/ui/display';
 import { Skeleton } from '@/components/ui/tooltip';
 import { ErrorState, NotFoundState } from '@/components/feedback/states';
 import { PageHeader } from '@/components/feedback/banners';
-import { ApplicationWorkflow } from '@/components/applications/application-workflow';
 import { DraftActions } from '@/components/applications/draft-actions';
 import { ApiError } from '@/lib/api/errors';
 import { useAgent } from '@/lib/agent-context';
@@ -81,8 +80,6 @@ export function ApplicationDetailPage() {
         </Link>
       </Button>
 
-      <ApplicationWorkflow application={application} drafts={drafts?.drafts ?? []} />
-
       <PageHeader
         title={application.opportunityTitle}
         description={application.institution}
@@ -109,6 +106,48 @@ export function ApplicationDetailPage() {
           </>
         }
       />
+
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          label="Application progress"
+          value={`${percent}%`}
+          hint={`${application.completion.completed} of ${application.completion.total} requirements`}
+          icon={<Check aria-hidden="true" className="size-4" />}
+        />
+        <StatCard
+          label="Verified deadline"
+          value={
+            application.deadlineVerified && application.deadline
+              ? new Date(application.deadline).toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'short',
+                })
+              : 'Unverified'
+          }
+          hint={
+            application.deadlineVerified
+              ? 'From an official source'
+              : 'Check the source before relying on it'
+          }
+          icon={<FileText aria-hidden="true" className="size-4" />}
+        />
+        <StatCard
+          label="Needs attention"
+          value={
+            application.checklist.filter(
+              (item) => item.status === 'missing' || item.status === 'needs_attention',
+            ).length
+          }
+          hint="Missing or unresolved requirements"
+          icon={<ListTodo aria-hidden="true" className="size-4" />}
+        />
+        <StatCard
+          label="Next best action"
+          value={application.nextBestAction ? 'Ready' : 'All clear'}
+          hint={application.nextBestAction ?? 'No immediate action is recorded'}
+          icon={<PenLine aria-hidden="true" className="size-4" />}
+        />
+      </div>
 
       <Card className="flex flex-col gap-3 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">

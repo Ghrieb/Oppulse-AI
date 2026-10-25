@@ -3,6 +3,7 @@ import { Bell, BellOff, CalendarClock, Pause, Play, TriangleAlert } from 'lucide
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { StatCard } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/tooltip';
 import { EmptyState, ErrorState } from '@/components/feedback/states';
@@ -63,6 +64,33 @@ export function MonitoringPage() {
         description="The agent re-checks the sources you saved and tells you when something meaningful changed. Checks run on a schedule — this is not a live feed."
       />
 
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          label="Active targets"
+          value={targets?.targets.filter((target) => target.status === 'active').length ?? 0}
+          hint="Scheduled checks"
+          icon={<Bell className="size-4" />}
+        />
+        <StatCard
+          label="New changes"
+          value={events?.events.length ?? 0}
+          hint="Since your last review"
+          icon={<CalendarClock className="size-4" />}
+        />
+        <StatCard
+          label="Unread alerts"
+          value={alerts?.unreadCount ?? 0}
+          hint="Need your attention"
+          icon={<Bell className="size-4" />}
+        />
+        <StatCard
+          label="Unavailable sources"
+          value={targets?.targets.filter((target) => target.sourceUnreachable).length ?? 0}
+          hint="No conclusion drawn"
+          icon={<TriangleAlert className="size-4" />}
+        />
+      </div>
+
       <Tabs defaultValue="targets">
         <TabsList>
           <TabsTrigger value="targets">Targets ({targets?.targets.length ?? 0})</TabsTrigger>
@@ -89,7 +117,7 @@ export function MonitoringPage() {
               }
             />
           ) : (
-            <div className="grid gap-3 md:grid-cols-2">
+            <div className="flex flex-col gap-2">
               {targets.targets.map((target) => (
                 <MonitorCard key={target.id} target={target} />
               ))}
@@ -182,55 +210,56 @@ function MonitorCard({ target }: { target: MonitorTarget }) {
   const isPaused = target.status === 'paused';
 
   return (
-    <Card className="flex flex-col gap-3 p-4">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <h2 className="text-sm font-semibold text-text">{target.label}</h2>
-        <Badge tone={target.status === 'error' ? 'warning' : isPaused ? 'neutral' : 'success'}>
-          {target.status === 'error' ? 'Check failed' : isPaused ? 'Paused' : 'Active'}
-        </Badge>
+    <Card className="flex flex-col gap-3 p-4 sm:flex-row sm:items-start sm:justify-between">
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <h2 className="text-sm font-semibold text-text">{target.label}</h2>
+          <Badge tone={target.status === 'error' ? 'warning' : isPaused ? 'neutral' : 'success'}>
+            {target.status === 'error' ? 'Check failed' : isPaused ? 'Paused' : 'Active'}
+          </Badge>
+        </div>
+
+        <dl className="grid gap-2 text-sm sm:grid-cols-2">
+          <div>
+            <dt className="text-meta text-text-muted">Frequency</dt>
+            <dd className="text-text">{target.frequency}</dd>
+          </div>
+          <div>
+            <dt className="text-meta text-text-muted">Events detected</dt>
+            <dd className="text-text">{target.eventsDetected}</dd>
+          </div>
+          <div>
+            <dt className="text-meta text-text-muted">Last successful check</dt>
+            <dd className="text-text">
+              {target.lastSuccessfulCheckAt
+                ? new Date(target.lastSuccessfulCheckAt).toLocaleString('en-GB', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })
+                : 'No successful check yet'}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-meta text-text-muted">Next scheduled check</dt>
+            <dd className="text-text">
+              {target.nextScheduledCheckAt
+                ? new Date(target.nextScheduledCheckAt).toLocaleString('en-GB', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })
+                : 'Not scheduled'}
+            </dd>
+          </div>
+        </dl>
+
+        {target.sourceUnreachable ? (
+          <p className="flex items-start gap-2 rounded-button bg-warning-surface px-3 py-2 text-meta text-warning">
+            <TriangleAlert aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
+            The source could not be reached. No conclusion was drawn about the opportunity.
+          </p>
+        ) : null}
       </div>
-
-      <dl className="grid gap-2 text-sm sm:grid-cols-2">
-        <div>
-          <dt className="text-meta text-text-muted">Frequency</dt>
-          <dd className="text-text">{target.frequency}</dd>
-        </div>
-        <div>
-          <dt className="text-meta text-text-muted">Events detected</dt>
-          <dd className="text-text">{target.eventsDetected}</dd>
-        </div>
-        <div>
-          <dt className="text-meta text-text-muted">Last successful check</dt>
-          <dd className="text-text">
-            {target.lastSuccessfulCheckAt
-              ? new Date(target.lastSuccessfulCheckAt).toLocaleString('en-GB', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                })
-              : 'No successful check yet'}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-meta text-text-muted">Next scheduled check</dt>
-          <dd className="text-text">
-            {target.nextScheduledCheckAt
-              ? new Date(target.nextScheduledCheckAt).toLocaleString('en-GB', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                })
-              : 'Not scheduled'}
-          </dd>
-        </div>
-      </dl>
-
-      {target.sourceUnreachable ? (
-        <p className="flex items-start gap-2 rounded-button bg-warning-surface px-3 py-2 text-meta text-warning">
-          <TriangleAlert aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
-          The last check could not reach this source. No conclusion is drawn about the opportunity.
-        </p>
-      ) : null}
-
-      <div className="flex items-center gap-2 border-t border-border pt-3">
+      <div className="flex shrink-0 items-center gap-2 sm:pt-1">
         <Button
           variant="outline"
           size="sm"

@@ -154,11 +154,11 @@ export function OpportunityRail({
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-col gap-0.5">
-                    <span className="truncate text-sm font-semibold text-text">
+                    <span className="line-clamp-2 text-sm leading-snug font-semibold text-text">
                       {opportunity.title}
                     </span>
-                    <span className="truncate text-meta text-text-muted">
-                      {opportunity.institution} · {opportunity.country.name}
+                    <span className="line-clamp-1 text-meta text-text-muted">
+                      {opportunity.institution}
                     </span>{' '}
                   </div>
                   {match ? (
@@ -171,6 +171,8 @@ export function OpportunityRail({
 
                 <div className="flex flex-wrap items-center gap-1.5">
                   <FundingTag coverage={opportunity.funding.coverage} />
+                  <Badge tone="neutral">{opportunity.country.name}</Badge>
+                  <Badge tone="neutral">{opportunity.type.replace(/_/g, ' ')}</Badge>
                   {opportunity.deadline.status === 'conflict' ? (
                     <Badge tone="warning">Deadline conflict</Badge>
                   ) : null}

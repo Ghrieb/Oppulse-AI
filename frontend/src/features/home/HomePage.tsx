@@ -8,6 +8,7 @@ import { ActivityPanel } from './ActivityPanel';
 import { SummaryPanels } from './SummaryPanels';
 import { MissionStrip } from '@/components/actions/mission-strip';
 import { NextBestAction } from '@/components/actions/next-best-action';
+import { Card } from '@/components/ui/card';
 import { useToast } from '@/lib/hooks/use-toast';
 import {
   useCancelRun,
@@ -192,10 +193,26 @@ export function HomePage() {
 
       <NextBestAction action={nextAction?.action} />
 
-      <div className={isClosed ? 'grid gap-4 lg:grid-cols-2' : 'grid gap-4 xl:grid-cols-3'}>
-        <AgentPanel />
-        <OpportunityRail selectedId={activeId} onSelect={selectOpportunity} />
-        {isClosed ? null : <OpportunityDetailPanel opportunityId={activeId} onClose={closePanel} />}
+      <div
+        className={
+          isClosed
+            ? 'grid gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(22rem,2fr)]'
+            : 'grid gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(22rem,2fr)]'
+        }
+      >
+        <div className="flex min-w-0 flex-col gap-4">
+          <AgentPanel />
+          <OpportunityRail selectedId={activeId} onSelect={selectOpportunity} />
+        </div>
+        {isClosed ? (
+          <Card className="hidden min-h-40 items-center justify-center p-6 text-center text-sm text-text-muted xl:flex">
+            Select an opportunity to see its evidence and next actions here.
+          </Card>
+        ) : (
+          <div className="min-w-0 xl:sticky xl:top-4 xl:self-start">
+            <OpportunityDetailPanel opportunityId={activeId} onClose={closePanel} />
+          </div>
+        )}
       </div>
 
       <ActivityPanel runId={mission?.latestRunId ?? null} />
