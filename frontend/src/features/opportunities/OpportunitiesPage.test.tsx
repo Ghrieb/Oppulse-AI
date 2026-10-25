@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { screen } from '@testing-library/react';
-import { renderWithProviders, requestPath } from '@/test/utils';
+import { renderWithProviders, requestPath, signInAsDemo } from '@/test/utils';
 import { OpportunitiesPage } from './OpportunitiesPage';
 import { setChaosRule } from '@/mocks/chaos';
 
@@ -15,6 +15,7 @@ const FIRST_TITLE = 'Helios Research Fellowship in Computational Biology';
  */
 describe('OpportunitiesPage', () => {
   it('reports a failed dismissal once, without a retry or a premature removal', async () => {
+    signInAsDemo();
     const { user } = renderWithProviders(<OpportunitiesPage />);
 
     // Let the page load, then fail only the dismissal.

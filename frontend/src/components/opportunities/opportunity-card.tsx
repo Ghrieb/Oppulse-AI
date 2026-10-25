@@ -31,9 +31,9 @@ import type { Match, Opportunity } from '@/lib/schemas';
 export interface OpportunityCardProps {
   opportunity: Opportunity;
   match: Match | null;
-  onToggleSave?: () => void;
-  onDismiss?: () => void;
-  onAddToApplication?: () => void;
+  onToggleSave?: (() => void) | undefined;
+  onDismiss?: (() => void) | undefined;
+  onAddToApplication?: (() => void) | undefined;
   saving?: boolean;
   dismissing?: boolean;
   addingToApplication?: boolean;

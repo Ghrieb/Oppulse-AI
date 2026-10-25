@@ -23,7 +23,7 @@ import { InstitutionLogo } from '@/components/resources/institution-logo';
 import { OpportunityBanner } from '@/components/resources/opportunity-banner';
 import { ApiError } from '@/lib/api/errors';
 import { useAgent } from '@/lib/agent-context';
-import { useOpportunity, useProfile } from '@/lib/queries';
+import { useOpportunity, useProfile, useSession } from '@/lib/queries';
 
 /** "research internship" → "Research Internship". */
 function capitaliseWords(value: string): string {
@@ -40,6 +40,7 @@ export function OpportunityDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { setContext } = useAgent();
+  const { data: session } = useSession();
   const [evidenceOpen, setEvidenceOpen] = useState(false);
   const { data, isPending, error, refetch } = useOpportunity(id ?? null);
   const { data: profile } = useProfile();
@@ -110,23 +111,36 @@ export function OpportunityDetailPage() {
                   Official call
                 </a>
               </Button>
-              <Button asChild size="sm">
-                <Link to={`/applications?opportunity=${opportunity.id}`}>
-                  <Pencil aria-hidden="true" className="size-4" />
-                  Add to my plan
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setContext({ opportunityId: opportunity.id });
-                  void navigate('/assistant');
-                }}
-              >
-                <MessageSquareText aria-hidden="true" className="size-4" />
-                Ask about this opportunity
-              </Button>
+              {session ? (
+                <Button asChild size="sm">
+                  <Link to={`/applications?opportunity=${opportunity.id}`}>
+                    <Pencil aria-hidden="true" className="size-4" />
+                    Add to my plan
+                  </Link>
+                </Button>
+              ) : (
+                <Button asChild size="sm">
+                  <Link
+                    to={`/auth/sign-up?next=${encodeURIComponent(`/applications?opportunity=${opportunity.id}`)}`}
+                  >
+                    <Pencil aria-hidden="true" className="size-4" />
+                    Create a plan
+                  </Link>
+                </Button>
+              )}
+              {session ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setContext({ opportunityId: opportunity.id });
+                    void navigate('/assistant');
+                  }}
+                >
+                  <MessageSquareText aria-hidden="true" className="size-4" />
+                  Ask about this opportunity
+                </Button>
+              ) : null}
             </>
           }
         />

@@ -29,7 +29,7 @@ from ..db.models import (
 )
 from ..db.session import get_session
 from ..errors import not_found, validation
-from ..security.session import CurrentUser, current_user
+from ..security.session import CurrentUser, current_user, optional_user
 from ..wire import WireModel, iso_utc
 from .shapes import (
     AnalyzeRequest,
@@ -138,7 +138,7 @@ def _row(opportunity: Opportunity, match: Any) -> dict[str, Any]:
 @router.get("/opportunities", response_model=OpportunityListOut)
 async def list_opportunities(
     request: Request,
-    user: CurrentUser = Depends(current_user),
+    user: CurrentUser | None = Depends(optional_user),
     session: AsyncSession = Depends(get_session),
 ) -> OpportunityListOut:
     """The opportunities, ranked against the confirmed profile."""
@@ -166,7 +166,9 @@ async def list_opportunities(
             if (opportunity.funding or {}).get("coverage") == wanted
         ]
 
-    matches = list((await session.execute(select(Match))).scalars().all())
+    matches = (
+        list((await session.execute(select(Match))).scalars().all()) if user is not None else []
+    )
     by_opportunity = {match.opportunity_id: match for match in matches}
 
     return OpportunityListOut(
@@ -187,7 +189,7 @@ async def list_opportunities(
 @router.get("/opportunities/{id}", response_model=OpportunityDetailOut)
 async def read_opportunity(
     id: str,
-    user: CurrentUser = Depends(current_user),
+    user: CurrentUser | None = Depends(optional_user),
     session: AsyncSession = Depends(get_session),
 ) -> OpportunityDetailOut:
     """One opportunity, with its evidence and its sources."""
@@ -208,10 +210,14 @@ async def read_opportunity(
     )
     sources = list((await session.execute(select(Source))).scalars().all())
 
-    application_result = await session.execute(
-        select(Application).where(Application.owner_id == user.id, Application.opportunity_id == id)
-    )
-    application = application_result.scalar_one_or_none()
+    application = None
+    if user is not None:
+        application_result = await session.execute(
+            select(Application).where(
+                Application.owner_id == user.id, Application.opportunity_id == id
+            )
+        )
+        application = application_result.scalar_one_or_none()
 
     return OpportunityDetailOut(
         opportunity=_row(opportunity, match)["opportunity"],

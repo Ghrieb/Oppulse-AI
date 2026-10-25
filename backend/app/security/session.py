@@ -91,12 +91,7 @@ async def optional_user(
     Used by the endpoints that are readable while signed out — the landing
     page's capability strip, for instance.
     """
-    header = request.headers.get("authorization", "")
-    if not header.lower().startswith("bearer "):
-        return None
-
-    token = header.split(" ", 1)[1].strip()
-    claims = decode_access_token(token, settings=get_settings())
+    claims = _claims_from(request)
     if claims is None:
         return None
 

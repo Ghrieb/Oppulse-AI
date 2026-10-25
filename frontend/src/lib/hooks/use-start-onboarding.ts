@@ -12,9 +12,9 @@ const DEMO_PASSWORD = 'demo-workspace-access';
  * Starting Oppulse.
  *
  * A signed-in visitor goes straight to onboarding. A signed-out visitor is
- * sent to register and is returned to the same step afterwards — the
- * intended destination travels with the request, so nobody lands on a
- * generic home screen after signing up.
+ * sent to register and is returned to the same step afterwards. Exploration
+ * is intentionally separate: the landing page can be visited without an
+ * account, while personal inputs still begin here.
  */
 export function useStartOnboarding(): (intent?: IntentChoice) => void {
   const navigate = useNavigate();

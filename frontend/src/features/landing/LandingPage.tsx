@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   LandingDifferentiation,
@@ -19,6 +19,7 @@ import { useStartOnboarding } from '@/lib/hooks/use-start-onboarding';
  */
 export function LandingPage() {
   const start = useStartOnboarding();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-dvh bg-background">
@@ -54,9 +55,11 @@ export function LandingPage() {
                 Sign in
               </Link>
             </Button>
-            <Button size="sm" onClick={() => start()} className="whitespace-nowrap">
-              <span className="hidden sm:inline">Start with my goal</span>
-              <span className="sm:hidden">Start</span>
+            <Button asChild size="sm" className="whitespace-nowrap">
+              <Link to="/opportunities">
+                <span className="hidden sm:inline">Explore opportunities</span>
+                <span className="sm:hidden">Explore</span>
+              </Link>
             </Button>
           </div>
         </div>
@@ -64,7 +67,7 @@ export function LandingPage() {
 
       <main id="main-content">
         <LandingHero
-          onStart={() => start('goal')}
+          onStart={() => navigate('/opportunities')}
           onUpload={() => start('materials')}
           onAnalyse={() => start('link')}
         />
@@ -74,7 +77,7 @@ export function LandingPage() {
         <LandingDifferentiation />
         <LandingTwoWays />
 
-        <LandingFinalCta onStart={() => start('goal')} />
+        <LandingFinalCta onStart={() => navigate('/opportunities')} />
       </main>
 
       <LandingFooter />

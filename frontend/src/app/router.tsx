@@ -14,9 +14,10 @@ import { NotFoundPage } from '@/features/NotFoundPage';
 /**
  * Routes.
  *
- * The landing page and authentication are public. Everything else requires
- * a session, and a signed-out visitor is returned to where they were
- * heading once they sign in.
+ * The landing page, opportunity catalogue and opportunity evidence are
+ * readable without an account. Personal workspaces and actions require a
+ * session, and a signed-out visitor is returned to where they were heading
+ * once they sign in.
  *
  * The home workspace is loaded eagerly because it is the first thing a
  * judge sees. Everything else is code-split.
@@ -112,10 +113,10 @@ export const router = createBrowserRouter([
     children: [
       { path: '/home', element: protectedRoute(<HomePage />) },
       { path: '/goals', element: protectedRoute(lazyRoute(<GoalsPage />)) },
-      { path: '/opportunities', element: protectedRoute(lazyRoute(<OpportunitiesPage />)) },
+      { path: '/opportunities', element: lazyRoute(<OpportunitiesPage />) },
       {
         path: '/opportunities/:id',
-        element: protectedRoute(lazyRoute(<OpportunityDetailPage />)),
+        element: lazyRoute(<OpportunityDetailPage />),
       },
       { path: '/documents', element: protectedRoute(lazyRoute(<DocumentsPage />)) },
       { path: '/profile', element: protectedRoute(lazyRoute(<ProfilePassportPage />)) },

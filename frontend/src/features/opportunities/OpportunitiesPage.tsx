@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -12,6 +13,7 @@ import {
   useCreateApplication,
   useDismissOpportunity,
   useOpportunities,
+  useSession,
   useToggleSaveOpportunity,
 } from '@/lib/queries';
 import { cn } from '@/lib/cn';
@@ -37,6 +39,7 @@ export function OpportunitiesPage() {
   const [query, setQuery] = useState('');
 
   const { data, isPending, error, refetch } = useOpportunities();
+  const { data: session } = useSession();
   const toggleSave = useToggleSaveOpportunity();
   const dismiss = useDismissOpportunity();
   const createApplication = useCreateApplication();
@@ -72,8 +75,27 @@ export function OpportunitiesPage() {
     <div className="flex flex-col gap-5">
       <PageHeader
         title="Opportunities"
-        description="Ranked against your confirmed profile. Every claim links back to the source it came from."
+        description={
+          session
+            ? 'Ranked against your confirmed profile. Every claim links back to the source it came from.'
+            : 'Browse real opportunity details and evidence first. Create an account when you are ready to compare them with your CV.'
+        }
       />
+
+      {!session ? (
+        <Card className="flex flex-col gap-3 border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-text">Exploring as a guest</p>
+            <p className="text-sm text-text-muted">
+              You can read opportunities and sources now. Sign in when you want to save, match your
+              profile, or build an application plan.
+            </p>
+          </div>
+          <Button asChild size="sm" className="shrink-0">
+            <Link to="/auth/sign-up">Create my workspace</Link>
+          </Button>
+        </Card>
+      ) : null}
 
       <Card className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -139,56 +161,70 @@ export function OpportunitiesPage() {
                 saving={toggleSave.isPending}
                 dismissing={dismiss.isPending}
                 addingToApplication={createApplication.isPending}
-                onToggleSave={() => {
-                  toggleSave.mutate(opportunity.id, {
-                    onError: () =>
-                      toast({
-                        tone: 'error',
-                        title: 'We could not update your list',
-                        description: 'Nothing was changed. Try again.',
-                      }),
-                    onSuccess: () =>
-                      toast({
-                        tone: 'success',
-                        title: opportunity.saved ? 'Removed from your list' : 'Saved to your list',
-                      }),
-                  });
-                }}
-                onDismiss={() => {
-                  dismiss.mutate(
-                    { id: opportunity.id },
-                    {
-                      onSuccess: () =>
-                        toast({
-                          tone: 'info',
-                          title: 'Removed from your results',
-                          description: 'We will use this to improve future recommendations.',
-                        }),
-                      onError: () =>
-                        toast({
-                          tone: 'error',
-                          title: 'We could not remove that from your results',
-                          description: 'Nothing was changed. Try again.',
-                        }),
-                    },
-                  );
-                }}
-                onAddToApplication={() => {
-                  createApplication.mutate(opportunity.id, {
-                    onSuccess: () =>
-                      toast({
-                        tone: 'success',
-                        title: 'Added to your application workspace',
-                        description: 'Open Applications to plan the next step.',
-                      }),
-                    onError: () =>
-                      toast({
-                        tone: 'error',
-                        title: 'We could not create the workspace',
-                        description: 'Nothing was changed. Try again.',
-                      }),
-                  });
-                }}
+                onToggleSave={
+                  session
+                    ? () => {
+                        toggleSave.mutate(opportunity.id, {
+                          onError: () =>
+                            toast({
+                              tone: 'error',
+                              title: 'We could not update your list',
+                              description: 'Nothing was changed. Try again.',
+                            }),
+                          onSuccess: () =>
+                            toast({
+                              tone: 'success',
+                              title: opportunity.saved
+                                ? 'Removed from your list'
+                                : 'Saved to your list',
+                            }),
+                        });
+                      }
+                    : undefined
+                }
+                onDismiss={
+                  session
+                    ? () => {
+                        dismiss.mutate(
+                          { id: opportunity.id },
+                          {
+                            onSuccess: () =>
+                              toast({
+                                tone: 'info',
+                                title: 'Removed from your results',
+                                description: 'We will use this to improve future recommendations.',
+                              }),
+                            onError: () =>
+                              toast({
+                                tone: 'error',
+                                title: 'We could not remove that from your results',
+                                description: 'Nothing was changed. Try again.',
+                              }),
+                          },
+                        );
+                      }
+                    : undefined
+                }
+                onAddToApplication={
+                  session
+                    ? () => {
+                        createApplication.mutate(opportunity.id, {
+                          onSuccess: () =>
+                            toast({
+                              tone: 'success',
+                              title: 'Added to your application workspace',
+                              description: 'Open Applications to plan the next step.',
+                            }),
+                          onError: () =>
+                            toast({
+                              tone: 'error',
+                              title: 'We could not create the workspace',
+                              description: 'Nothing was changed. Try again.',
+                            }),
+                        });
+                      }
+                    : undefined
+                }
               />
             );
           })}
