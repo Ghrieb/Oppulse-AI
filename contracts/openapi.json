@@ -1,0 +1,6932 @@
+{
+  "components": {
+    "schemas": {
+      "ActionBlock": {
+        "description": "An action the student may take, and what it would do.",
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "effect": {
+            "default": "prepares",
+            "enum": [
+              "prepares",
+              "would_send"
+            ],
+            "title": "Effect",
+            "type": "string"
+          },
+          "kind": {
+            "const": "action",
+            "default": "action",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "title": "Payload",
+            "type": "object"
+          }
+        },
+        "required": [
+          "label",
+          "action"
+        ],
+        "title": "ActionBlock",
+        "type": "object"
+      },
+      "ActionRequest": {
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "payload": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payload"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "title": "ActionRequest",
+        "type": "object"
+      },
+      "ActionResponseOut": {
+        "properties": {
+          "block": {
+            "additionalProperties": true,
+            "title": "Block",
+            "type": "object"
+          },
+          "createdId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Createdid"
+          },
+          "route": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Route"
+          }
+        },
+        "required": [
+          "block"
+        ],
+        "title": "ActionResponseOut",
+        "type": "object"
+      },
+      "AlertListOut": {
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/AlertOut"
+            },
+            "title": "Alerts",
+            "type": "array"
+          },
+          "unreadCount": {
+            "default": 0,
+            "title": "Unreadcount",
+            "type": "integer"
+          }
+        },
+        "title": "AlertListOut",
+        "type": "object"
+      },
+      "AlertOut": {
+        "properties": {
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "delivery": {
+            "additionalProperties": true,
+            "title": "Delivery",
+            "type": "object"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "monitorEventId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Monitoreventid"
+          },
+          "read": {
+            "default": false,
+            "title": "Read",
+            "type": "boolean"
+          },
+          "sensitivity": {
+            "title": "Sensitivity",
+            "type": "string"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "body",
+          "severity",
+          "category",
+          "sensitivity",
+          "createdAt"
+        ],
+        "title": "AlertOut",
+        "type": "object"
+      },
+      "AnalyzeRequest": {
+        "description": "A link to analyse without a saved mission.",
+        "properties": {
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "title": "AnalyzeRequest",
+        "type": "object"
+      },
+      "AnswerOut": {
+        "properties": {
+          "answeredAt": {
+            "title": "Answeredat",
+            "type": "string"
+          },
+          "factKey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Factkey"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "questionId": {
+            "title": "Questionid",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value"
+          }
+        },
+        "required": [
+          "questionId",
+          "value",
+          "answeredAt",
+          "source"
+        ],
+        "title": "AnswerOut",
+        "type": "object"
+      },
+      "ApplicationListOut": {
+        "properties": {
+          "applications": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationOut"
+            },
+            "title": "Applications",
+            "type": "array"
+          }
+        },
+        "title": "ApplicationListOut",
+        "type": "object"
+      },
+      "ApplicationOut": {
+        "properties": {
+          "checklist": {
+            "items": {
+              "$ref": "#/components/schemas/ChecklistItemOut"
+            },
+            "title": "Checklist",
+            "type": "array"
+          },
+          "completion": {
+            "$ref": "#/components/schemas/CompletionOut"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "deadlineVerified": {
+            "default": false,
+            "title": "Deadlineverified",
+            "type": "boolean"
+          },
+          "draftIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Draftids",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "institution": {
+            "title": "Institution",
+            "type": "string"
+          },
+          "nextBestAction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextbestaction"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "officialUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Officialurl"
+          },
+          "opportunityId": {
+            "title": "Opportunityid",
+            "type": "string"
+          },
+          "opportunityTitle": {
+            "title": "Opportunitytitle",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TaskOut"
+            },
+            "title": "Tasks",
+            "type": "array"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "opportunityId",
+          "opportunityTitle",
+          "institution",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "ApplicationOut",
+        "type": "object"
+      },
+      "Capability": {
+        "description": "One service, and what the student can actually do with it.",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "key": {
+            "enum": [
+              "data",
+              "ai",
+              "search",
+              "extraction",
+              "monitoring",
+              "in_app",
+              "email"
+            ],
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "live",
+              "mocked",
+              "unavailable"
+            ],
+            "title": "Mode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "mode",
+          "detail"
+        ],
+        "title": "Capability",
+        "type": "object"
+      },
+      "CapabilityStatus": {
+        "description": "The whole strip.",
+        "properties": {
+          "capabilities": {
+            "items": {
+              "$ref": "#/components/schemas/Capability"
+            },
+            "title": "Capabilities",
+            "type": "array"
+          },
+          "isPrototype": {
+            "default": true,
+            "title": "Isprototype",
+            "type": "boolean"
+          }
+        },
+        "title": "CapabilityStatus",
+        "type": "object"
+      },
+      "ChecklistBlock": {
+        "description": "What the call requires, and what is still open.",
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ChecklistItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "kind": {
+            "const": "checklist",
+            "default": "checklist",
+            "title": "Kind",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "ChecklistBlock",
+        "type": "object"
+      },
+      "ChecklistItem": {
+        "properties": {
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "route": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Route"
+          },
+          "status": {
+            "default": "needs_attention",
+            "enum": [
+              "missing",
+              "ready",
+              "needs_attention",
+              "done"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "title": "ChecklistItem",
+        "type": "object"
+      },
+      "ChecklistItemOut": {
+        "properties": {
+          "documentId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Documentid"
+          },
+          "dueDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duedate"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "status"
+        ],
+        "title": "ChecklistItemOut",
+        "type": "object"
+      },
+      "CompareOut": {
+        "description": "The comparison, and what it cannot settle.",
+        "properties": {
+          "differences": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Differences",
+            "type": "array"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/CompareRowOut"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "unverified": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unverified",
+            "type": "array"
+          }
+        },
+        "title": "CompareOut",
+        "type": "object"
+      },
+      "CompareRowOut": {
+        "description": "One opportunity in a comparison.",
+        "properties": {
+          "country": {
+            "title": "Country",
+            "type": "string"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "deadlineVerified": {
+            "default": false,
+            "title": "Deadlineverified",
+            "type": "boolean"
+          },
+          "eligibility": {
+            "default": "unresolved",
+            "title": "Eligibility",
+            "type": "string"
+          },
+          "estimatedGap": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimatedgap"
+          },
+          "fitScore": {
+            "default": 0,
+            "title": "Fitscore",
+            "type": "integer"
+          },
+          "fundingCoverage": {
+            "default": "unknown",
+            "title": "Fundingcoverage",
+            "type": "string"
+          },
+          "institution": {
+            "title": "Institution",
+            "type": "string"
+          },
+          "opportunityId": {
+            "title": "Opportunityid",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "unresolvedRequirements": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unresolvedrequirements",
+            "type": "array"
+          }
+        },
+        "required": [
+          "opportunityId",
+          "title",
+          "institution",
+          "country"
+        ],
+        "title": "CompareRowOut",
+        "type": "object"
+      },
+      "CompleteRequest": {
+        "properties": {
+          "draft": {
+            "$ref": "#/components/schemas/DraftOut-Input"
+          }
+        },
+        "required": [
+          "draft"
+        ],
+        "title": "CompleteRequest",
+        "type": "object"
+      },
+      "CompleteResponseOut": {
+        "properties": {
+          "mission": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Mission",
+            "type": "object"
+          },
+          "runId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runid"
+          }
+        },
+        "required": [
+          "mission"
+        ],
+        "title": "CompleteResponseOut",
+        "type": "object"
+      },
+      "CompletionOut": {
+        "properties": {
+          "completed": {
+            "default": 0,
+            "title": "Completed",
+            "type": "integer"
+          },
+          "total": {
+            "default": 0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "title": "CompletionOut",
+        "type": "object"
+      },
+      "ConsentOut": {
+        "properties": {
+          "allowProfileMatching": {
+            "title": "Allowprofilematching",
+            "type": "boolean"
+          },
+          "emailNotifications": {
+            "title": "Emailnotifications",
+            "type": "boolean"
+          },
+          "externalModelProcessing": {
+            "title": "Externalmodelprocessing",
+            "type": "boolean"
+          },
+          "retentionDays": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retentiondays"
+          }
+        },
+        "required": [
+          "externalModelProcessing",
+          "allowProfileMatching",
+          "emailNotifications"
+        ],
+        "title": "ConsentOut",
+        "type": "object"
+      },
+      "CreateDraftRequest": {
+        "properties": {
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "CreateDraftRequest",
+        "type": "object"
+      },
+      "CreateMissionRequest": {
+        "properties": {
+          "criteria": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criteria"
+          },
+          "objective": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Objective",
+            "type": "string"
+          },
+          "source": {
+            "default": "manual",
+            "title": "Source",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 140,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "objective"
+        ],
+        "title": "CreateMissionRequest",
+        "type": "object"
+      },
+      "CreateMonitorTargetRequest": {
+        "properties": {
+          "frequency": {
+            "default": "daily",
+            "title": "Frequency",
+            "type": "string"
+          },
+          "label": {
+            "maxLength": 140,
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "targetId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Targetid"
+          },
+          "targetType": {
+            "title": "Targettype",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "targetType",
+          "label"
+        ],
+        "title": "CreateMonitorTargetRequest",
+        "type": "object"
+      },
+      "CreateProposalRequest": {
+        "properties": {
+          "instruction": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Instruction",
+            "type": "string"
+          },
+          "selectedText": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selectedtext"
+          }
+        },
+        "required": [
+          "instruction"
+        ],
+        "title": "CreateProposalRequest",
+        "type": "object"
+      },
+      "DateOfBirthOut": {
+        "properties": {
+          "excludedFromAiContext": {
+            "title": "Excludedfromaicontext",
+            "type": "boolean"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "status",
+          "updatedAt",
+          "excludedFromAiContext"
+        ],
+        "title": "DateOfBirthOut",
+        "type": "object"
+      },
+      "DismissRequest": {
+        "properties": {
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "title": "DismissRequest",
+        "type": "object"
+      },
+      "DocumentListOut": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentOut"
+            },
+            "title": "Documents",
+            "type": "array"
+          }
+        },
+        "required": [
+          "documents"
+        ],
+        "title": "DocumentListOut",
+        "type": "object"
+      },
+      "DocumentOut": {
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "consentToUse": {
+            "title": "Consenttouse",
+            "type": "boolean"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "downloadUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Downloadurl"
+          },
+          "errorMessage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Errormessage"
+          },
+          "extraction": {
+            "$ref": "#/components/schemas/ExtractionOut"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "mimeType": {
+            "title": "Mimetype",
+            "type": "string"
+          },
+          "proposedFacts": {
+            "items": {
+              "$ref": "#/components/schemas/ProposedFactOut"
+            },
+            "title": "Proposedfacts",
+            "type": "array"
+          },
+          "sizeBytes": {
+            "title": "Sizebytes",
+            "type": "integer"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "filename",
+          "mimeType",
+          "sizeBytes",
+          "category",
+          "status",
+          "extraction",
+          "consentToUse",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "DocumentOut",
+        "type": "object"
+      },
+      "DraftActionBlock": {
+        "description": "A document the student could start.",
+        "properties": {
+          "applicationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Applicationid"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "draftType": {
+            "title": "Drafttype",
+            "type": "string"
+          },
+          "effect": {
+            "default": "prepares",
+            "enum": [
+              "prepares",
+              "would_send"
+            ],
+            "title": "Effect",
+            "type": "string"
+          },
+          "kind": {
+            "const": "draft_action",
+            "default": "draft_action",
+            "title": "Kind",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "draftType"
+        ],
+        "title": "DraftActionBlock",
+        "type": "object"
+      },
+      "DraftListOut": {
+        "properties": {
+          "drafts": {
+            "items": {
+              "$ref": "#/components/schemas/app__api__workspace__DraftOut"
+            },
+            "title": "Drafts",
+            "type": "array"
+          }
+        },
+        "title": "DraftListOut",
+        "type": "object"
+      },
+      "DraftOut-Input": {
+        "properties": {
+          "answers": {
+            "items": {
+              "$ref": "#/components/schemas/AnswerOut"
+            },
+            "title": "Answers",
+            "type": "array"
+          },
+          "completed": {
+            "default": false,
+            "title": "Completed",
+            "type": "boolean"
+          },
+          "currentQuestionId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currentquestionid"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "intent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intent"
+          },
+          "referenceUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referenceurl"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "uploadedDocumentConsent": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uploadeddocumentconsent"
+          },
+          "uploadedDocumentId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uploadeddocumentid"
+          },
+          "uploadedDocumentStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uploadeddocumentstatus"
+          }
+        },
+        "required": [
+          "id",
+          "updatedAt"
+        ],
+        "title": "DraftOut",
+        "type": "object"
+      },
+      "DraftResponseOut": {
+        "properties": {
+          "draft": {
+            "$ref": "#/components/schemas/app__api__onboarding__DraftOut"
+          }
+        },
+        "required": [
+          "draft"
+        ],
+        "title": "DraftResponseOut",
+        "type": "object"
+      },
+      "EmailPreferenceOut": {
+        "properties": {
+          "categories": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "object"
+          },
+          "defaultCadence": {
+            "title": "Defaultcadence",
+            "type": "string"
+          }
+        },
+        "required": [
+          "defaultCadence",
+          "categories"
+        ],
+        "title": "EmailPreferenceOut",
+        "type": "object"
+      },
+      "EmailVerificationLink": {
+        "properties": {
+          "expiresAt": {
+            "title": "Expiresat",
+            "type": "string"
+          },
+          "sentTo": {
+            "format": "email",
+            "title": "Sentto",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "sentTo",
+          "expiresAt"
+        ],
+        "title": "EmailVerificationLink",
+        "type": "object"
+      },
+      "EmailVerificationResult": {
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/SessionUser"
+          }
+        },
+        "required": [
+          "user"
+        ],
+        "title": "EmailVerificationResult",
+        "type": "object"
+      },
+      "EvidenceBlock": {
+        "description": "What the source says, and where it says it.",
+        "properties": {
+          "kind": {
+            "const": "evidence",
+            "default": "evidence",
+            "title": "Kind",
+            "type": "string"
+          },
+          "requirementId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirementid"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceSource"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "summary"
+        ],
+        "title": "EvidenceBlock",
+        "type": "object"
+      },
+      "EvidenceSource": {
+        "properties": {
+          "quality": {
+            "default": "unknown",
+            "enum": [
+              "official",
+              "primary",
+              "secondary",
+              "aggregator",
+              "unknown"
+            ],
+            "title": "Quality",
+            "type": "string"
+          },
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "url",
+          "quote"
+        ],
+        "title": "EvidenceSource",
+        "type": "object"
+      },
+      "ExtractionOut": {
+        "properties": {
+          "completedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completedat"
+          },
+          "method": {
+            "default": "none",
+            "title": "Method",
+            "type": "string"
+          },
+          "proposedFactIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Proposedfactids",
+            "type": "array"
+          },
+          "unreadSections": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unreadsections",
+            "type": "array"
+          }
+        },
+        "title": "ExtractionOut",
+        "type": "object"
+      },
+      "FactSource": {
+        "description": "Where an extracted value came from.\n\nThe three fields the contract requires are always present when there is\na source at all: a source without a document is not a source.",
+        "properties": {
+          "documentId": {
+            "title": "Documentid",
+            "type": "string"
+          },
+          "documentName": {
+            "title": "Documentname",
+            "type": "string"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "pageReference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagereference"
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Section"
+          }
+        },
+        "required": [
+          "documentId",
+          "documentName",
+          "excerpt"
+        ],
+        "title": "FactSource",
+        "type": "object"
+      },
+      "FactSourceOut": {
+        "properties": {
+          "documentId": {
+            "title": "Documentid",
+            "type": "string"
+          },
+          "documentName": {
+            "title": "Documentname",
+            "type": "string"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "pageReference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagereference"
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Section"
+          }
+        },
+        "required": [
+          "documentId",
+          "documentName",
+          "excerpt"
+        ],
+        "title": "FactSourceOut",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HistoryOut": {
+        "properties": {
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/MessageOut"
+            },
+            "title": "Messages",
+            "type": "array"
+          }
+        },
+        "title": "HistoryOut",
+        "type": "object"
+      },
+      "ImpactEntryOut": {
+        "properties": {
+          "factKey": {
+            "title": "Factkey",
+            "type": "string"
+          },
+          "requirements": {
+            "items": {
+              "$ref": "#/components/schemas/ImpactRequirementOut"
+            },
+            "title": "Requirements",
+            "type": "array"
+          }
+        },
+        "required": [
+          "factKey",
+          "requirements"
+        ],
+        "title": "ImpactEntryOut",
+        "type": "object"
+      },
+      "ImpactOut": {
+        "properties": {
+          "impact": {
+            "items": {
+              "$ref": "#/components/schemas/ImpactEntryOut"
+            },
+            "title": "Impact",
+            "type": "array"
+          }
+        },
+        "required": [
+          "impact"
+        ],
+        "title": "ImpactOut",
+        "type": "object"
+      },
+      "ImpactRequirementOut": {
+        "properties": {
+          "opportunityId": {
+            "title": "Opportunityid",
+            "type": "string"
+          },
+          "opportunityTitle": {
+            "title": "Opportunitytitle",
+            "type": "string"
+          },
+          "requirementId": {
+            "title": "Requirementid",
+            "type": "string"
+          },
+          "requirementLabel": {
+            "title": "Requirementlabel",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opportunityId",
+          "opportunityTitle",
+          "requirementId",
+          "requirementLabel",
+          "status"
+        ],
+        "title": "ImpactRequirementOut",
+        "type": "object"
+      },
+      "InstitutionBlock": {
+        "description": "The answer to a question about an institution.\n\nIt separates what the official source states from what could not be\nverified, and the media it carries is labelled as secondary.",
+        "properties": {
+          "action": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Action"
+          },
+          "country": {
+            "title": "Country",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/InstitutionEvidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "institutionType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Institutiontype"
+          },
+          "kind": {
+            "const": "institution",
+            "default": "institution",
+            "title": "Kind",
+            "type": "string"
+          },
+          "location": {
+            "title": "Location",
+            "type": "string"
+          },
+          "media": {
+            "items": {
+              "$ref": "#/components/schemas/MediaContext"
+            },
+            "title": "Media",
+            "type": "array"
+          },
+          "programmeContext": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Programmecontext"
+          },
+          "unverified": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unverified",
+            "type": "array"
+          }
+        },
+        "required": [
+          "description",
+          "location",
+          "country"
+        ],
+        "title": "InstitutionBlock",
+        "type": "object"
+      },
+      "InstitutionEvidence": {
+        "properties": {
+          "quote": {
+            "title": "Quote",
+            "type": "string"
+          },
+          "sourceType": {
+            "default": "secondary",
+            "enum": [
+              "official",
+              "verified_provider",
+              "secondary"
+            ],
+            "title": "Sourcetype",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "url",
+          "quote"
+        ],
+        "title": "InstitutionEvidence",
+        "type": "object"
+      },
+      "MediaContext": {
+        "description": "Media, as secondary context.\n\nIt never proves eligibility, funding, a deadline or an admission\nlikelihood. The publisher and the date travel with it so the student can\njudge it, and the label in the interface says what it is.",
+        "properties": {
+          "attribution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attribution"
+          },
+          "kind": {
+            "enum": [
+              "image",
+              "video"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "publishedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publishedat"
+          },
+          "publisher": {
+            "title": "Publisher",
+            "type": "string"
+          },
+          "sourceType": {
+            "default": "secondary",
+            "enum": [
+              "official",
+              "verified_provider",
+              "secondary"
+            ],
+            "title": "Sourcetype",
+            "type": "string"
+          },
+          "status": {
+            "default": "not_reviewed",
+            "enum": [
+              "available",
+              "unavailable",
+              "removed",
+              "not_reviewed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "url",
+          "title",
+          "publisher"
+        ],
+        "title": "MediaContext",
+        "type": "object"
+      },
+      "MediaContextBlock": {
+        "description": "Media, on its own, as secondary context.",
+        "properties": {
+          "kind": {
+            "const": "media_context",
+            "default": "media_context",
+            "title": "Kind",
+            "type": "string"
+          },
+          "media": {
+            "items": {
+              "$ref": "#/components/schemas/MediaContext"
+            },
+            "title": "Media",
+            "type": "array"
+          },
+          "subject": {
+            "title": "Subject",
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject"
+        ],
+        "title": "MediaContextBlock",
+        "type": "object"
+      },
+      "MessageOut": {
+        "properties": {
+          "blocks": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Blocks",
+            "type": "array"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "context": {
+            "additionalProperties": true,
+            "title": "Context",
+            "type": "object"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "content",
+          "createdAt"
+        ],
+        "title": "MessageOut",
+        "type": "object"
+      },
+      "MessageRequest": {
+        "properties": {
+          "context": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "message": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "selectedText": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selectedtext"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "MessageRequest",
+        "type": "object"
+      },
+      "MissionListOut": {
+        "properties": {
+          "missions": {
+            "items": {
+              "$ref": "#/components/schemas/MissionOut"
+            },
+            "title": "Missions",
+            "type": "array"
+          }
+        },
+        "title": "MissionListOut",
+        "type": "object"
+      },
+      "MissionOut": {
+        "properties": {
+          "confirmedFactIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Confirmedfactids",
+            "type": "array"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "criteria": {
+            "additionalProperties": true,
+            "title": "Criteria",
+            "type": "object"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "latestRunId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latestrunid"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "monitoring": {
+            "$ref": "#/components/schemas/MonitoringConfigOut"
+          },
+          "objective": {
+            "title": "Objective",
+            "type": "string"
+          },
+          "selectedDocumentIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Selecteddocumentids",
+            "type": "array"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "userConfirmedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userconfirmedat"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "objective",
+          "status",
+          "source",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "MissionOut",
+        "type": "object"
+      },
+      "MonitorEventListOut": {
+        "properties": {
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/MonitorEventOut"
+            },
+            "title": "Events",
+            "type": "array"
+          }
+        },
+        "title": "MonitorEventListOut",
+        "type": "object"
+      },
+      "MonitorEventOut": {
+        "properties": {
+          "contentHash": {
+            "title": "Contenthash",
+            "type": "string"
+          },
+          "detectedAt": {
+            "title": "Detectedat",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "isTestEvent": {
+            "default": false,
+            "title": "Istestevent",
+            "type": "boolean"
+          },
+          "monitorTargetId": {
+            "title": "Monitortargetid",
+            "type": "string"
+          },
+          "previousHash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previoushash"
+          },
+          "recommendedAction": {
+            "title": "Recommendedaction",
+            "type": "string"
+          },
+          "sourceUrl": {
+            "title": "Sourceurl",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "whatChanged": {
+            "title": "Whatchanged",
+            "type": "string"
+          },
+          "whyItMatters": {
+            "title": "Whyitmatters",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "monitorTargetId",
+          "type",
+          "whatChanged",
+          "whyItMatters",
+          "recommendedAction",
+          "detectedAt",
+          "sourceUrl",
+          "contentHash"
+        ],
+        "title": "MonitorEventOut",
+        "type": "object"
+      },
+      "MonitorTargetListOut": {
+        "properties": {
+          "targets": {
+            "items": {
+              "$ref": "#/components/schemas/MonitorTargetOut"
+            },
+            "title": "Targets",
+            "type": "array"
+          }
+        },
+        "title": "MonitorTargetListOut",
+        "type": "object"
+      },
+      "MonitorTargetOut": {
+        "properties": {
+          "eventsDetected": {
+            "default": 0,
+            "title": "Eventsdetected",
+            "type": "integer"
+          },
+          "frequency": {
+            "title": "Frequency",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "lastSuccessfulCheckAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastsuccessfulcheckat"
+          },
+          "nextScheduledCheckAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextscheduledcheckat"
+          },
+          "sourceUnreachable": {
+            "default": false,
+            "title": "Sourceunreachable",
+            "type": "boolean"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "targetId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Targetid"
+          },
+          "targetType": {
+            "title": "Targettype",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "id",
+          "targetType",
+          "label",
+          "frequency",
+          "status"
+        ],
+        "title": "MonitorTargetOut",
+        "type": "object"
+      },
+      "MonitoringConfigOut": {
+        "properties": {
+          "enabled": {
+            "default": false,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "frequency": {
+            "default": "weekly",
+            "title": "Frequency",
+            "type": "string"
+          }
+        },
+        "title": "MonitoringConfigOut",
+        "type": "object"
+      },
+      "NextActionOut": {
+        "description": "The one action the student should take next.",
+        "properties": {
+          "blockerId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blockerid"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "cta": {
+            "title": "Cta",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "priority": {
+            "default": 0,
+            "title": "Priority",
+            "type": "integer"
+          },
+          "rationale": {
+            "title": "Rationale",
+            "type": "string"
+          },
+          "route": {
+            "title": "Route",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "rationale",
+          "cta",
+          "route",
+          "createdAt"
+        ],
+        "title": "NextActionOut",
+        "type": "object"
+      },
+      "NextActionResponseOut": {
+        "properties": {
+          "action": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NextActionOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "NextActionResponseOut",
+        "type": "object"
+      },
+      "OpportunityDetailOut": {
+        "description": "One opportunity, in full.",
+        "properties": {
+          "applicationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Applicationid"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchRecord"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "match": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResearchRecord"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "opportunity": {
+            "$ref": "#/components/schemas/ResearchRecord"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchRecord"
+            },
+            "title": "Sources",
+            "type": "array"
+          }
+        },
+        "required": [
+          "opportunity"
+        ],
+        "title": "OpportunityDetailOut",
+        "type": "object"
+      },
+      "OpportunityListOut": {
+        "description": "A page of opportunities, with the caller's assessments.",
+        "properties": {
+          "hasMore": {
+            "default": false,
+            "title": "Hasmore",
+            "type": "boolean"
+          },
+          "matches": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchRecord"
+            },
+            "title": "Matches",
+            "type": "array"
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextcursor"
+          },
+          "opportunities": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchRecord"
+            },
+            "title": "Opportunities",
+            "type": "array"
+          }
+        },
+        "title": "OpportunityListOut",
+        "type": "object"
+      },
+      "OpportunityReferenceBlock": {
+        "description": "A reference to an opportunity.\n\nIt is how the chat opens the detail panel without repeating the\nopportunity's whole content in the message.",
+        "properties": {
+          "country": {
+            "title": "Country",
+            "type": "string"
+          },
+          "institution": {
+            "title": "Institution",
+            "type": "string"
+          },
+          "kind": {
+            "const": "opportunity_reference",
+            "default": "opportunity_reference",
+            "title": "Kind",
+            "type": "string"
+          },
+          "opportunityId": {
+            "title": "Opportunityid",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opportunityId",
+          "title",
+          "institution",
+          "country",
+          "reason"
+        ],
+        "title": "OpportunityReferenceBlock",
+        "type": "object"
+      },
+      "PasswordForgotRequest": {
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "PasswordForgotRequest",
+        "type": "object"
+      },
+      "PasswordForgotResponse": {
+        "description": "Always true, whether or not the address is known.\n\nThe endpoint must never confirm who has an account, or it becomes a way\nof discovering who is using the product.",
+        "properties": {
+          "accepted": {
+            "default": true,
+            "title": "Accepted",
+            "type": "boolean"
+          }
+        },
+        "title": "PasswordForgotResponse",
+        "type": "object"
+      },
+      "PasswordResetRequest": {
+        "properties": {
+          "password": {
+            "maxLength": 200,
+            "minLength": 8,
+            "title": "Password",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "password"
+        ],
+        "title": "PasswordResetRequest",
+        "type": "object"
+      },
+      "PasswordResetResponse": {
+        "properties": {
+          "changed": {
+            "default": true,
+            "title": "Changed",
+            "type": "boolean"
+          }
+        },
+        "title": "PasswordResetResponse",
+        "type": "object"
+      },
+      "PreferencesOut": {
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "email": {
+            "$ref": "#/components/schemas/EmailPreferenceOut"
+          },
+          "guidedView": {
+            "title": "Guidedview",
+            "type": "boolean"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "guidedView",
+          "email",
+          "timezone",
+          "currency"
+        ],
+        "title": "PreferencesOut",
+        "type": "object"
+      },
+      "ProfileFactOut": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "confidence": {
+            "title": "Confidence",
+            "type": "string"
+          },
+          "conflict": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflict"
+          },
+          "conflicting": {
+            "title": "Conflicting",
+            "type": "boolean"
+          },
+          "corrected": {
+            "title": "Corrected",
+            "type": "boolean"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "excluded": {
+            "title": "Excluded",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "numericValue": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Numericvalue"
+          },
+          "section": {
+            "title": "Section",
+            "type": "string"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FactSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "usedFor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usedfor"
+          },
+          "value": {
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "label",
+          "value",
+          "status",
+          "excluded",
+          "corrected",
+          "conflicting",
+          "section",
+          "confidence",
+          "createdAt"
+        ],
+        "title": "ProfileFactOut",
+        "type": "object"
+      },
+      "ProfileOut": {
+        "properties": {
+          "avatarUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatarurl"
+          },
+          "consent": {
+            "$ref": "#/components/schemas/ConsentOut"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/ProfileFactOut"
+            },
+            "title": "Facts",
+            "type": "array"
+          },
+          "fullName": {
+            "title": "Fullname",
+            "type": "string"
+          },
+          "headline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Headline"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/PreferencesOut"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "fullName",
+          "email",
+          "facts",
+          "preferences",
+          "consent",
+          "updatedAt"
+        ],
+        "title": "ProfileOut",
+        "type": "object"
+      },
+      "ProposalOut": {
+        "properties": {
+          "baseVersion": {
+            "title": "Baseversion",
+            "type": "integer"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "draftId": {
+            "title": "Draftid",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "unsupportedClaims": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unsupportedclaims",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "draftId",
+          "baseVersion",
+          "content",
+          "summary",
+          "status",
+          "createdAt"
+        ],
+        "title": "ProposalOut",
+        "type": "object"
+      },
+      "ProposedFactOut": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "confidence": {
+            "title": "Confidence",
+            "type": "string"
+          },
+          "conflict": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflict"
+          },
+          "conflicting": {
+            "title": "Conflicting",
+            "type": "boolean"
+          },
+          "corrected": {
+            "title": "Corrected",
+            "type": "boolean"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "excluded": {
+            "title": "Excluded",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "numericValue": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Numericvalue"
+          },
+          "section": {
+            "title": "Section",
+            "type": "string"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FactSourceOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "usedFor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usedfor"
+          },
+          "value": {
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "label",
+          "value",
+          "status",
+          "excluded",
+          "corrected",
+          "conflicting",
+          "section",
+          "confidence",
+          "createdAt"
+        ],
+        "title": "ProposedFactOut",
+        "type": "object"
+      },
+      "ProtectedProfileOut": {
+        "description": "The protected section, in the shape the contract lists.",
+        "properties": {
+          "protectedProfile": {
+            "$ref": "#/components/schemas/ProtectedSectionOut"
+          }
+        },
+        "required": [
+          "protectedProfile"
+        ],
+        "title": "ProtectedProfileOut",
+        "type": "object"
+      },
+      "ProtectedSectionOut": {
+        "properties": {
+          "dateOfBirth": {
+            "$ref": "#/components/schemas/DateOfBirthOut"
+          }
+        },
+        "required": [
+          "dateOfBirth"
+        ],
+        "title": "ProtectedSectionOut",
+        "type": "object"
+      },
+      "ResearchRecord": {
+        "additionalProperties": true,
+        "description": "A record the agent produced, kept as it was produced.\n\nThe fields are open on purpose: the agent's schema is the contract for\nthis data, and re-typing it here would create a second, drifting\ndefinition of the same thing.",
+        "properties": {},
+        "title": "ResearchRecord",
+        "type": "object"
+      },
+      "ResponseOut": {
+        "description": "The assistant's answer.\n\nThe blocks are typed, so a block the service produces is checked before\nit leaves — and the OpenAPI document describes every kind, which is what\nmakes the contract check able to compare the two sides.",
+        "properties": {
+          "blocks": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "action": "#/components/schemas/ActionBlock",
+                  "checklist": "#/components/schemas/ChecklistBlock",
+                  "draft_action": "#/components/schemas/DraftActionBlock",
+                  "evidence": "#/components/schemas/EvidenceBlock",
+                  "institution": "#/components/schemas/InstitutionBlock",
+                  "media_context": "#/components/schemas/MediaContextBlock",
+                  "opportunity_reference": "#/components/schemas/OpportunityReferenceBlock",
+                  "run": "#/components/schemas/RunBlock",
+                  "text": "#/components/schemas/TextBlock",
+                  "unknown_or_conflict": "#/components/schemas/UnknownOrConflictBlock"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TextBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/EvidenceBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/ChecklistBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/DraftActionBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/RunBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/InstitutionBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContextBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/OpportunityReferenceBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/UnknownOrConflictBlock"
+                },
+                {
+                  "$ref": "#/components/schemas/ActionBlock"
+                }
+              ]
+            },
+            "title": "Blocks",
+            "type": "array"
+          },
+          "context": {
+            "additionalProperties": true,
+            "title": "Context",
+            "type": "object"
+          },
+          "suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggestions",
+            "type": "array"
+          }
+        },
+        "title": "ResponseOut",
+        "type": "object"
+      },
+      "RevisionOut": {
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "factId": {
+            "title": "Factid",
+            "type": "string"
+          },
+          "factLabel": {
+            "title": "Factlabel",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "newValue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Newvalue"
+          },
+          "previousValue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previousvalue"
+          },
+          "sourceDocumentName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sourcedocumentname"
+          }
+        },
+        "required": [
+          "id",
+          "factId",
+          "factLabel",
+          "action",
+          "createdAt"
+        ],
+        "title": "RevisionOut",
+        "type": "object"
+      },
+      "RevisionsOut": {
+        "properties": {
+          "revisions": {
+            "items": {
+              "$ref": "#/components/schemas/RevisionOut"
+            },
+            "title": "Revisions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "revisions"
+        ],
+        "title": "RevisionsOut",
+        "type": "object"
+      },
+      "RunBlock": {
+        "description": "A research run, and where it stands.",
+        "properties": {
+          "kind": {
+            "const": "run",
+            "default": "run",
+            "title": "Kind",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "runId": {
+            "title": "Runid",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "runId",
+          "status",
+          "message"
+        ],
+        "title": "RunBlock",
+        "type": "object"
+      },
+      "RunBudgetOut": {
+        "properties": {
+          "elapsedSeconds": {
+            "default": 0,
+            "title": "Elapsedseconds",
+            "type": "integer"
+          },
+          "fetchedSources": {
+            "default": 0,
+            "title": "Fetchedsources",
+            "type": "integer"
+          },
+          "modelCalls": {
+            "default": 0,
+            "title": "Modelcalls",
+            "type": "integer"
+          },
+          "searchCalls": {
+            "default": 0,
+            "title": "Searchcalls",
+            "type": "integer"
+          }
+        },
+        "title": "RunBudgetOut",
+        "type": "object"
+      },
+      "RunErrorOut": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "retryable": {
+            "default": false,
+            "title": "Retryable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "RunErrorOut",
+        "type": "object"
+      },
+      "RunEventListOut": {
+        "properties": {
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/RunEventOut"
+            },
+            "title": "Events",
+            "type": "array"
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextcursor"
+          }
+        },
+        "title": "RunEventListOut",
+        "type": "object"
+      },
+      "RunEventOut": {
+        "properties": {
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "runId": {
+            "title": "Runid",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "runId",
+          "type",
+          "message",
+          "createdAt"
+        ],
+        "title": "RunEventOut",
+        "type": "object"
+      },
+      "RunOut": {
+        "properties": {
+          "budgetUsed": {
+            "$ref": "#/components/schemas/RunBudgetOut"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunErrorOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "finishedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finishedat"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "missionId": {
+            "title": "Missionid",
+            "type": "string"
+          },
+          "phase": {
+            "title": "Phase",
+            "type": "string"
+          },
+          "startedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startedat"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunSummaryOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "missionId",
+          "status",
+          "phase"
+        ],
+        "title": "RunOut",
+        "type": "object"
+      },
+      "RunStartOut": {
+        "description": "The `202 Accepted` body of a queued run.",
+        "properties": {
+          "runId": {
+            "title": "Runid",
+            "type": "string"
+          },
+          "status": {
+            "default": "queued",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "runId"
+        ],
+        "title": "RunStartOut",
+        "type": "object"
+      },
+      "RunSummaryOut": {
+        "properties": {
+          "candidatesFound": {
+            "default": 0,
+            "title": "Candidatesfound",
+            "type": "integer"
+          },
+          "needingVerification": {
+            "default": 0,
+            "title": "Needingverification",
+            "type": "integer"
+          },
+          "sourcesReviewed": {
+            "default": 0,
+            "title": "Sourcesreviewed",
+            "type": "integer"
+          },
+          "unreachable": {
+            "default": 0,
+            "title": "Unreachable",
+            "type": "integer"
+          }
+        },
+        "title": "RunSummaryOut",
+        "type": "object"
+      },
+      "SessionResponse": {
+        "properties": {
+          "expiresAt": {
+            "title": "Expiresat",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/SessionUser"
+          }
+        },
+        "required": [
+          "user",
+          "expiresAt"
+        ],
+        "title": "SessionResponse",
+        "type": "object"
+      },
+      "SessionUser": {
+        "description": "The user, as the frontend expects it.",
+        "properties": {
+          "avatarUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatarurl"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "emailVerified": {
+            "title": "Emailverified",
+            "type": "boolean"
+          },
+          "emailVerifiedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emailverifiedat"
+          },
+          "fullName": {
+            "title": "Fullname",
+            "type": "string"
+          },
+          "headline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Headline"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "fullName",
+          "emailVerified"
+        ],
+        "title": "SessionUser",
+        "type": "object"
+      },
+      "SignInRequest": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "SignInRequest",
+        "type": "object"
+      },
+      "SignUpRequest": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "fullName": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Fullname",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 200,
+            "minLength": 8,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "fullName"
+        ],
+        "title": "SignUpRequest",
+        "type": "object"
+      },
+      "SignUpResponse": {
+        "properties": {
+          "signedIn": {
+            "title": "Signedin",
+            "type": "boolean"
+          },
+          "user": {
+            "$ref": "#/components/schemas/SessionUser"
+          }
+        },
+        "required": [
+          "user",
+          "signedIn"
+        ],
+        "title": "SignUpResponse",
+        "type": "object"
+      },
+      "SnapshotOut": {
+        "properties": {
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/ProfileFactOut"
+            },
+            "title": "Facts",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "facts"
+        ],
+        "title": "SnapshotOut",
+        "type": "object"
+      },
+      "TaskOut": {
+        "properties": {
+          "blockedReason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blockedreason"
+          },
+          "dueDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duedate"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "status"
+        ],
+        "title": "TaskOut",
+        "type": "object"
+      },
+      "TextBlock": {
+        "description": "The answer itself.",
+        "properties": {
+          "kind": {
+            "const": "text",
+            "default": "text",
+            "title": "Kind",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "TextBlock",
+        "type": "object"
+      },
+      "UnknownOrConflictBlock": {
+        "description": "What could not be verified.\n\nThe honest edge of an answer: what was checked, what remains unknown,\nand the most useful next step. It is never replaced with a confident\nguess.",
+        "properties": {
+          "checked": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Checked",
+            "type": "array"
+          },
+          "conflict": {
+            "default": false,
+            "title": "Conflict",
+            "type": "boolean"
+          },
+          "kind": {
+            "const": "unknown_or_conflict",
+            "default": "unknown_or_conflict",
+            "title": "Kind",
+            "type": "string"
+          },
+          "nextAction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextaction"
+          },
+          "question": {
+            "title": "Question",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "title": "UnknownOrConflictBlock",
+        "type": "object"
+      },
+      "UpdateApplicationRequest": {
+        "properties": {
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 4000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "tasks": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tasks"
+          }
+        },
+        "title": "UpdateApplicationRequest",
+        "type": "object"
+      },
+      "UpdateDocumentRequest": {
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "consentToUse": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Consenttouse"
+          }
+        },
+        "title": "UpdateDocumentRequest",
+        "type": "object"
+      },
+      "UpdateDraftRequest": {
+        "properties": {
+          "baseVersion": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Baseversion"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "title": "UpdateDraftRequest",
+        "type": "object"
+      },
+      "UpdateFactRequest": {
+        "properties": {
+          "excluded": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Excluded"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "title": "UpdateFactRequest",
+        "type": "object"
+      },
+      "UpdateFactResponse": {
+        "properties": {
+          "fact": {
+            "$ref": "#/components/schemas/ProfileFactOut"
+          },
+          "impact": {
+            "items": {
+              "$ref": "#/components/schemas/ImpactEntryOut"
+            },
+            "title": "Impact",
+            "type": "array"
+          },
+          "revisions": {
+            "items": {
+              "$ref": "#/components/schemas/RevisionOut"
+            },
+            "title": "Revisions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "fact",
+          "revisions",
+          "impact"
+        ],
+        "title": "UpdateFactResponse",
+        "type": "object"
+      },
+      "UpdateMissionRequest": {
+        "properties": {
+          "criteria": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criteria"
+          },
+          "monitoring": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Monitoring"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "maxLength": 4000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objective"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 140,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "UpdateMissionRequest",
+        "type": "object"
+      },
+      "UpdateMonitorTargetRequest": {
+        "properties": {
+          "frequency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frequency"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "title": "UpdateMonitorTargetRequest",
+        "type": "object"
+      },
+      "UpdateProfileRequest": {
+        "properties": {
+          "consent": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Consent"
+          },
+          "fullName": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fullname"
+          },
+          "preferences": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferences"
+          }
+        },
+        "title": "UpdateProfileRequest",
+        "type": "object"
+      },
+      "UpdateProtectedProfileRequest": {
+        "properties": {
+          "dateOfBirth": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dateofbirth"
+          },
+          "dateOfBirthStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dateofbirthstatus"
+          },
+          "excludedFromAiContext": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Excludedfromaicontext"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "title": "UpdateProtectedProfileRequest",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VersionOut": {
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "content",
+          "createdAt",
+          "source"
+        ],
+        "title": "VersionOut",
+        "type": "object"
+      },
+      "app__api__onboarding__DraftOut": {
+        "properties": {
+          "answers": {
+            "items": {
+              "$ref": "#/components/schemas/AnswerOut"
+            },
+            "title": "Answers",
+            "type": "array"
+          },
+          "completed": {
+            "default": false,
+            "title": "Completed",
+            "type": "boolean"
+          },
+          "currentQuestionId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currentquestionid"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "intent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intent"
+          },
+          "referenceUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referenceurl"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "uploadedDocumentConsent": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uploadeddocumentconsent"
+          },
+          "uploadedDocumentId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uploadeddocumentid"
+          },
+          "uploadedDocumentStatus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uploadeddocumentstatus"
+          }
+        },
+        "required": [
+          "id",
+          "updatedAt"
+        ],
+        "title": "DraftOut",
+        "type": "object"
+      },
+      "app__api__workspace__DraftOut": {
+        "properties": {
+          "applicationId": {
+            "title": "Applicationid",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "currentVersion": {
+            "title": "Currentversion",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "opportunityId": {
+            "title": "Opportunityid",
+            "type": "string"
+          },
+          "pendingProposal": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProposalOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "versions": {
+            "items": {
+              "$ref": "#/components/schemas/VersionOut"
+            },
+            "title": "Versions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "applicationId",
+          "opportunityId",
+          "type",
+          "title",
+          "currentVersion",
+          "content",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "DraftOut",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "\nThe Oppulse AI backend: the versioned HTTP contract the frontend speaks, the\nagent that researches opportunities and explains what it found, and the\ndeterministic services that decide what the agent may conclude.\n",
+    "title": "Oppulse AI",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/alerts": {
+      "get": {
+        "description": "The alerts in the student's app.",
+        "operationId": "list_alerts_api_v1_alerts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Alerts",
+        "tags": [
+          "monitoring"
+        ]
+      }
+    },
+    "/api/v1/alerts/{id}/read": {
+      "post": {
+        "description": "Marks an alert as read.",
+        "operationId": "read_alert_api_v1_alerts__id__read_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Alert",
+        "tags": [
+          "monitoring"
+        ]
+      }
+    },
+    "/api/v1/alerts/{id}/retry": {
+      "post": {
+        "description": "Retries a delivery.\n\nOnly the in-app channel is active, and an in-app alert cannot fail its\nown delivery, so there is nothing to retry. The endpoint says so rather\nthan pretending to have sent something.",
+        "operationId": "retry_alert_api_v1_alerts__id__retry_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Retry Alert",
+        "tags": [
+          "monitoring"
+        ]
+      }
+    },
+    "/api/v1/applications": {
+      "get": {
+        "description": "The caller's applications.",
+        "operationId": "list_applications_api_v1_applications_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Applications",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/applications/{id}": {
+      "get": {
+        "description": "One application.",
+        "operationId": "read_application_api_v1_applications__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Application",
+        "tags": [
+          "workspace"
+        ]
+      },
+      "patch": {
+        "description": "Changes an application's status, its notes or its tasks.",
+        "operationId": "update_application_api_v1_applications__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateApplicationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Application",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/applications/{id}/drafts": {
+      "get": {
+        "description": "The documents prepared for one application.",
+        "operationId": "list_application_drafts_api_v1_applications__id__drafts_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Application Drafts",
+        "tags": [
+          "workspace"
+        ]
+      },
+      "post": {
+        "description": "Starts a document for an application.\n\nIt is a starting point grounded in the confirmed facts, and it is never\napplied without the student.",
+        "operationId": "create_application_draft_api_v1_applications__id__drafts_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDraftRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__workspace__DraftOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Application Draft",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/assistant/actions": {
+      "post": {
+        "description": "Runs an action the assistant offered.\n\nEverything that creates state is confirmed by the student first: the\ninterface asks, and only then does this endpoint run.",
+        "operationId": "run_action_api_v1_assistant_actions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResponseOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Run Action",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/v1/assistant/history": {
+      "get": {
+        "description": "The conversation.\n\nThe frontend keeps a copy so a refresh is instant; this is the copy that\ndecides what a turn may use.",
+        "operationId": "read_history_api_v1_assistant_history_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read History",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/v1/assistant/messages": {
+      "post": {
+        "description": "Asks the assistant something.\n\nThe context is assembled here, and only here: the client says *what* it\nselected, and the service decides what may be read.",
+        "operationId": "send_message_api_v1_assistant_messages_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send Message",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/v1/auth/email/verification": {
+      "post": {
+        "description": "Sends a verification link.\n\nThe token comes back in the response because the prototype cannot\ndeliver email yet. In the backend it only ever travels in the message.",
+        "operationId": "request_email_verification_api_v1_auth_email_verification_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailVerificationLink"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Request Email Verification",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/email/verification/confirm": {
+      "post": {
+        "description": "Confirms the address.\n\nOnly the backend can set this. The client cannot ask for a verified\naddress, and no sensitive alert is sent to an unverified one.",
+        "operationId": "confirm_email_verification_api_v1_auth_email_verification_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailVerificationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Confirm Email Verification",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password/forgot": {
+      "post": {
+        "description": "Asks for a password reset link.\n\nThe answer is the same whether or not the address has an account: the\nendpoint must never confirm who has one, or it becomes a way of\ndiscovering who is using the product.",
+        "operationId": "forgot_password_api_v1_auth_password_forgot_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordForgotRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordForgotResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Forgot Password",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password/reset": {
+      "post": {
+        "description": "Sets a new password with a reset token.\n\nThe token is single-use, and every session of that account is revoked:\na password reset is how an account is recovered, so the old sessions\nmust not survive it.",
+        "operationId": "reset_password_api_v1_auth_password_reset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordResetRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordResetResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reset Password",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/session": {
+      "get": {
+        "description": "The current session.\n\nWhen the access token has expired but the refresh token is still good,\nthe session is renewed here — which is why the frontend's contract\ncarries no token at all: it asks for the session and gets one.",
+        "operationId": "read_session_api_v1_auth_session_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Session",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/sign-in": {
+      "post": {
+        "description": "Signs a student in.\n\nThe failure message is the same whether the address is unknown or the\npassword is wrong: the endpoint must not confirm which addresses have\naccounts.",
+        "operationId": "sign_in_api_v1_auth_sign_in_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Sign In",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/sign-out": {
+      "post": {
+        "description": "Signs the student out, everywhere.",
+        "operationId": "sign_out_api_v1_auth_sign_out_post",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Sign Out",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/sign-up": {
+      "post": {
+        "description": "Creates an account.",
+        "operationId": "sign_up_api_v1_auth_sign_up_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignUpResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Sign Up",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/capabilities": {
+      "get": {
+        "description": "What is connected, per service.",
+        "operationId": "capabilities_api_v1_capabilities_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilityStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Capabilities",
+        "tags": [
+          "capabilities"
+        ]
+      }
+    },
+    "/api/v1/documents": {
+      "get": {
+        "description": "The caller's documents.",
+        "operationId": "list_documents_api_v1_documents_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Documents",
+        "tags": [
+          "documents"
+        ]
+      },
+      "post": {
+        "description": "Uploads a document.\n\nThe file is read here, on our own machine. Only the text of the pages we\ncould read is ever sent to a model provider, and the pages we could not\nread are named.",
+        "operationId": "upload_document_api_v1_documents_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload Document",
+        "tags": [
+          "documents"
+        ]
+      }
+    },
+    "/api/v1/documents/{id}": {
+      "delete": {
+        "description": "Deletes a document.\n\nThe facts extracted from it are withdrawn, unless the student confirmed\nthem separately.",
+        "operationId": "delete_document_api_v1_documents__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Document",
+        "tags": [
+          "documents"
+        ]
+      },
+      "get": {
+        "description": "One document.",
+        "operationId": "read_document_api_v1_documents__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Document",
+        "tags": [
+          "documents"
+        ]
+      },
+      "patch": {
+        "description": "Changes the consent, or the category.\n\nThe consent is the student's decision about whether this document may be\nused as AI context, and it is revocable at any time.",
+        "operationId": "update_document_api_v1_documents__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDocumentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Document",
+        "tags": [
+          "documents"
+        ]
+      }
+    },
+    "/api/v1/documents/{id}/content": {
+      "get": {
+        "description": "Downloads the caller's private document bytes.",
+        "operationId": "download_document_api_v1_documents__id__content_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download Document",
+        "tags": [
+          "documents"
+        ]
+      }
+    },
+    "/api/v1/drafts/{id}": {
+      "get": {
+        "description": "One document.",
+        "operationId": "read_draft_api_v1_drafts__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__workspace__DraftOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Draft",
+        "tags": [
+          "workspace"
+        ]
+      },
+      "patch": {
+        "description": "Saves an edit as a new version.\n\nThe previous version stays recoverable, and a stale edit is refused\nrather than silently overwriting someone else's work.",
+        "operationId": "update_draft_api_v1_drafts__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDraftRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__workspace__DraftOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Draft",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/drafts/{id}/proposals": {
+      "post": {
+        "description": "Asks the assistant to propose a revision.\n\nThe proposal is a *proposal*: it does not touch the document, and the\nstudent reviews the diff before accepting it.",
+        "operationId": "create_proposal_api_v1_drafts__id__proposals_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProposalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProposalOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Proposal",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/drafts/{id}/proposals/{proposalId}/accept": {
+      "post": {
+        "description": "Accepts a proposal, as a new version.\n\nThe previous version stays recoverable, and the acceptance is recorded.",
+        "operationId": "accept_proposal_api_v1_drafts__id__proposals__proposalId__accept_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "proposalId",
+            "required": true,
+            "schema": {
+              "title": "Proposalid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__workspace__DraftOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Accept Proposal",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/drafts/{id}/proposals/{proposalId}/reject": {
+      "post": {
+        "description": "Discards a proposal. The document is unchanged.",
+        "operationId": "reject_proposal_api_v1_drafts__id__proposals__proposalId__reject_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "proposalId",
+            "required": true,
+            "schema": {
+              "title": "Proposalid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__workspace__DraftOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reject Proposal",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/drafts/{id}/versions": {
+      "get": {
+        "description": "Every version of a document, oldest first.",
+        "operationId": "list_draft_versions_api_v1_drafts__id__versions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/VersionOut"
+                  },
+                  "title": "Response List Draft Versions Api V1 Drafts  Id  Versions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Draft Versions",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/missions": {
+      "get": {
+        "description": "The caller's missions.",
+        "operationId": "list_missions_api_v1_missions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Missions",
+        "tags": [
+          "missions"
+        ]
+      },
+      "post": {
+        "description": "Creates a mission.",
+        "operationId": "create_mission_api_v1_missions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Mission",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/api/v1/missions/{id}": {
+      "get": {
+        "description": "One mission.",
+        "operationId": "read_mission_api_v1_missions__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Mission",
+        "tags": [
+          "missions"
+        ]
+      },
+      "patch": {
+        "description": "Changes a mission.",
+        "operationId": "update_mission_api_v1_missions__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Mission",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/api/v1/missions/{id}/runs": {
+      "post": {
+        "description": "Queues a run.\n\nA run is a row with a lease, so a refresh neither loses it nor starts a\nsecond one: an unfinished run for this mission is resumed instead. With\nan `Idempotency-Key`, the same key always names the same run — even\nafter that run finished — because the key is stored on the run itself\nand the unique constraint makes the claim atomic.",
+        "operationId": "start_run_api_v1_missions__id__runs_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunStartOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start Run",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/api/v1/monitor-events": {
+      "get": {
+        "description": "The changes the agent noticed.",
+        "operationId": "list_monitor_events_api_v1_monitor_events_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorEventListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Monitor Events",
+        "tags": [
+          "monitoring"
+        ]
+      }
+    },
+    "/api/v1/monitor-targets": {
+      "get": {
+        "description": "The sources the student is watching.",
+        "operationId": "list_monitor_targets_api_v1_monitor_targets_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorTargetListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Monitor Targets",
+        "tags": [
+          "monitoring"
+        ]
+      },
+      "post": {
+        "description": "Starts watching a source.",
+        "operationId": "create_monitor_target_api_v1_monitor_targets_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMonitorTargetRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorTargetOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Monitor Target",
+        "tags": [
+          "monitoring"
+        ]
+      }
+    },
+    "/api/v1/monitor-targets/{id}": {
+      "patch": {
+        "description": "Pauses, resumes or re-times a watched source.",
+        "operationId": "update_monitor_target_api_v1_monitor_targets__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMonitorTargetRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorTargetOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Monitor Target",
+        "tags": [
+          "monitoring"
+        ]
+      }
+    },
+    "/api/v1/next-action": {
+      "get": {
+        "description": "The one action the student should take next.\n\nIt is derived, not authored: the same inputs always produce the same\nrecommendation, and it is always tied to a real blocker.",
+        "operationId": "read_next_action_api_v1_next_action_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NextActionResponseOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Next Action",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/onboarding/complete": {
+      "post": {
+        "description": "Turns the answers into a mission, and starts the run.\n\nThe date of birth goes to the **protected** section — never into a fact,\nnever into the mission — because it is used for one thing only.",
+        "operationId": "complete_onboarding_api_v1_onboarding_complete_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompleteResponseOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Complete Onboarding",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/api/v1/onboarding/draft": {
+      "get": {
+        "description": "The student's draft.",
+        "operationId": "read_draft_api_v1_onboarding_draft_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftResponseOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Draft",
+        "tags": [
+          "onboarding"
+        ]
+      },
+      "put": {
+        "description": "Saves the draft.\n\nEvery answer is saved as it is given, so a refresh — or a lost\nconnection — never costs the student their answers.",
+        "operationId": "save_draft_api_v1_onboarding_draft_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftOut-Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftResponseOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save Draft",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/api/v1/opportunities": {
+      "get": {
+        "description": "The opportunities, ranked against the confirmed profile.",
+        "operationId": "list_opportunities_api_v1_opportunities_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Opportunities",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/opportunities/analyze": {
+      "post": {
+        "description": "Analyses a link without saving a mission first.\n\nIt starts a research run, and the run is durable: the browser may close\nand the run continues.",
+        "operationId": "analyze_opportunity_api_v1_opportunities_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Analyze Opportunity Api V1 Opportunities Analyze Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Analyze Opportunity",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/opportunities/compare": {
+      "post": {
+        "description": "Compares two to four opportunities side by side.\n\nIt is a read of what the agent already found: the same eligibility,\nfunding and deadline, with the differences named. It never invents a\nranking the evidence does not support.",
+        "operationId": "compare_opportunities_api_v1_opportunities_compare_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompareOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Compare Opportunities",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/opportunities/{id}": {
+      "get": {
+        "description": "One opportunity, with its evidence and its sources.",
+        "operationId": "read_opportunity_api_v1_opportunities__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Opportunity",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/opportunities/{id}/applications": {
+      "post": {
+        "description": "Turns a saved opportunity into a workspace.\n\nThe checklist is drawn from the call, and it is the same checklist the\nassistant offers — so the student sees one list, not two.",
+        "operationId": "create_application_api_v1_opportunities__id__applications_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Create Application Api V1 Opportunities  Id  Applications Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Application",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/opportunities/{id}/dismiss": {
+      "post": {
+        "description": "Hides an opportunity from the student's list.",
+        "operationId": "dismiss_opportunity_api_v1_opportunities__id__dismiss_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DismissRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Dismiss Opportunity",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/opportunities/{id}/save": {
+      "post": {
+        "description": "Saves an opportunity to the student's plan.",
+        "operationId": "save_opportunity_api_v1_opportunities__id__save_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save Opportunity",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/profile": {
+      "get": {
+        "description": "The caller's profile.",
+        "operationId": "read_profile_api_v1_profile_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Profile",
+        "tags": [
+          "profile"
+        ]
+      },
+      "patch": {
+        "description": "Changes the name, the preferences or the consent.",
+        "operationId": "update_profile_api_v1_profile_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Profile",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/v1/profile/facts/{id}": {
+      "patch": {
+        "description": "Confirms, corrects, rejects or excludes one fact.\n\nIt is not just a write: it changes what the agent can conclude, so every\nopportunity is re-evaluated and the history is recorded.",
+        "operationId": "update_fact_api_v1_profile_facts__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFactRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateFactResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Fact",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/v1/profile/impact": {
+      "get": {
+        "description": "What each fact is holding up.",
+        "operationId": "read_impact_api_v1_profile_impact_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImpactOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Impact",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/v1/profile/protected": {
+      "get": {
+        "description": "The protected section.\n\nIt is a separate endpoint on purpose: a routine profile read never\nreturns the date of birth, so it cannot leak into a list view, a log or\na prompt.",
+        "operationId": "read_protected_profile_api_v1_profile_protected_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtectedProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Protected Profile",
+        "tags": [
+          "profile"
+        ]
+      },
+      "patch": {
+        "description": "Changes the date of birth, or withdraws it.\n\nChanging it re-evaluates every opportunity, because the age\nrequirements change with it.",
+        "operationId": "update_protected_profile_api_v1_profile_protected_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProtectedProfileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtectedProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Protected Profile",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/v1/profile/revisions": {
+      "get": {
+        "description": "Every change the student made, newest first.",
+        "operationId": "read_revisions_api_v1_profile_revisions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Revisions",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/v1/profile/snapshots/latest": {
+      "get": {
+        "description": "The profile as it was when the last run started.",
+        "operationId": "read_latest_snapshot_api_v1_profile_snapshots_latest_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read Latest Snapshot",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/v1/runs/{id}": {
+      "get": {
+        "description": "One run.",
+        "operationId": "read_run_api_v1_runs__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Run",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/api/v1/runs/{id}/cancel": {
+      "post": {
+        "description": "Cancels a run.\n\nThe run stops at its next checkpoint, and it is not deleted: the student\ncan see what it did before it stopped.",
+        "operationId": "cancel_run_api_v1_runs__id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Run",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/api/v1/runs/{id}/events": {
+      "get": {
+        "description": "The factual events of a run.\n\nWhat happened, the object it happened to, and when. Never the model's\ninternal reasoning.",
+        "operationId": "read_run_events_api_v1_runs__id__events_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunEventListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Run Events",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/api/v1/runs/{id}/pause": {
+      "post": {
+        "description": "Pauses a run.\n\nThe worker stops at its next checkpoint and keeps everything it has\nalready done; the run stays on the row, so resuming continues from the\nstage it paused on rather than starting again.",
+        "operationId": "pause_run_api_v1_runs__id__pause_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Pause Run",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/api/v1/runs/{id}/resume": {
+      "post": {
+        "description": "Re-queues a paused run.\n\nNothing is re-done: the worker picks the run up and enters at the\nstage the checkpoint names.",
+        "operationId": "resume_run_api_v1_runs__id__resume_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Resume Run",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/api/v1/runs/{id}/retry": {
+      "post": {
+        "description": "Re-queues a run that failed or stopped short.\n\nOnly the stage that failed is redone: the checkpoint holds what the\nearlier stages produced, and their events are already on the timeline.",
+        "operationId": "retry_run_api_v1_runs__id__retry_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Retry Run",
+        "tags": [
+          "missions"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Liveness.\n\nIt says \"alive\" and nothing more. A health check that leaks a version or\na dependency's state is a reconnaissance gift.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Health Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "description": "Readiness.\n\nThe body states which dependencies are ready, so a deployment can be\ndebugged without a log dive. It never states *why* one is not ready in\nterms that could leak a connection string or a key.",
+        "operationId": "ready_health_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Ready Health Ready Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  }
+}

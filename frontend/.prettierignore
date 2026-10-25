@@ -1,0 +1,9 @@
+dist
+coverage
+node_modules
+public/mockServiceWorker.js
+*.local
+test-results
+playwright-report
+blob-report
+docs/screenshots

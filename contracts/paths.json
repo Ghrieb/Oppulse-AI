@@ -1,0 +1,649 @@
+{
+  "version": 1,
+  "note": "The HTTP contract, read out of the frontend's MSW handlers: the routes the backend must serve, and each route's coverage in the frontend — the files that call it, or a deferred marker with the reason nothing calls it yet.",
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/v1/alerts",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/alerts/:id/read",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/alerts/:id/retry",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/applications",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/applications/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/applications/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/applications/:id/drafts",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/applications/:id/drafts",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/assistant/actions",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "app/agent-provider.tsx"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/assistant/history",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "app/agent-provider.tsx"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/assistant/messages",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "app/agent-provider.tsx"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/email/verification",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/email/verification/confirm",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/password/forgot",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "No password-recovery pages exist in the router."
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/password/reset",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "No password-recovery pages exist in the router."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/session",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/sign-in",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "features/auth/AuthPages.tsx",
+          "lib/hooks/use-start-onboarding.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/sign-out",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "The shell's Sign out navigates to the sign-in page without calling the API."
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/sign-up",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "features/auth/AuthPages.tsx"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/capabilities",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/hooks/use-capability-status.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/documents",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/documents",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/documents/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/documents/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/documents/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/documents/:id/content",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "The document library exposes metadata and consent in the current student flow; download is reserved for the document detail action."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/drafts/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/drafts/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drafts/:id/proposals",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drafts/:id/proposals/:proposalId/accept",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drafts/:id/proposals/:proposalId/reject",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/drafts/:id/versions",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "The studio reads draft.versions from the draft detail response instead."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/missions",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/missions",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "Missions are created through POST /onboarding/complete; nothing posts a bare one."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/missions/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/missions/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/missions/:id/runs",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/monitor-events",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/monitor-targets",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/monitor-targets",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/monitor-targets/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/next-action",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/onboarding/complete",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/onboarding/draft",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/onboarding/draft",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/opportunities",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/opportunities/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/opportunities/:id/applications",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/opportunities/:id/dismiss",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/opportunities/:id/save",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/opportunities/analyze",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "app/agent-provider.tsx"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/opportunities/compare",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "Reserved for the assistant's action pipeline; no page posts it."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profile",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/profile",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "features/settings/SettingsPage.tsx"
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/profile/facts/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profile/impact",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profile/protected",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/profile/protected",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profile/revisions",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profile/snapshots/latest",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "Snapshots are taken by the backend but no UI ever reads one back."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/runs/:id",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/runs/:id/cancel",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/runs/:id/events",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/runs/:id/pause",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/runs/:id/resume",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/runs/:id/retry",
+      "coverage": {
+        "kind": "deferred",
+        "reason": "The run-control UI can pause, resume and cancel but never re-runs; the endpoint is served and mocked."
+      }
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+/**
+ * Oppulse AI — design tokens
+ *
+ * Source of truth: `archive/opPulse-ai-frontend-ui-ux-specification.md` §4.2–4.4.
+ * The palette below is reproduced verbatim from the specification. Components
+ * must reference these semantic tokens (e.g. `bg-surface`, `text-text-muted`)
+ * and never raw hex values.
+ *
+ * Tailwind v4 generates utilities from the `--color-*`, `--text-*`, `--radius-*`
+ * and `--font-*` namespaces declared in `@theme`.
+ */
+
+@theme {
+  /* ---------------------------------------------------------------------
+   * Colour tokens (spec §4.2)
+   * ------------------------------------------------------------------ */
+  --color-sidebar: #0b1730;
+  --color-sidebar-raised: #14264a;
+  --color-background: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #eef3fb;
+  --color-border: #dce4f0;
+  --color-text: #12213d;
+  /* Darkened from #60708a: the old value sat at 4.53:1 on the canvas, which
+   * passes by 0.03 and leaves no headroom. This is 5.60:1 on #f5f7fb and
+   * 5.99:1 on white. */
+  --color-text-muted: #55637c;
+  --color-primary: #5b4bf2;
+  --color-primary-hover: #4939db;
+  --color-info: #2f73c9;
+  --color-success: #16845a;
+  --color-success-surface: #e8f7ef;
+  --color-warning: #a96800;
+  --color-warning-surface: #fff5dd;
+  --color-danger: #c13c48;
+  --color-danger-surface: #ffedf0;
+  --color-focus-ring: #7d6cff;
+
+  /* ---------------------------------------------------------------------
+   * Typography (spec §4.3)
+   * ------------------------------------------------------------------ */
+  --font-sans:
+    'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, monospace;
+
+  --text-page-title: 2rem; /* 32px desktop page title */
+  --text-page-title--line-height: 2.25rem;
+  --text-section: 1.375rem; /* 22px section heading */
+  --text-section--line-height: 1.75rem;
+  --text-card-title: 1.125rem; /* 18px card title */
+  --text-card-title--line-height: 1.5rem;
+  --text-body: 1rem; /* 16px body, 1.5 line height (spec §4.3) */
+  --text-body--line-height: 1.5;
+  --text-meta: 0.84375rem; /* 13.5px metadata - never smaller (spec §4.3) */
+  --text-meta--line-height: 1.4;
+
+  /* ---------------------------------------------------------------------
+   * Shape and spacing (spec §4.4)
+   * ------------------------------------------------------------------ */
+  --radius-card: 0.875rem; /* 14px — between the 12–16px card range */
+  --radius-button: 0.5rem; /* 8px — between the 8–10px button range */
+  --radius-panel: 1rem; /* 16px */
+
+  /* Elevation is used sparingly: borders carry hierarchy before shadows. */
+  --shadow-panel: 0 1px 2px 0 rgb(11 23 48 / 0.04), 0 8px 24px -12px rgb(11 23 48 / 0.12);
+  --shadow-popover: 0 12px 32px -8px rgb(11 23 48 / 0.18);
+  --shadow-focus: 0 0 0 3px rgb(125 108 255 / 0.35);
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 160" role="img" aria-labelledby="title">
+  <title>Oppulse AI</title>
+  <defs>
+    <linearGradient id="oppulse-wordmark-gradient" x1="30" y1="130" x2="170" y2="30" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B4BF2"/>
+      <stop offset="1" stop-color="#16B8A6"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8 8) scale(.56)">
+    <path fill="url(#oppulse-wordmark-gradient)" d="M128 16c61.856 0 112 50.144 112 112 0 61.856-50.144 112-112 112S16 189.856 16 128 66.144 16 128 16Zm0 30c-45.297 0-82 36.703-82 82s36.703 82 82 82 82-36.703 82-82-36.703-82-82-82Z"/>
+    <path fill="url(#oppulse-wordmark-gradient)" d="m128 64 66 64-66 64v-38h-38v-52h38V64Z"/>
+    <circle cx="128" cy="128" r="15" fill="#fff"/>
+  </g>
+  <text x="170" y="104" fill="#0B1730" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="700" letter-spacing="-3">Oppulse</text>
+  <text x="525" y="104" fill="#5B4BF2" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="700" letter-spacing="-3">AI</text>
+</svg>

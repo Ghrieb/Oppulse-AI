@@ -1,0 +1,44 @@
+name: Backend
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install
+        working-directory: backend
+        run: uv sync --all-extras
+
+      - name: Lint
+        working-directory: backend
+        run: uv run ruff check .
+
+      - name: Formatting
+        working-directory: backend
+        run: uv run ruff format --check .
+
+      - name: Types
+        working-directory: backend
+        run: uv run mypy app
+
+      - name: Tests, including the evaluation harness
+        working-directory: backend
+        run: uv run pytest
+
+      - name: The harness must not have been weakened
+        working-directory: backend
+        run: uv run pytest tests/test_evaluation_harness.py tests/test_ai_boundary.py -q

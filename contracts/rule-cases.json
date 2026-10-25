@@ -1,0 +1,814 @@
+{
+  "version": 1,
+  "note": "Shared cases for the rule engine. The inputs are hand-authored; the expectations are generated from the TypeScript implementation (the reference) and asserted by BOTH the TypeScript test and the Python test. A divergence fails both suites, in CI, on the case that disagrees. Regenerate with: npm run cases:update",
+  "cases": [
+    {
+      "name": "at_least is met by a confirmed fact",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000004",
+          "label": "English proficiency",
+          "kind": "language",
+          "status": "unresolved",
+          "sourceClause": "A minimum of B2 English is required for the research group.",
+          "evidenceIds": [],
+          "profileFactKey": "english_level",
+          "check": {
+            "factKey": "english_level",
+            "kind": "at_least",
+            "value": 6.5,
+            "unit": "IELTS band"
+          },
+          "ageRule": null,
+          "blocking": true,
+          "explanation": "Your IELTS result is still awaiting confirmation."
+        },
+        "profile": {
+          "facts": [
+            {
+              "key": "english_level",
+              "label": "English (CEFR)",
+              "value": "B2 (IELTS 6.5)",
+              "numericValue": 6.5,
+              "code": "B2",
+              "status": "confirmed",
+              "excluded": false,
+              "source": {
+                "documentName": "IELTS_2025.pdf",
+                "excerpt": "Overall band score 6.5",
+                "pageReference": "p. 1",
+                "section": "Test results"
+              }
+            }
+          ]
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "likely",
+        "explanation": "Your confirmed english (cefr) — B2 (IELTS 6.5) — satisfies this requirement."
+      }
+    },
+    {
+      "name": "at_least is not met by a confirmed fact",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000004",
+          "label": "English proficiency",
+          "kind": "language",
+          "status": "unresolved",
+          "sourceClause": "A minimum of B2 English is required for the research group.",
+          "evidenceIds": [],
+          "profileFactKey": "english_level",
+          "check": {
+            "factKey": "english_level",
+            "kind": "at_least",
+            "value": 6.5,
+            "unit": "IELTS band"
+          },
+          "ageRule": null,
+          "blocking": true,
+          "explanation": "Your IELTS result is still awaiting confirmation."
+        },
+        "profile": {
+          "facts": [
+            {
+              "key": "english_level",
+              "label": "English (CEFR)",
+              "value": "B1 (IELTS 5.5)",
+              "numericValue": 5.5,
+              "code": "B1",
+              "status": "confirmed",
+              "excluded": false,
+              "source": null
+            }
+          ]
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "ineligible",
+        "explanation": "Your confirmed english (cefr) — B1 (IELTS 5.5) — does not meet this requirement."
+      }
+    },
+    {
+      "name": "an unconfirmed fact leaves the requirement unresolved",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000004",
+          "label": "English proficiency",
+          "kind": "language",
+          "status": "unresolved",
+          "sourceClause": "A minimum of B2 English is required for the research group.",
+          "evidenceIds": [],
+          "profileFactKey": "english_level",
+          "check": {
+            "factKey": "english_level",
+            "kind": "at_least",
+            "value": 6.5,
+            "unit": "IELTS band"
+          },
+          "ageRule": null,
+          "blocking": true,
+          "explanation": "Your IELTS result is still awaiting confirmation."
+        },
+        "profile": {
+          "facts": [
+            {
+              "key": "english_level",
+              "label": "English (CEFR)",
+              "value": "B2 (IELTS 6.5)",
+              "numericValue": 6.5,
+              "code": "B2",
+              "status": "proposed",
+              "excluded": false,
+              "source": {
+                "documentName": "IELTS_2025.pdf",
+                "excerpt": "Overall band score 6.5",
+                "pageReference": "p. 1",
+                "section": "Test results"
+              }
+            }
+          ]
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "unresolved",
+        "explanation": "Your english (cefr) was extracted from IELTS_2025.pdf but you have not confirmed it, so this requirement stays unresolved."
+      }
+    },
+    {
+      "name": "an excluded fact leaves the requirement unresolved",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000003",
+          "label": "Nationality",
+          "kind": "nationality",
+          "status": "unresolved",
+          "sourceClause": "Open to nationals of listed countries.",
+          "evidenceIds": [],
+          "profileFactKey": "nationality",
+          "check": {
+            "factKey": "nationality",
+            "kind": "in_list",
+            "values": [
+              "DZ",
+              "MA",
+              "TN"
+            ]
+          },
+          "ageRule": null,
+          "blocking": true,
+          "explanation": "Not evaluated yet."
+        },
+        "profile": {
+          "facts": [
+            {
+              "key": "nationality",
+              "label": "Nationality",
+              "value": "Algeria",
+              "numericValue": null,
+              "code": "DZ",
+              "status": "confirmed",
+              "excluded": true,
+              "source": null
+            }
+          ]
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "unresolved",
+        "explanation": "You excluded your nationality from AI use, so this requirement is not being checked."
+      }
+    },
+    {
+      "name": "a missing fact leaves the requirement unresolved",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000001",
+          "label": "Enrolled in a Master's programme",
+          "kind": "degree",
+          "status": "unresolved",
+          "sourceClause": "Enrolled in a Master's programme.",
+          "evidenceIds": [],
+          "profileFactKey": "degree_level",
+          "check": {
+            "factKey": "degree_level",
+            "kind": "at_least",
+            "value": 2,
+            "unit": "degree level"
+          },
+          "ageRule": null,
+          "blocking": true,
+          "explanation": "Not evaluated yet."
+        },
+        "profile": {
+          "facts": []
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "unresolved",
+        "explanation": "Oppulse has no enrolled in a master's programme for you yet, so it cannot check this requirement."
+      }
+    },
+    {
+      "name": "in_list is met by a confirmed fact",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000003",
+          "label": "Nationality",
+          "kind": "nationality",
+          "status": "unresolved",
+          "sourceClause": "Open to nationals of listed countries.",
+          "evidenceIds": [],
+          "profileFactKey": "nationality",
+          "check": {
+            "factKey": "nationality",
+            "kind": "in_list",
+            "values": [
+              "DZ",
+              "MA",
+              "TN"
+            ]
+          },
+          "ageRule": null,
+          "blocking": true,
+          "explanation": "Not evaluated yet."
+        },
+        "profile": {
+          "facts": [
+            {
+              "key": "nationality",
+              "label": "Nationality",
+              "value": "Algeria",
+              "numericValue": null,
+              "code": "DZ",
+              "status": "confirmed",
+              "excluded": false,
+              "source": null
+            }
+          ]
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "likely",
+        "explanation": "Your confirmed nationality — Algeria — satisfies this requirement."
+      }
+    },
+    {
+      "name": "present is met by a confirmed fact",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000002",
+          "label": "Research field",
+          "kind": "field",
+          "status": "unresolved",
+          "sourceClause": "Applicants must state a research area.",
+          "evidenceIds": [],
+          "profileFactKey": "field",
+          "check": {
+            "factKey": "field",
+            "kind": "present"
+          },
+          "ageRule": null,
+          "blocking": false,
+          "explanation": "Not evaluated yet."
+        },
+        "profile": {
+          "facts": [
+            {
+              "key": "field",
+              "label": "Field of study",
+              "value": "Computational biology",
+              "numericValue": null,
+              "code": null,
+              "status": "confirmed",
+              "excluded": false,
+              "source": null
+            }
+          ]
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "likely",
+        "explanation": "Your confirmed field of study — Computational biology — satisfies this requirement."
+      }
+    },
+    {
+      "name": "a requirement with no check keeps the agent's status",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000006",
+          "label": "Programme requires a visa sponsor",
+          "kind": "other",
+          "status": "likely",
+          "sourceClause": "The programme does not sponsor visas.",
+          "evidenceIds": [],
+          "profileFactKey": null,
+          "check": null,
+          "ageRule": null,
+          "blocking": false,
+          "explanation": "The published restriction is that applicants who need a visa sponsor are not accepted."
+        },
+        "profile": {
+          "facts": []
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "likely",
+        "explanation": "The published restriction is that applicants who need a visa sponsor are not accepted."
+      }
+    },
+    {
+      "name": "an age requirement is satisfied by a confirmed date",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000017",
+          "label": "Participants must be 18 or over at the start of the programme",
+          "kind": "age",
+          "status": "unresolved",
+          "sourceClause": "The summer school is open to participants aged 18 and over.",
+          "evidenceIds": [],
+          "profileFactKey": null,
+          "check": null,
+          "ageRule": {
+            "kind": "min_age",
+            "minAge": 18,
+            "maxAge": null,
+            "eligibilityDate": "2027-07-01",
+            "sourceTitle": "Meridian AI Summer School 2027 — official programme page",
+            "sourceUrl": "https://meridian-ai.eu/summer-school",
+            "verification": "verified"
+          },
+          "blocking": false,
+          "explanation": "Not evaluated yet."
+        },
+        "profile": {
+          "facts": []
+        },
+        "protectedProfile": {
+          "dateOfBirth": {
+            "value": "2004-03-12",
+            "status": "provided",
+            "source": "onboarding",
+            "updatedAt": "2026-10-19T09:00:00.000Z",
+            "excludedFromAiContext": false
+          }
+        }
+      },
+      "expected": {
+        "status": "likely",
+        "explanation": "The age requirement appears satisfied. The rule is from Meridian AI Summer School 2027 — official programme page, measured on 2027-07-01."
+      }
+    },
+    {
+      "name": "an age requirement is unresolved without a date",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000017",
+          "label": "Participants must be 18 or over at the start of the programme",
+          "kind": "age",
+          "status": "unresolved",
+          "sourceClause": "The summer school is open to participants aged 18 and over.",
+          "evidenceIds": [],
+          "profileFactKey": null,
+          "check": null,
+          "ageRule": {
+            "kind": "min_age",
+            "minAge": 18,
+            "maxAge": null,
+            "eligibilityDate": "2027-07-01",
+            "sourceTitle": "Meridian AI Summer School 2027 — official programme page",
+            "sourceUrl": "https://meridian-ai.eu/summer-school",
+            "verification": "verified"
+          },
+          "blocking": false,
+          "explanation": "Not evaluated yet."
+        },
+        "profile": {
+          "facts": []
+        },
+        "protectedProfile": null
+      },
+      "expected": {
+        "status": "unresolved",
+        "explanation": "Your date of birth is not available, so this age requirement stays unresolved. You can add it in your passport."
+      }
+    },
+    {
+      "name": "an age requirement is unresolved when the date is excluded",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000017",
+          "label": "Participants must be 18 or over at the start of the programme",
+          "kind": "age",
+          "status": "unresolved",
+          "sourceClause": "The summer school is open to participants aged 18 and over.",
+          "evidenceIds": [],
+          "profileFactKey": null,
+          "check": null,
+          "ageRule": {
+            "kind": "min_age",
+            "minAge": 18,
+            "maxAge": null,
+            "eligibilityDate": "2027-07-01",
+            "sourceTitle": "Meridian AI Summer School 2027 — official programme page",
+            "sourceUrl": "https://meridian-ai.eu/summer-school",
+            "verification": "verified"
+          },
+          "blocking": false,
+          "explanation": "Not evaluated yet."
+        },
+        "profile": {
+          "facts": []
+        },
+        "protectedProfile": {
+          "dateOfBirth": {
+            "value": "2004-03-12",
+            "status": "provided",
+            "source": "onboarding",
+            "updatedAt": "2026-10-19T09:00:00.000Z",
+            "excludedFromAiContext": true
+          }
+        }
+      },
+      "expected": {
+        "status": "unresolved",
+        "explanation": "Your date of birth is not available, so this age requirement stays unresolved. You can add it in your passport."
+      }
+    },
+    {
+      "name": "a conflicting age rule is preserved",
+      "kind": "requirement",
+      "input": {
+        "requirement": {
+          "id": "50000000-0000-4000-8000-000000000018",
+          "label": "Applicants must be under 30 on the closing date",
+          "kind": "age",
+          "status": "unresolved",
+          "sourceClause": "The fellowship is open to applicants under 30 at the closing date.",
+          "evidenceIds": [],
+          "profileFactKey": null,
+          "check": null,
+          "ageRule": {
+            "kind": "max_age",
+            "minAge": null,
+            "maxAge": 30,
+            "eligibilityDate": "2026-12-15",
+            "sourceTitle": "Sable Foundation Fellowship 2027 — official call",
+            "sourceUrl": "https://sable-foundation.org/fellowships/2027",
+            "verification": "conflicting"
+          },
+          "blocking": false,
+          "explanation": "Not evaluated yet."
+        },
+        "profile": {
+          "facts": []
+        },
+        "protectedProfile": {
+          "dateOfBirth": {
+            "value": "2004-03-12",
+            "status": "provided",
+            "source": "onboarding",
+            "updatedAt": "2026-10-19T09:00:00.000Z",
+            "excludedFromAiContext": false
+          }
+        }
+      },
+      "expected": {
+        "status": "unresolved",
+        "explanation": "Two sources state different age rules, so this one needs your review. The rule from Sable Foundation Fellowship 2027 — official call is shown here."
+      }
+    },
+    {
+      "name": "the next action asks for a blocking fact first",
+      "kind": "next_action",
+      "input": {
+        "profile": {
+          "facts": [
+            {
+              "id": "a1000000-0000-4000-8000-000000000005",
+              "key": "english_level",
+              "label": "English (CEFR)",
+              "value": "B2 (IELTS 6.5)",
+              "numericValue": 6.5,
+              "code": "B2",
+              "status": "proposed",
+              "excluded": false,
+              "source": null
+            }
+          ]
+        },
+        "opportunities": [
+          {
+            "id": "d4000000-0000-4000-8000-000000000001",
+            "title": "Helios Research Fellowship in Computational Biology",
+            "sourceDomain": "helios-fellowship.org",
+            "dismissed": false,
+            "deadline": {
+              "status": "verified",
+              "value": "2026-11-20"
+            },
+            "requirements": [
+              {
+                "id": "50000000-0000-4000-8000-000000000004",
+                "label": "English proficiency",
+                "profileFactKey": "english_level",
+                "status": "unresolved"
+              }
+            ]
+          }
+        ],
+        "applications": [],
+        "drafts": [],
+        "sources": [],
+        "alerts": [],
+        "now": "2026-10-19T12:00:00.000Z"
+      },
+      "expected": {
+        "id": "69807d47-23fc-4d98-9ee6-cc1d597f5a9e",
+        "kind": "confirm_fact",
+        "title": "Confirm your English (CEFR)",
+        "rationale": "It is the one thing blocking an eligibility requirement, so every assessment stays unresolved until you confirm it.",
+        "cta": "Review the fact",
+        "route": "/profile?fact=a1000000-0000-4000-8000-000000000005",
+        "priority": 100,
+        "blockerId": "a1000000-0000-4000-8000-000000000005",
+        "createdAt": "2026-10-19T12:00:00.000Z"
+      }
+    },
+    {
+      "name": "the next action resolves a deadline conflict",
+      "kind": "next_action",
+      "input": {
+        "profile": {
+          "facts": []
+        },
+        "opportunities": [
+          {
+            "id": "d4000000-0000-4000-8000-000000000006",
+            "title": "Verdant Climate Data Fellowship",
+            "sourceDomain": "verdant-fellowship.eu",
+            "dismissed": false,
+            "deadline": {
+              "status": "conflict",
+              "value": "2026-12-01"
+            },
+            "requirements": []
+          }
+        ],
+        "applications": [],
+        "drafts": [],
+        "sources": [],
+        "alerts": [],
+        "now": "2026-10-19T12:00:00.000Z"
+      },
+      "expected": {
+        "id": "38042839-dda0-4df6-8491-9e8390b4af48",
+        "kind": "resolve_conflict",
+        "title": "Two sources disagree on the Verdant Climate Data Fellowship deadline",
+        "rationale": "Until the official date is confirmed, the application window cannot be planned around.",
+        "cta": "Review the conflict",
+        "route": "/opportunities/d4000000-0000-4000-8000-000000000006",
+        "priority": 90,
+        "blockerId": "d4000000-0000-4000-8000-000000000006",
+        "createdAt": "2026-10-19T12:00:00.000Z"
+      }
+    },
+    {
+      "name": "the next action names a source it could not reach",
+      "kind": "next_action",
+      "input": {
+        "profile": {
+          "facts": []
+        },
+        "opportunities": [
+          {
+            "id": "d4000000-0000-4000-8000-000000000007",
+            "title": "Northwind Summer Research Programme",
+            "sourceDomain": "northwind-program.org",
+            "dismissed": false,
+            "deadline": {
+              "status": "not_found",
+              "value": null
+            },
+            "requirements": []
+          }
+        ],
+        "applications": [],
+        "drafts": [],
+        "sources": [
+          {
+            "id": "e5000000-0000-4000-8000-000000000009",
+            "domain": "northwind-program.org",
+            "status": "unavailable",
+            "title": "Northwind Summer Research Programme"
+          }
+        ],
+        "alerts": [],
+        "now": "2026-10-19T12:00:00.000Z"
+      },
+      "expected": {
+        "id": "2aa51937-fe90-4538-9633-c0f10cc96b32",
+        "kind": "check_source",
+        "title": "We could not reach the source for Northwind Summer Research Programme",
+        "rationale": "Nothing from that page has been verified, so its deadline and funding are unknown rather than absent.",
+        "cta": "See what is missing",
+        "route": "/opportunities/d4000000-0000-4000-8000-000000000007",
+        "priority": 70,
+        "blockerId": "e5000000-0000-4000-8000-000000000009",
+        "createdAt": "2026-10-19T12:00:00.000Z"
+      }
+    },
+    {
+      "name": "the next action asks for a missing document",
+      "kind": "next_action",
+      "input": {
+        "profile": {
+          "facts": []
+        },
+        "opportunities": [],
+        "applications": [
+          {
+            "id": "4e000000-0000-4000-8000-000000000001",
+            "opportunityTitle": "Helios Research Fellowship in Computational Biology",
+            "status": "preparing",
+            "completion": {
+              "completed": 1,
+              "total": 3
+            },
+            "checklist": [
+              {
+                "id": "5f000000-0000-4000-8000-000000000002",
+                "label": "IELTS certificate",
+                "status": "missing",
+                "documentId": null,
+                "note": "Your English score is not on file yet."
+              }
+            ]
+          }
+        ],
+        "drafts": [],
+        "sources": [],
+        "alerts": [],
+        "now": "2026-10-19T12:00:00.000Z"
+      },
+      "expected": {
+        "id": "f879ae21-424c-459c-ad1b-a0dfa02149e2",
+        "kind": "complete_document",
+        "title": "Upload the document Helios Research Fellowship in Computational Biology needs",
+        "rationale": "Your English score is not on file yet.",
+        "cta": "Open the checklist",
+        "route": "/applications/4e000000-0000-4000-8000-000000000001",
+        "priority": 60,
+        "blockerId": "5f000000-0000-4000-8000-000000000002",
+        "createdAt": "2026-10-19T12:00:00.000Z"
+      }
+    },
+    {
+      "name": "the next action asks for an unreviewed proposal",
+      "kind": "next_action",
+      "input": {
+        "profile": {
+          "facts": []
+        },
+        "opportunities": [],
+        "applications": [],
+        "drafts": [
+          {
+            "id": "60000000-0000-4000-8000-000000000001",
+            "title": "Motivation letter - Helios Fellowship",
+            "pendingProposal": {
+              "id": "70000000-0000-4000-8000-000000000001",
+              "summary": "Proposed revision"
+            }
+          }
+        ],
+        "sources": [],
+        "alerts": [],
+        "now": "2026-10-19T12:00:00.000Z"
+      },
+      "expected": {
+        "id": "ebaf201b-481d-4404-8db8-5b3146b4347a",
+        "kind": "review_proposal",
+        "title": "Review the proposed revision to your motivation letter - helios fellowship",
+        "rationale": "The assistant has drafted a change but nothing has been applied to your document yet.",
+        "cta": "Review the diff",
+        "route": "/writing/60000000-0000-4000-8000-000000000001",
+        "priority": 50,
+        "blockerId": "70000000-0000-4000-8000-000000000001",
+        "createdAt": "2026-10-19T12:00:00.000Z"
+      }
+    },
+    {
+      "name": "the next action is an unread alert",
+      "kind": "next_action",
+      "input": {
+        "profile": {
+          "facts": []
+        },
+        "opportunities": [],
+        "applications": [],
+        "drafts": [],
+        "sources": [],
+        "alerts": [
+          {
+            "id": "a0000000-0000-4000-8000-000000000001",
+            "title": "Verdant Climate Data Fellowship — funding increased",
+            "body": "The equipment budget rose from EUR 2,500 to EUR 4,000.",
+            "read": false
+          }
+        ],
+        "now": "2026-10-19T12:00:00.000Z"
+      },
+      "expected": {
+        "id": "858af48b-014b-414e-9e2a-0bcdd91531a8",
+        "kind": "check_source",
+        "title": "Verdant Climate Data Fellowship — funding increased",
+        "rationale": "The equipment budget rose from EUR 2,500 to EUR 4,000.",
+        "cta": "Read the alert",
+        "route": "/monitoring",
+        "priority": 30,
+        "blockerId": "a0000000-0000-4000-8000-000000000001",
+        "createdAt": "2026-10-19T12:00:00.000Z"
+      }
+    },
+    {
+      "name": "there is no next action when nothing is blocked",
+      "kind": "next_action",
+      "input": {
+        "profile": {
+          "facts": []
+        },
+        "opportunities": [],
+        "applications": [],
+        "drafts": [],
+        "sources": [],
+        "alerts": [],
+        "now": "2026-10-19T12:00:00.000Z"
+      },
+      "expected": null
+    },
+    {
+      "name": "completeness counts only confirmed facts",
+      "kind": "completeness",
+      "input": {
+        "profile": {
+          "facts": [
+            {
+              "key": "degree_level",
+              "label": "Current degree level",
+              "value": "Master's",
+              "status": "confirmed",
+              "excluded": false
+            },
+            {
+              "key": "field",
+              "label": "Field of study",
+              "value": "Computational biology",
+              "status": "confirmed",
+              "excluded": false
+            },
+            {
+              "key": "graduation_year",
+              "label": "Expected graduation",
+              "value": "2027",
+              "status": "proposed",
+              "excluded": false
+            },
+            {
+              "key": "english_level",
+              "label": "English proficiency",
+              "value": "B2",
+              "status": "confirmed",
+              "excluded": true
+            }
+          ]
+        }
+      },
+      "expected": {
+        "confirmed": 2,
+        "required": 6,
+        "percent": 33,
+        "summary": "2 of 6 confirmed. 1 waiting for you, 3 still missing."
+      }
+    }
+  ]
+}

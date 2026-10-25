@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "note": "Routes the contract lists that no frontend caller reaches yet, each with the reason. The exporter refuses a route that is both listed here and called by a page: a working caller must delete its marker.",
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/v1/documents/:id/content",
+      "reason": "The document library exposes metadata and consent in the current student flow; download is reserved for the document detail action."
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/password/forgot",
+      "reason": "No password-recovery pages exist in the router."
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/password/reset",
+      "reason": "No password-recovery pages exist in the router."
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/sign-out",
+      "reason": "The shell's Sign out navigates to the sign-in page without calling the API."
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/drafts/:id/versions",
+      "reason": "The studio reads draft.versions from the draft detail response instead."
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/missions",
+      "reason": "Missions are created through POST /onboarding/complete; nothing posts a bare one."
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/opportunities/compare",
+      "reason": "Reserved for the assistant's action pipeline; no page posts it."
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profile/snapshots/latest",
+      "reason": "Snapshots are taken by the backend but no UI ever reads one back."
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/runs/:id/retry",
+      "reason": "The run-control UI can pause, resume and cancel but never re-runs; the endpoint is served and mocked."
+    }
+  ]
+}

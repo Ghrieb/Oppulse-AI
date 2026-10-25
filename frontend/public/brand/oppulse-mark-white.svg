@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title>Oppulse mark</title>
+  <path fill="#fff" d="M128 16c61.856 0 112 50.144 112 112 0 61.856-50.144 112-112 112S16 189.856 16 128 66.144 16 128 16Zm0 30c-45.297 0-82 36.703-82 82s36.703 82 82 82 82-36.703 82-82-36.703-82-82-82Z"/>
+  <path fill="#fff" d="m128 64 66 64-66 64v-38h-38v-52h38V64Z"/>
+  <circle cx="128" cy="128" r="15" fill="#0B1730"/>
+</svg>

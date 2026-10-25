@@ -1,0 +1,234 @@
+import { useMemo, useState } from 'react';
+import { Compass } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { EmptyState, ErrorState } from '@/components/feedback/states';
+import { PageHeader } from '@/components/feedback/banners';
+import { Skeleton } from '@/components/ui/tooltip';
+import { OpportunityCard } from '@/components/opportunities/opportunity-card';
+import { useToast } from '@/lib/hooks/use-toast';
+import {
+  useCreateApplication,
+  useDismissOpportunity,
+  useOpportunities,
+  useToggleSaveOpportunity,
+} from '@/lib/queries';
+import { cn } from '@/lib/cn';
+
+const FUNDING_FILTERS = [
+  { id: 'all', label: 'All funding' },
+  { id: 'fully_funded', label: 'Fully funded' },
+  { id: 'partial', label: 'Partially funded' },
+  { id: 'unknown', label: 'Funding unknown' },
+] as const;
+
+const TYPE_FILTERS = [
+  { id: 'all', label: 'All types' },
+  { id: 'research_internship', label: 'Internships' },
+  { id: 'fellowship', label: 'Fellowships' },
+  { id: 'scholarship', label: 'Scholarships' },
+  { id: 'summer_school', label: 'Summer schools' },
+] as const;
+
+export function OpportunitiesPage() {
+  const [funding, setFunding] = useState<string>('all');
+  const [type, setType] = useState<string>('all');
+  const [query, setQuery] = useState('');
+
+  const { data, isPending, error, refetch } = useOpportunities();
+  const toggleSave = useToggleSaveOpportunity();
+  const dismiss = useDismissOpportunity();
+  const createApplication = useCreateApplication();
+  const { toast } = useToast();
+
+  const matches = data?.matches ?? [];
+
+  const visible = useMemo(() => {
+    const list = data?.opportunities ?? [];
+    const needle = query.trim().toLowerCase();
+    return list.filter((opportunity) => {
+      if (funding !== 'all' && opportunity.funding.coverage !== funding) return false;
+      if (type !== 'all' && opportunity.type !== type) return false;
+      if (!needle) return true;
+      return (
+        opportunity.title.toLowerCase().includes(needle) ||
+        opportunity.institution.toLowerCase().includes(needle) ||
+        opportunity.country.name.toLowerCase().includes(needle)
+      );
+    });
+  }, [data, funding, type, query]);
+
+  if (error) {
+    return (
+      <div className="flex flex-col gap-4">
+        <PageHeader title="Opportunities" />
+        <ErrorState error={error} onRetry={() => void refetch()} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-5">
+      <PageHeader
+        title="Opportunities"
+        description="Ranked against your confirmed profile. Every claim links back to the source it came from."
+      />
+
+      <Card className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex-1">
+            <label htmlFor="opportunity-search" className="sr-only">
+              Search opportunities
+            </label>
+            <Input
+              id="opportunity-search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search by title, institution or destination"
+              type="search"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+          <FilterGroup
+            label="Funding"
+            options={FUNDING_FILTERS}
+            value={funding}
+            onChange={setFunding}
+          />
+          <FilterGroup label="Type" options={TYPE_FILTERS} value={type} onChange={setType} />
+        </div>
+      </Card>
+
+      {isPending ? (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {[0, 1, 2, 3].map((index) => (
+            <Skeleton key={index} className="h-96" />
+          ))}
+        </div>
+      ) : visible.length === 0 ? (
+        <EmptyState
+          icon={<Compass className="size-5" />}
+          title="No opportunities match these filters"
+          description="Your search scope and filters are narrower than the available results. Broaden the filters, or edit the mission that produced them."
+          action={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setFunding('all');
+                setType('all');
+                setQuery('');
+              }}
+            >
+              Clear filters
+            </Button>
+          }
+        />
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {visible.map((opportunity) => {
+            const match = matches.find((item) => item.opportunityId === opportunity.id) ?? null;
+            return (
+              <OpportunityCard
+                key={opportunity.id}
+                opportunity={opportunity}
+                match={match}
+                saving={toggleSave.isPending}
+                dismissing={dismiss.isPending}
+                addingToApplication={createApplication.isPending}
+                onToggleSave={() => {
+                  toggleSave.mutate(opportunity.id, {
+                    onError: () =>
+                      toast({
+                        tone: 'error',
+                        title: 'We could not update your list',
+                        description: 'Nothing was changed. Try again.',
+                      }),
+                    onSuccess: () =>
+                      toast({
+                        tone: 'success',
+                        title: opportunity.saved ? 'Removed from your list' : 'Saved to your list',
+                      }),
+                  });
+                }}
+                onDismiss={() => {
+                  dismiss.mutate(
+                    { id: opportunity.id },
+                    {
+                      onSuccess: () =>
+                        toast({
+                          tone: 'info',
+                          title: 'Removed from your results',
+                          description: 'We will use this to improve future recommendations.',
+                        }),
+                      onError: () =>
+                        toast({
+                          tone: 'error',
+                          title: 'We could not remove that from your results',
+                          description: 'Nothing was changed. Try again.',
+                        }),
+                    },
+                  );
+                }}
+                onAddToApplication={() => {
+                  createApplication.mutate(opportunity.id, {
+                    onSuccess: () =>
+                      toast({
+                        tone: 'success',
+                        title: 'Added to your application workspace',
+                        description: 'Open Applications to plan the next step.',
+                      }),
+                    onError: () =>
+                      toast({
+                        tone: 'error',
+                        title: 'We could not create the workspace',
+                        description: 'Nothing was changed. Try again.',
+                      }),
+                  });
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FilterGroup({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: ReadonlyArray<{ id: string; label: string }>;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <span className="text-meta font-medium text-text-muted">{label}</span>
+      {options.map((option) => (
+        <button
+          key={option.id}
+          type="button"
+          onClick={() => onChange(option.id)}
+          aria-pressed={value === option.id}
+          className={cn(
+            'min-h-9 rounded-full border px-3 text-meta font-medium transition-colors',
+            'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring',
+            value === option.id
+              ? 'border-primary bg-primary/10 text-primary'
+              : 'border-border bg-surface text-text-muted hover:bg-surface-subtle',
+          )}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  );
+}
