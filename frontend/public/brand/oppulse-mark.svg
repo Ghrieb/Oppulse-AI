@@ -1,12 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
-  <title>Oppulse mark</title>
+  <title>Oppulse AI neural lens mark</title>
   <defs>
     <linearGradient id="oppulse-gradient" x1="32" y1="224" x2="224" y2="32" gradientUnits="userSpaceOnUse">
       <stop stop-color="#5B4BF2"/>
+      <stop offset=".55" stop-color="#8B72F6"/>
       <stop offset="1" stop-color="#16B8A6"/>
     </linearGradient>
   </defs>
-  <path fill="url(#oppulse-gradient)" d="M128 16c61.856 0 112 50.144 112 112 0 61.856-50.144 112-112 112S16 189.856 16 128 66.144 16 128 16Zm0 30c-45.297 0-82 36.703-82 82s36.703 82 82 82 82-36.703 82-82-36.703-82-82-82Z"/>
-  <path fill="url(#oppulse-gradient)" d="m128 64 66 64-66 64v-38h-38v-52h38V64Z"/>
-  <circle cx="128" cy="128" r="15" fill="#fff"/>
+  <circle cx="128" cy="128" r="99" fill="none" stroke="url(#oppulse-gradient)" stroke-width="18" stroke-linecap="round" stroke-dasharray="492 130" transform="rotate(-38 128 128)"/>
+  <path d="M72 83 105 111M184 83l-33 28M72 173l33-28M184 173l-33-28" fill="none" stroke="url(#oppulse-gradient)" stroke-width="8" stroke-linecap="round"/>
+  <path d="m128 89 34 20v38l-34 20-34-20v-38l34-20Z" fill="url(#oppulse-gradient)"/>
+  <path d="m128 105 20 12v22l-20 12-20-12v-22l20-12Z" fill="#fff"/>
+  <circle cx="65" cy="77" r="13" fill="#5B4BF2"/>
+  <circle cx="191" cy="77" r="13" fill="#16B8A6"/>
+  <circle cx="65" cy="179" r="13" fill="#16B8A6"/>
+  <circle cx="191" cy="179" r="13" fill="#5B4BF2"/>
 </svg>

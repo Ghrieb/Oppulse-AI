@@ -21,6 +21,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "screenshots": "playwright test e2e/screenshots.spec.ts",
+    "record:demo": "node scripts/record-demo.mjs",
     "msw:init": "msw init public --save",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
     "cases:update": "node scripts/update-rule-cases.mjs",

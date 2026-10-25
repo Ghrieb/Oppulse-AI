@@ -1,6 +1,6 @@
 # Oppulse AI
 
-![Oppulse AI logo](frontend/public/brand/oppulse-mark.svg)
+![Oppulse AI neural lens logo](frontend/public/brand/oppulse-mark.svg)
 
 **A student opportunity workspace that turns scattered programme information into clear, evidence-backed decisions and stronger applications.**
 
@@ -9,6 +9,10 @@ Oppulse AI helps students discover scholarships, fellowships, internships, resea
 This project is part of the **ThirdUni Program**.
 
 > **Discover → Understand → Verify → Prepare → Apply → Monitor**
+
+The Oppulse mark is a neural lens: connected signals represent evidence and
+opportunity discovery, while the central lens represents a student making a
+clearer decision with AI-assisted research.
 
 ## Product promise
 
@@ -187,7 +191,8 @@ See [docs/environments.md](docs/environments.md) for the boundary rules and [doc
 
 ## Screenshots
 
-The repository includes representative desktop and mobile flows:
+The repository includes refreshed desktop and mobile flows captured from the
+deterministic student-testing experience:
 
 - [Landing page](frontend/docs/screenshots/00-landing.png)
 - [Onboarding](frontend/docs/screenshots/01b-onboarding.png)
@@ -198,6 +203,14 @@ The repository includes representative desktop and mobile flows:
 - [Writing studio](frontend/docs/screenshots/09-writing-studio.png)
 - [Monitoring](frontend/docs/screenshots/10-monitoring.png)
 - [Mobile home](frontend/docs/screenshots/13-mobile-home.png)
+
+## Demo recording
+
+The submission-ready student journey recording is available at
+[frontend/docs/clips/oppulse-student-journey.webm](frontend/docs/clips/oppulse-student-journey.webm).
+It uses synthetic replay data and contains no provider credentials or
+personal student information. Upload a copy to an accessible video host
+(for example, an unlisted YouTube or Google Drive video) before submitting.
 
 ## Deployment readiness
 
@@ -228,6 +241,7 @@ The repository does not provision Azure, Supabase, email, search or model accoun
 | `contracts/` | Frontend/backend route and entity contract |
 | `docs/` | Architecture, environment and deployment documentation |
 | `frontend/docs/screenshots/` | Product journey evidence |
+| `frontend/docs/clips/` | Submission demo recordings |
 
 ## ThirdUni Program
 
