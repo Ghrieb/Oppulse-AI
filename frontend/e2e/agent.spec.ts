@@ -43,7 +43,7 @@ test('the context follows the student from an opportunity into the assistant', a
     .click();
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
-  await page.getByRole('button', { name: 'Ask about this opportunity' }).click();
+  await page.getByRole('button', { name: 'Ask Oppulse' }).click();
 
   await expect(page).toHaveURL(/\/assistant/);
 
@@ -128,8 +128,10 @@ test('selecting text scopes the revision to that selection', async ({ page }) =>
   await expect(page.getByRole('heading', { name: /Motivation letter/ })).toBeVisible();
 
   // Clear the proposal that is already waiting, so the assistant can be asked
-  // for a new one.
+  // for a new one. The instruction box opens on demand, behind "Custom
+  // request" — asking is an explicit choice, never a surprise.
   await page.getByRole('button', { name: 'Reject' }).click();
+  await page.getByRole('button', { name: 'Custom request' }).click();
   await expect(page.getByText('What should change?')).toBeVisible();
 
   // Select a phrase in the document.

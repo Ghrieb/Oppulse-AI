@@ -89,8 +89,9 @@ test('a run can be watched, paused, resumed and cancelled', async ({ page }) => 
   await expect(page.getByRole('button', { name: 'Resume', exact: true })).toHaveCount(0);
 
   // Cancel: the run stops for good, says so, and the strip offers a fresh run.
+  // The toast carries the same words, so the exact card status is asserted.
   await page.getByRole('button', { name: 'Cancel run' }).click();
-  await expect(page.getByText('Run cancelled')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('Run cancelled', { exact: true })).toBeVisible({ timeout: 10_000 });
   await expect(page.getByText('Cancelled', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Run research' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Cancel run' })).toHaveCount(0);
@@ -175,7 +176,7 @@ test('an upload is read as processing, and claims nothing until confirmed', asyn
 
   await signIn(page);
   await page.goto('/documents');
-  await expect(page.getByRole('heading', { name: 'My documents' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Documents' })).toBeVisible();
 
   // Facts a document already proposed wait for confirmation, and say so.
   const pending = page.getByText(/facts? waiting for your confirmation/);
@@ -364,7 +365,7 @@ test('an unreachable source is reported honestly, and the results it could not r
 
   // The alert says the check failed — not that the programme is gone.
   await page.goto('/monitoring');
-  await expect(page.getByRole('heading', { name: 'Monitoring and alerts' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Monitoring & Alerts' })).toBeVisible();
   await page.getByRole('tab', { name: /Alerts/ }).click();
   await expect(
     page.getByRole('heading', { name: 'Northwind Summer Research Programme could not be checked' }),
@@ -416,7 +417,7 @@ test('the assistant shows every media state and links only what still exists', a
     .getByRole('link', { name: 'Helios Research Fellowship in Computational Biology' })
     .first()
     .click();
-  await page.getByRole('button', { name: 'Ask about this opportunity' }).click();
+  await page.getByRole('button', { name: 'Ask Oppulse' }).click();
   await expect(page).toHaveURL(/\/assistant/);
 
   await page.getByLabel('Message to Oppulse').fill('What does the official page show?');
@@ -458,7 +459,9 @@ test('an expired session sends the student to sign-in and back to where they wer
   await page.goto('/profile');
   await expect(page.getByRole('heading', { name: 'My profile' })).toBeVisible();
 
-  // The session ends server-side while the passport is open.
+  // The session ends server-side while the passport is open. The rule is
+  // scoped to this test and cleared on the way out, so it cannot leak into
+  // the next journey that shares this worker.
   await page.evaluate(() => {
     window.__oppulse?.chaos.set({
       pattern: '/opportunities',
@@ -468,32 +471,36 @@ test('an expired session sends the student to sign-in and back to where they wer
     });
   });
 
-  // Any change re-evaluates the opportunities — and this response is a 401.
-  await page.getByRole('button', { name: 'Languages and certificates' }).click();
-  await page.getByRole('button', { name: /English \(CEFR\)/ }).click();
-  await page.getByRole('button', { name: 'Exclude from AI use' }).click();
-  await expect(page.getByText('Requirements that depend on it stay unresolved.')).toBeVisible();
+  try {
+    // Any change re-evaluates the opportunities — and this response is a 401.
+    await page.getByRole('button', { name: 'Languages and certificates' }).click();
+    await page.getByRole('button', { name: /English \(CEFR\)/ }).click();
+    await page.getByRole('button', { name: 'Exclude from AI use' }).click();
+    await expect(page.getByText('Requirements that depend on it stay unresolved.')).toBeVisible();
 
-  // Opening the list shows the expiry on the page the student asked for.
-  await page.getByRole('link', { name: 'Opportunities', exact: true }).first().click();
-  await expect(page).toHaveURL(/\/opportunities/);
-  const signInAgain = page.getByRole('link', { name: 'Sign in again' });
-  await expect(signInAgain).toBeVisible({ timeout: 10_000 });
-  await expect(page.getByText('Your session has expired')).toBeVisible();
-  await expect(
-    page.getByText('Sign in again and we will return you to where you were.'),
-  ).toBeVisible();
-  await expect(signInAgain).toHaveAttribute('href', /next=%2Fopportunities$/);
+    // Opening the list shows the expiry on the page the student asked for.
+    await page.getByRole('link', { name: 'Opportunities', exact: true }).first().click();
+    await expect(page).toHaveURL(/\/opportunities/);
+    const signInAgain = page.getByRole('link', { name: 'Sign in again' });
+    await expect(signInAgain).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText('Your session has expired')).toBeVisible();
+    await expect(
+      page.getByText('Sign in again and we will return you to where you were.'),
+    ).toBeVisible();
+    await expect(signInAgain).toHaveAttribute('href', /next=%2Fopportunities$/);
 
-  // The way back is the same destination, not a generic home screen.
-  await signInAgain.click();
-  await expect(page).toHaveURL(/\/auth\/sign-in\?next=%2Fopportunities/);
-  await page.getByLabel('Email address').fill('sara.benali@example.edu');
-  await page.getByLabel('Password').fill('PrototypePass1');
-  await page.getByRole('button', { name: 'Sign in' }).click();
+    // The way back is the same destination, not a generic home screen.
+    await signInAgain.click();
+    await expect(page).toHaveURL(/\/auth\/sign-in\?next=%2Fopportunities/);
+    await page.getByLabel('Email address').fill('sara.benali@example.edu');
+    await page.getByLabel('Password').fill('PrototypePass1');
+    await page.getByRole('button', { name: 'Sign in' }).click();
 
-  await expect(page).toHaveURL(/\/opportunities/);
-  await expect(page.getByRole('heading', { name: 'Opportunities' })).toBeVisible();
+    await expect(page).toHaveURL(/\/opportunities/);
+    await expect(page.getByRole('heading', { name: 'Opportunities' })).toBeVisible();
+  } finally {
+    await page.evaluate(() => window.__oppulse?.chaos.clear());
+  }
 
   expect(errors, `Console errors:\n${errors.join('\n')}`).toEqual([]);
 });
@@ -510,7 +517,7 @@ test('the capability disclosure names what is simulated and what is offline', as
 
   // The shell states the mode per service, not as one blanket claim.
   await page
-    .getByRole('button', { name: /Demo data/ })
+    .getByRole('button', { name: /Sample data/ })
     .first()
     .click();
   const menu = page.getByRole('menu');

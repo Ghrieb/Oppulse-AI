@@ -39,7 +39,7 @@ export function AppShell() {
         <OfflineBanner />
         {PRODUCT_MODE === 'student_testing' ? <CapabilityBanner /> : null}
 
-        <main id="main-content" className="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6">
+        <main id="main-content" className="mx-auto w-full max-w-canvas px-4 py-6 sm:px-6">
           <Outlet />
         </main>
       </div>

@@ -5,6 +5,7 @@ import {
   alertListSchema,
   applicationListSchema,
   applicationSchema,
+  compareResponseSchema,
   documentListSchema,
   documentSchema,
   draftListSchema,
@@ -651,11 +652,29 @@ export function useCreateApplication() {
 
   return useMutation({
     mutationFn: (opportunityId: string) =>
-      apiClient.post(`/opportunities/${opportunityId}/applications`),
+      apiClient.post(`/opportunities/${opportunityId}/applications`, undefined, {
+        schema: applicationSchema,
+      }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.applications });
       void queryClient.invalidateQueries({ queryKey: ['opportunities'] });
     },
+  });
+}
+
+/**
+ * Compares two to four opportunities side by side.
+ *
+ * A read of what the agent already found — the same eligibility, funding
+ * and deadline with the differences named. It never invents a ranking the
+ * evidence does not support (spec §6.4).
+ */
+export function useCompareOpportunities() {
+  return useMutation({
+    mutationFn: (opportunityIds: string[]) =>
+      apiClient.post('/opportunities/compare', { opportunityIds }, {
+        schema: compareResponseSchema,
+      }),
   });
 }
 

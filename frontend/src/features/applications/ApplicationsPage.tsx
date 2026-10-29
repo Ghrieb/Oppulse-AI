@@ -8,34 +8,8 @@ import { Skeleton } from '@/components/ui/tooltip';
 import { EmptyState, ErrorState } from '@/components/feedback/states';
 import { PageHeader } from '@/components/feedback/banners';
 import { useApplications } from '@/lib/queries';
-import type { Application, ApplicationStatus } from '@/lib/schemas';
-
-const STATUS_LABEL: Record<ApplicationStatus, string> = {
-  considering: 'Considering',
-  preparing: 'Preparing',
-  waiting_for_documents: 'Waiting for documents',
-  waiting_for_recommender: 'Waiting for recommender',
-  ready_for_review: 'Ready for review',
-  submitted: 'Submitted',
-  accepted: 'Accepted',
-  rejected: 'Rejected',
-  withdrawn: 'Withdrawn',
-};
-
-const STATUS_TONE: Record<
-  ApplicationStatus,
-  'neutral' | 'success' | 'warning' | 'danger' | 'info'
-> = {
-  considering: 'neutral',
-  preparing: 'info',
-  waiting_for_documents: 'warning',
-  waiting_for_recommender: 'warning',
-  ready_for_review: 'success',
-  submitted: 'info',
-  accepted: 'success',
-  rejected: 'danger',
-  withdrawn: 'neutral',
-};
+import type { Application } from '@/lib/schemas';
+import { STATUS_LABEL, STATUS_TONE } from './status';
 
 /**
  * Application workspaces.

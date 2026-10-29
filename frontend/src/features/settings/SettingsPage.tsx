@@ -146,8 +146,8 @@ export function SettingsPage() {
 
           <p className="text-sm text-text-muted">
             Every alert appears in the app, where you can read it, act on it and keep it. Email
-            notifications are a later increment: the contract for them is ready, and the interface
-            will grow them when a mail provider is actually connected.
+            notifications are not available yet — they arrive as soon as an email service is
+            connected.
           </p>
 
           <ul className="grid gap-2 sm:grid-cols-2">
@@ -158,7 +158,7 @@ export function SettingsPage() {
             />
             <IntegrationRow
               name="Email notifications"
-              detail="A later increment, not available yet"
+              detail="Not available yet"
               connected={false}
             />
           </ul>

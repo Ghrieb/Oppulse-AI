@@ -10,7 +10,7 @@ import { expect, test, type ConsoleMessage, type Page } from '@playwright/test';
  *
  * Two things differ from the demo mode, and both are deliberate:
  *
- * - there is no "prototype data" banner, because the data is not synthetic;
+ * - there is no "sample data" banner, because the data is not synthetic;
  * - the capabilities say what is actually live, per service.
  */
 
@@ -36,17 +36,37 @@ test.describe('the live service', () => {
     return errors;
   }
 
-  test('the capability strip says what is actually live', async ({ page }) => {
+  test('the capability menu says what is actually live', async ({ page }) => {
     const errors = collectConsoleErrors(page);
 
     await page.goto('/');
-    await expect(page.getByText('What works right now')).toBeVisible();
-    await expect(page.getByText('Profile and opportunities')).toBeVisible();
+    // The public landing page makes no capability claim at all.
+    await expect(page.getByText('What works right now')).toHaveCount(0);
 
-    // No provider is configured locally, so the reasoning and the search
-    // are honestly reported as simulated, and monitoring as unavailable.
-    await expect(page.getByText('Simulated').first()).toBeVisible();
-    await expect(page.getByText('Not connected').first()).toBeVisible();
+    // Signed in, the shell states it per service.
+    await page.goto('/auth/sign-in');
+    await page.getByLabel('Email address').fill('sara.benali@example.edu');
+    await page.getByLabel('Password').fill('PrototypePass1');
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await expect(page).toHaveURL(/\/onboarding/);
+    await page.goto('/home');
+    await expect(page.getByRole('heading', { name: /Hi Sara!/ })).toBeVisible();
+
+    await page.getByRole('button', { name: /Live API/ }).click();
+    const menu = page.getByRole('menu');
+    await expect(menu.getByText('Connection status')).toBeVisible();
+    const rows = menu.getByRole('listitem');
+    await expect(
+      rows.filter({ hasText: 'Profile and opportunities' }).getByText('Live'),
+    ).toBeVisible();
+
+    // No provider key is configured in this run, so the reasoning and the
+    // search are honestly reported as simulated, and monitoring as
+    // not configured.
+    await expect(rows.filter({ hasText: 'AI reasoning' }).getByText('Simulated')).toBeVisible();
+    await expect(
+      rows.filter({ hasText: 'Change monitoring' }).getByText('Not configured'),
+    ).toBeVisible();
 
     expect(errors, `Console errors:\n${errors.join('\n')}`).toEqual([]);
   });

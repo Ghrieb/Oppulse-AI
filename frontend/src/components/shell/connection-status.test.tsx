@@ -19,19 +19,20 @@ describe('ConnectionIndicator', () => {
     signInAsDemo();
   });
 
-  it('labels the app as demo data in mock mode', () => {
+  it('labels the app as sample data in mock mode', () => {
     renderWithProviders(<ConnectionIndicator />);
 
-    expect(screen.getByRole('button', { name: /Demo data/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Sample data/ })).toBeInTheDocument();
   });
 
-  it('reports the API connection, the product mode and each capability', async () => {
+  it('reports plainly what the student is looking at and each capability', async () => {
     const { user } = renderWithProviders(<ConnectionIndicator />);
 
-    await user.click(screen.getByRole('button', { name: /Demo data/ }));
+    await user.click(screen.getByRole('button', { name: /Sample data/ }));
 
-    expect(await screen.findByText(/API connection: mock/)).toBeInTheDocument();
-    expect(screen.getByText(/Product mode: demo/)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Running on sample data — examples, not real records/),
+    ).toBeInTheDocument();
     expect(screen.getByText('AI reasoning')).toBeInTheDocument();
     expect(screen.getAllByText('Simulated').length).toBeGreaterThan(0);
     expect(screen.getByText('Not configured')).toBeInTheDocument();
@@ -44,10 +45,10 @@ describe('CapabilityBanner', () => {
     signInAsDemo();
   });
 
-  it('stays hidden in demo mode — the prototype banner owns that surface', () => {
+  it('stays hidden in demo mode — the sample-data banner owns that surface', () => {
     renderWithProviders(<CapabilityBanner />);
 
-    expect(screen.queryByText('Student testing')).not.toBeInTheDocument();
+    expect(screen.queryByText('Service status')).not.toBeInTheDocument();
   });
 });
 

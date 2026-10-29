@@ -99,8 +99,13 @@ describe('journey 16 — offline recovery', () => {
       { route: '/writing/60000000-0000-4000-8000-000000000001' },
     );
 
-    // The draft loads while the connection is still up.
-    await screen.findByText(/Dear Selection Committee/);
+    // The draft loads while the connection is still up. Scoped to the
+    // editor: the always-visible proposal diff repeats the same text.
+    await waitFor(() => {
+      expect(document.querySelector('.ProseMirror')?.textContent).toContain(
+        'Dear Selection Committee',
+      );
+    });
 
     // The connection drops before the next autosave.
     setChaosRule({ pattern: '/drafts', mode: 'offline', delayMs: 0 });

@@ -51,6 +51,11 @@ const ApplicationDetailPage = lazy(() =>
   })),
 );
 const WritingStudioPage = lazy(() => import('@/features/writing/WritingStudioPage'));
+const WritingStudioIndex = lazy(() =>
+  import('@/features/writing/WritingStudioIndex').then((module) => ({
+    default: module.WritingStudioIndex,
+  })),
+);
 const MonitoringPage = lazy(() =>
   import('@/features/monitoring/MonitoringPage').then((module) => ({
     default: module.MonitoringPage,
@@ -125,6 +130,7 @@ export const router = createBrowserRouter([
         path: '/applications/:id',
         element: protectedRoute(lazyRoute(<ApplicationDetailPage />)),
       },
+      { path: '/writing', element: protectedRoute(lazyRoute(<WritingStudioIndex />)) },
       { path: '/writing/:draftId', element: protectedRoute(lazyRoute(<WritingStudioPage />)) },
       { path: '/monitoring', element: protectedRoute(lazyRoute(<MonitoringPage />)) },
       { path: '/assistant', element: protectedRoute(lazyRoute(<AssistantPage />)) },

@@ -61,11 +61,11 @@ describe('HomePage', () => {
     expect(await screen.findByText('Deadline conflict')).toBeInTheDocument();
   });
 
-  it('states clearly that the data is prototype data', async () => {
+  it('states clearly that the data is sample data', async () => {
     renderWithProviders(<PrototypeBanner />);
 
-    expect(await screen.findByText('Prototype data')).toBeInTheDocument();
-    expect(screen.getByText(/the backend is not connected yet/i)).toBeInTheDocument();
+    expect(await screen.findByText('Sample data')).toBeInTheDocument();
+    expect(screen.getByText(/examples while your workspace is being set up/i)).toBeInTheDocument();
   });
 
   it('shows a recoverable error state when the provider fails', async () => {

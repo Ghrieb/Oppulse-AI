@@ -1,5 +1,5 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
-import { Paperclip, SendHorizonal } from 'lucide-react';
+import { Link2, Paperclip, SendHorizonal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 
@@ -62,19 +62,7 @@ export function AgentComposer({
       {selectionSlot}
       {contextSlot}
       {contextLabel ? <p className="text-meta text-text-muted">{contextLabel}</p> : null}
-      <div className="flex items-end gap-2 rounded-panel border border-border bg-surface p-2 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus-ring">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label="Attach a document or paste a link"
-          aria-expanded={linkOpen}
-          disabled={disabled || pending}
-          onClick={() => setLinkOpen((open) => !open)}
-        >
-          <Paperclip aria-hidden="true" className="size-5" />
-        </Button>
-
+      <div className="flex flex-col gap-2 rounded-panel border border-border bg-surface p-3 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus-ring">
         <label htmlFor="agent-composer" className="sr-only">
           Message to Oppulse
         </label>
@@ -88,21 +76,49 @@ export function AgentComposer({
               handleSubmit(event);
             }
           }}
-          rows={1}
+          rows={2}
           placeholder={placeholder}
           disabled={disabled || pending}
-          className="max-h-40 min-h-11 flex-1 resize-none bg-transparent px-1 py-2.5 text-sm leading-relaxed text-text outline-none placeholder:text-text-muted/70 disabled:cursor-not-allowed"
+          className="min-h-16 w-full resize-none bg-transparent px-1 py-1 text-sm leading-relaxed text-text outline-none placeholder:text-text-muted/70 disabled:cursor-not-allowed"
         />
 
-        <Button
-          type="submit"
-          size="icon"
-          disabled={!value.trim() || disabled || pending}
-          loading={pending}
-        >
-          <SendHorizonal aria-hidden="true" className="size-5" />
-          <span className="sr-only">Send message</span>
-        </Button>
+        <div className="flex items-center gap-1 border-t border-border pt-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            aria-label="Attach a document or paste a link"
+            aria-expanded={linkOpen}
+            disabled={disabled || pending}
+            onClick={() => setLinkOpen((open) => !open)}
+          >
+            <Paperclip aria-hidden="true" className="size-4" />
+            Attach
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            aria-label="Add a URL to analyse"
+            aria-expanded={linkOpen}
+            disabled={disabled || pending}
+            onClick={() => setLinkOpen((open) => !open)}
+          >
+            <Link2 aria-hidden="true" className="size-4" />
+            Add URL
+          </Button>
+
+          <Button
+            type="submit"
+            size="icon"
+            className="ml-auto"
+            disabled={!value.trim() || disabled || pending}
+            loading={pending}
+          >
+            <SendHorizonal aria-hidden="true" className="size-5" />
+            <span className="sr-only">Send message</span>
+          </Button>
+        </div>
       </div>
 
       {linkOpen ? (

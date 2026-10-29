@@ -28,6 +28,7 @@
   --color-primary: #5b4bf2;
   --color-primary-hover: #4939db;
   --color-info: #2f73c9;
+  --color-info-surface: #e7f0fc;
   --color-success: #16845a;
   --color-success-surface: #e8f7ef;
   --color-warning: #a96800;
@@ -60,6 +61,15 @@
   --radius-card: 0.875rem; /* 14px — between the 12–16px card range */
   --radius-button: 0.5rem; /* 8px — between the 8–10px button range */
   --radius-panel: 1rem; /* 16px */
+
+  /* ---------------------------------------------------------------------
+   * Content width (spec §4.4)
+   *
+   * One source of truth for how wide a reading or marketing surface may
+   * grow. The application canvas sits wider than the landing/onboarding
+   * columns because a workbench needs room for a rail plus a panel.
+   * ------------------------------------------------------------------ */
+  --container-canvas: 1600px; /* signed-in workbench (main element) */
 
   /* Elevation is used sparingly: borders carry hierarchy before shadows. */
   --shadow-panel: 0 1px 2px 0 rgb(11 23 48 / 0.04), 0 8px 24px -12px rgb(11 23 48 / 0.12);

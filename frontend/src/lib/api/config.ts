@@ -28,7 +28,7 @@ export type ProductMode = 'demo' | 'student_testing';
 export const PRODUCT_MODE: ProductMode =
   import.meta.env.VITE_PRODUCT_MODE === 'student_testing' ? 'student_testing' : 'demo';
 
-/** Whether to display the "prototype data" banner. */
+/** Whether to display the "sample data" banner. */
 export const SHOW_PROTOTYPE_BANNER: boolean =
   import.meta.env.VITE_SHOW_PROTOTYPE_BANNER === 'true' || IS_MOCK_MODE;
 

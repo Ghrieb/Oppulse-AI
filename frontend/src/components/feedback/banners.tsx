@@ -25,10 +25,11 @@ export function OfflineBanner({ className }: { className?: string }) {
 }
 
 /**
- * Prototype banner.
+ * Sample-data banner.
  *
- * While the app runs against fixtures, this states so plainly. A judge must
- * never mistake a prototype screen for a working product.
+ * While the app runs against fixtures, this states so plainly in language a
+ * student understands — no internal terms such as "prototype", "backend" or
+ * "fixtures". Honest disclosure, plain words.
  */
 export function PrototypeBanner({ className }: { className?: string }) {
   if (!SHOW_PROTOTYPE_BANNER) return null;
@@ -42,12 +43,11 @@ export function PrototypeBanner({ className }: { className?: string }) {
       )}
     >
       <FlaskConical aria-hidden="true" className="size-3.5 shrink-0" />
-      <span className="font-semibold">Prototype data</span>
+      <span className="font-semibold">Sample data</span>
       <span className="hidden text-primary/80 sm:inline">
-        — the backend is not connected yet. Names, programmes and sources below are synthetic
-        fixtures.
+        — names, programmes and sources below are examples while your workspace is being set up.
       </span>
-      <span className="text-primary/80 sm:hidden">— backend not connected</span>
+      <span className="text-primary/80 sm:hidden">— examples only</span>
     </div>
   );
 }

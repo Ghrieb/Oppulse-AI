@@ -60,7 +60,7 @@ export function ConnectionIndicator() {
           ) : (
             <Wifi aria-hidden="true" className="size-3.5" />
           )}
-          {IS_MOCK_MODE ? 'Demo data' : 'Live API'}
+          {IS_MOCK_MODE ? 'Sample data' : 'Live API'}
           <span className="sr-only">Open connection status</span>
         </button>
       </DropdownMenuTrigger>
@@ -68,7 +68,9 @@ export function ConnectionIndicator() {
         <DropdownMenuLabel className="flex flex-col gap-0.5">
           <span>Connection status</span>
           <span className="text-meta font-normal text-text-muted">
-            API connection: {IS_MOCK_MODE ? 'mock' : 'live'} · Product mode: {PRODUCT_MODE}
+            {IS_MOCK_MODE
+              ? 'Running on sample data — examples, not real records'
+              : 'Connected to the live service'}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -98,8 +100,8 @@ export function ConnectionIndicator() {
 /**
  * Capability banner.
  *
- * In Student Testing mode this replaces the generic synthetic-data banner:
- * per-service status instead of one blanket claim.
+ * Per-service status instead of one blanket claim: each service says what it
+ * actually is right now — live, sample or not configured.
  */
 export function CapabilityBanner({ className }: { className?: string }) {
   const { data, isPending } = useCapabilityStatus();
@@ -114,7 +116,7 @@ export function CapabilityBanner({ className }: { className?: string }) {
         className,
       )}
     >
-      <span className="font-semibold text-text">Student testing</span>
+      <span className="font-semibold text-text">Service status</span>
       {data.capabilities.map((capability) => {
         const badge = CAPABILITY_BADGE[capability.mode];
         return (

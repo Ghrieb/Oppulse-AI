@@ -42,7 +42,7 @@ describe('accessibility', () => {
   it('the monitoring screen has no serious accessibility violations', async () => {
     const { container } = renderWithProviders(<MonitoringPage />);
 
-    await screen.findByRole('heading', { name: 'Monitoring and alerts' });
+    await screen.findByRole('heading', { name: 'Monitoring & Alerts' });
 
     const violations = await findAccessibilityViolations(container);
     expect(describeViolations(violations)).toBe('');

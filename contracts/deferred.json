@@ -33,11 +33,6 @@
       "reason": "Missions are created through POST /onboarding/complete; nothing posts a bare one."
     },
     {
-      "method": "POST",
-      "path": "/api/v1/opportunities/compare",
-      "reason": "Reserved for the assistant's action pipeline; no page posts it."
-    },
-    {
       "method": "GET",
       "path": "/api/v1/profile/snapshots/latest",
       "reason": "Snapshots are taken by the backend but no UI ever reads one back."

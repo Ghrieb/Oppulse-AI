@@ -1,0 +1,11 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none">
+ <defs><linearGradient id="bg" x1="25" y1="20" x2="230" y2="240" gradientUnits="userSpaceOnUse"><stop stop-color="#F2F0FF"/><stop offset="1" stop-color="#DDEBFF"/></linearGradient><linearGradient id="shell" x1="72" y1="57" x2="182" y2="203" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#DBE4FF"/></linearGradient><linearGradient id="face" x1="82" y1="78" x2="174" y2="143" gradientUnits="userSpaceOnUse"><stop stop-color="#172A50"/><stop offset="1" stop-color="#273F78"/></linearGradient><linearGradient id="accent" x1="70" y1="90" x2="188" y2="190" gradientUnits="userSpaceOnUse"><stop stop-color="#8E72FF"/><stop offset="1" stop-color="#5C55E8"/></linearGradient></defs>
+ <circle cx="128" cy="128" r="120" fill="url(#bg)"/><circle cx="128" cy="128" r="119" stroke="#C9D7FF" stroke-width="2"/>
+ <path d="M128 38v16" stroke="#5869B7" stroke-width="5" stroke-linecap="round"/><circle cx="128" cy="32" r="9" fill="#7969F2"/><circle cx="125" cy="29" r="3" fill="#fff" fill-opacity=".8"/>
+ <rect x="49" y="91" width="18" height="51" rx="9" fill="url(#accent)"/><rect x="189" y="91" width="18" height="51" rx="9" fill="url(#accent)"/>
+ <rect x="64" y="64" width="128" height="98" rx="34" fill="url(#shell)" stroke="#9CADED" stroke-width="3"/><rect x="78" y="78" width="100" height="70" rx="25" fill="url(#face)"/>
+ <path d="M99 110c0-6 4-10 9-10s9 4 9 10v2c0 6-4 10-9 10s-9-4-9-10v-2Zm40 0c0-6 4-10 9-10s9 4 9 10v2c0 6-4 10-9 10s-9-4-9-10v-2Z" fill="#79E7F5"/><path d="M116 133c7 5 17 5 24 0" stroke="#A9F1F5" stroke-width="3" stroke-linecap="round"/>
+ <path d="M92 164h72l17 34c2 5-1 10-7 10H82c-6 0-9-5-7-10l17-34Z" fill="url(#shell)" stroke="#9CADED" stroke-width="3"/><path d="m128 172 9 10-9 17-9-17 9-10Z" fill="#8B78FF"/><circle cx="128" cy="184" r="3" fill="#DDFBFF"/>
+ <circle cx="57" cy="69" r="5" fill="#60D8E7"/><path d="M197 165c7-8 17-8 23 0-6 8-16 8-23 0Z" fill="#8D79F4"/><circle cx="208" cy="165" r="3" fill="#fff"/>
+ <ellipse cx="128" cy="220" rx="52" ry="7" fill="#A5B5E9" fill-opacity=".35"/>
+</svg>

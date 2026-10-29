@@ -184,8 +184,8 @@ test('a student can complete the primary journey', async ({ page }) => {
   await expect(page.getByText(/Enrolled in a Master/)).toBeVisible();
 
   // 6. The evidence is reachable and cites a source.
-  await page.getByRole('tab', { name: 'Evidence' }).click();
-  await expect(page.getByRole('heading', { name: 'Source references' })).toBeVisible();
+  await page.getByRole('tab', { name: 'Sources' }).click();
+  await expect(page.getByRole('heading', { name: 'Sources' })).toBeVisible();
   await page.getByRole('button', { name: 'Open drawer' }).click();
   await expect(page.getByRole('dialog', { name: 'Source evidence' })).toBeVisible();
   await page.getByRole('button', { name: 'Close' }).click();
@@ -195,7 +195,7 @@ test('a student can complete the primary journey', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Application workspace' })).toBeVisible();
   await page.getByRole('link', { name: 'Continue application' }).first().click();
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.getByText('Next best action:')).toBeVisible();
+  await expect(page.getByText('Next best action')).toBeVisible();
 
   // 8. The writing studio shows a reviewable proposal, not an applied edit.
   await page.goto('/writing/60000000-0000-4000-8000-000000000001');
@@ -206,13 +206,13 @@ test('a student can complete the primary journey', async ({ page }) => {
 
   // 9. Monitoring shows real check times, not a live promise.
   await page.goto('/monitoring');
-  await expect(page.getByRole('heading', { name: 'Monitoring and alerts' })).toBeVisible();
-  await expect(page.getByText('Last successful check').first()).toBeVisible();
-  await expect(page.getByText('Next scheduled check').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Monitoring & Alerts' })).toBeVisible();
+  await expect(page.getByText('Last check').first()).toBeVisible();
+  await expect(page.getByText('Next check').first()).toBeVisible();
 
   // 10. The profile requires confirmation of extracted facts.
   await page.goto('/documents');
-  await expect(page.getByRole('heading', { name: 'My documents' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Documents' })).toBeVisible();
   await expect(page.getByText(/facts waiting for your confirmation/)).toBeVisible();
   await expect(page.getByRole('link', { name: 'Review in your passport' })).toBeVisible();
 
@@ -231,7 +231,7 @@ test('a protected route sends a signed-out visitor to sign in and back again', a
 
   // The intended destination is restored.
   await expect(page).toHaveURL(/\/documents/);
-  await expect(page.getByRole('heading', { name: 'My documents' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Documents' })).toBeVisible();
 
   expect(errors, `Console errors:\n${errors.join('\n')}`).toEqual([]);
 });
@@ -318,9 +318,9 @@ test('every primary route renders without console errors', async ({ page }) => {
   for (const route of routes) {
     await page.goto(route);
     await expect(page.getByRole('main')).toBeVisible();
-    // The prototype banner must be visible: a judge must never mistake a
-    // prototype for a working product.
-    await expect(page.getByText('Prototype data')).toBeVisible();
+    // The sample-data marker must be visible: a visitor must never mistake
+    // sample content for real records.
+    await expect(page.getByText('Sample data')).toBeVisible();
   }
 
   expect(errors, `Console errors:\n${errors.join('\n')}`).toEqual([]);

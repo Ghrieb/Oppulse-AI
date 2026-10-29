@@ -11,7 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_API_BASE_URL?: string;
   /** `mock` serves fixtures from MSW; `live` calls a real backend. */
   readonly VITE_API_MODE?: 'mock' | 'live';
-  /** Shows the "prototype data" banner. */
+  /** Shows the "sample data" banner. */
   readonly VITE_SHOW_PROTOTYPE_BANNER?: string;
   /** `demo` labels synthetic data; `student_testing` shows capability-specific status. */
   readonly VITE_PRODUCT_MODE?: 'demo' | 'student_testing';

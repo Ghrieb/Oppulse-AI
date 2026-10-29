@@ -41,13 +41,15 @@ test('the first MVP delivers in-app alerts only, and does not advertise email', 
   // In-app is the only channel, and the interface says so plainly rather
   // than offering a control that cannot deliver anything.
   await expect(page.getByText('In-app only, for now')).toBeVisible();
-  await expect(page.getByText(/Email notifications are a later increment/)).toBeVisible();
+  await expect(page.getByText(/Email notifications are not available yet/)).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Daily digest' })).toHaveCount(0);
 
-  // And the capability strip does not claim email is live.
-  await page.goto('/');
+  // And the capability strip does not claim email is live. (The public
+  // landing page lives at `/` since guests can explore; the strip is on
+  // the signed-in workspace.)
+  await page.goto('/home');
   await expect(page.getByText('Email notifications')).toBeVisible();
-  await expect(page.getByText('Not connected').first()).toBeVisible();
+  await expect(page.getByText('Not configured').first()).toBeVisible();
 
   // The alert list still shows every alert in the app.
   await page.goto('/monitoring');

@@ -1,9 +1,10 @@
-import { Bot, Compass, Link2, MessageSquareText, Target } from 'lucide-react';
+import { Compass, Link2, MessageSquareText, Target } from 'lucide-react';
 import { ActionChips } from '@/components/agent/action-chips';
 import { AgentConversation } from '@/components/agent/agent-conversation';
 import { AgentComposer } from '@/components/agent/agent-composer';
 import { ApprovalBoundaryNote } from '@/components/agent/assistant-blocks';
 import { ContextStrip } from '@/components/agent/context-strip';
+import { OppulseIdentity } from '@/components/agent/oppulse-identity';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { PageHeader } from '@/components/feedback/banners';
@@ -29,12 +30,7 @@ export function AssistantPage() {
         <Card className="flex min-h-[36rem] flex-col overflow-hidden">
           <div className="flex flex-col gap-3 border-b border-border p-5">
             <div className="flex items-start gap-3">
-              <span
-                aria-hidden="true"
-                className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/12 text-primary"
-              >
-                <Bot className="size-5" />
-              </span>
+              <OppulseIdentity size="md" className="mt-0.5 rounded-full ring-1 ring-border" />
               <div className="flex flex-col gap-1">
                 <h2 className="text-card-title font-semibold text-text">Ask your agent</h2>
                 <p className="text-sm text-text-muted">

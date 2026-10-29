@@ -57,7 +57,7 @@ function brand(
     officialDomain,
     logoUrl: options.logoUrl ?? null,
     bannerUrl: options.bannerUrl ?? null,
-    attribution: options.logoUrl ? 'Synthetic demo asset' : null,
+    attribution: options.logoUrl ? 'Sample illustration' : null,
     verifiedAt: '2026-10-18T21:10:00.000Z',
     source: options.source ?? 'fallback',
     // A synthetic institution is never looked up on a third-party service.

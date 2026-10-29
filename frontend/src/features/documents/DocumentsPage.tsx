@@ -35,7 +35,7 @@ export function DocumentsPage() {
   return (
     <div className="flex flex-col gap-5">
       <PageHeader
-        title="My documents"
+        title="Documents"
         description="Your CV, transcripts and certificates. Oppulse reads them locally and proposes what it finds — nothing is used until you confirm it."
         actions={
           pendingFacts.length > 0 ? (

@@ -505,8 +505,10 @@
       "method": "POST",
       "path": "/api/v1/opportunities/compare",
       "coverage": {
-        "kind": "deferred",
-        "reason": "Reserved for the assistant's action pipeline; no page posts it."
+        "kind": "hook",
+        "callers": [
+          "lib/queries.ts"
+        ]
       }
     },
     {

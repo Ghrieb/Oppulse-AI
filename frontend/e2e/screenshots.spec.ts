@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 
 /**
@@ -85,12 +85,18 @@ test('capture desktop screens', async ({ page }) => {
   await page.waitForTimeout(1500);
   await page.screenshot({ path: `${OUTPUT}/08-application-workspace.png`, fullPage: false });
 
+  // Wait for real content, not a timer: both routes are code-split and
+  // fetch on mount, so a fixed delay can capture the loading skeleton.
   await page.goto('/writing/60000000-0000-4000-8000-000000000001');
-  await page.waitForTimeout(2200);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText('Version history').first()).toBeVisible({ timeout: 20_000 });
   await page.screenshot({ path: `${OUTPUT}/09-writing-studio.png`, fullPage: false });
 
   await page.goto('/monitoring');
-  await page.waitForTimeout(1500);
+  await expect(page.getByRole('heading', { name: 'Monitoring & Alerts' })).toBeVisible({
+    timeout: 20_000,
+  });
+  await expect(page.getByText('Monitoring targets').first()).toBeVisible({ timeout: 20_000 });
   await page.screenshot({ path: `${OUTPUT}/10-monitoring.png`, fullPage: false });
 
   await page.goto('/goals');

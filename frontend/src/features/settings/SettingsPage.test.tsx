@@ -21,7 +21,7 @@ describe('SettingsPage', () => {
     renderWithProviders(<SettingsPage />);
 
     expect(await screen.findByText('In-app only, for now')).toBeInTheDocument();
-    expect(screen.getByText(/Email notifications are a later increment/)).toBeInTheDocument();
+    expect(screen.getByText(/Email notifications are not available yet/)).toBeInTheDocument();
   });
 
   it('does not offer an email control that cannot deliver anything', async () => {

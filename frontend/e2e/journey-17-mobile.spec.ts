@@ -64,7 +64,7 @@ test('an opportunity opened from the assistant becomes the full detail route', a
   await tap(page.getByRole('link', { name: HELIOS }).first());
   await expect(page.getByRole('heading', { level: 1, name: HELIOS })).toBeVisible();
 
-  await tap(page.getByRole('button', { name: 'Ask about this opportunity' }));
+  await tap(page.getByRole('button', { name: 'Ask Oppulse' }));
   await expect(page).toHaveURL(/\/assistant/);
   await expect(page.getByText('Working on', { exact: true })).toBeVisible();
 
@@ -88,11 +88,11 @@ test('an opportunity opened from the assistant becomes the full detail route', a
   await expect(page.getByRole('heading', { level: 1, name: HELIOS })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'AI overview' })).toBeVisible();
   await expect(page.getByText('Deadline', { exact: true }).first()).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Back to opportunities' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Back to results' })).toBeVisible();
 
-  // Evidence is on the phone too, not behind a hover or a wide screen.
-  await tap(page.getByRole('tab', { name: 'Evidence' }));
-  await expect(page.getByRole('heading', { name: 'Source references' })).toBeVisible();
+  // Sources are on the phone too, not behind a hover or a wide screen.
+  await tap(page.getByRole('tab', { name: 'Sources' }));
+  await expect(page.getByRole('heading', { name: 'Sources' })).toBeVisible();
   await expect(page.getByText('Official source').first()).toBeVisible();
 
   // Going back returns to the same conversation - the thread was never lost.
