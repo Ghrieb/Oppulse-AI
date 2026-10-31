@@ -4,6 +4,7 @@
   "buildCommand": "cd frontend && npm run build",
   "outputDirectory": "frontend/dist",
   "env": {
+    "OPPULSE_DATABASE_BYPASS": "true",
     "VITE_API_MODE": "live",
     "VITE_GUEST_DEMO": "false",
     "VITE_PRODUCT_MODE": "student_testing",

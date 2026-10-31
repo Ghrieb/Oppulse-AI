@@ -44,6 +44,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        # The temporary Vercel database-bypass workspace has no migrations.
+        # Build its schema at startup so registration and the student flow can
+        # continue while the durable Supabase connection is being repaired.
+        if resolved.database_bypass:
+            from .db.session import create_all
+
+            await create_all()
+
         # The run worker: one loop that claims queued runs, walks their
         # stages and writes the timeline. Tests drive the worker directly
         # and never run this lifespan, so the switch is configuration.

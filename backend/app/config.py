@@ -51,6 +51,12 @@ class Settings(BaseSettings):
     models are written to be portable; only the driver changes."""
 
     database_echo: bool = False
+    database_bypass: bool = False
+    """Use an isolated temporary SQLite workspace when Postgres is unavailable.
+
+    This is intended only for a short-lived hosted review: Vercel may discard
+    its local filesystem between instances, so student data is not durable.
+    """
 
     # -- Private document storage --------------------------------------
 
@@ -162,7 +168,7 @@ class Settings(BaseSettings):
         """Reject settings that could make a deployment unsafe."""
         if not self.is_local and self.jwt_secret == LOCAL_JWT_SECRET:
             raise ValueError("OPPULSE_JWT_SECRET must be replaced outside local development.")
-        if self.is_production and self.uses_sqlite:
+        if self.is_production and self.uses_sqlite and not self.database_bypass:
             raise ValueError("Production must use a durable Postgres database.")
 
     @field_validator("cors_origins")
@@ -187,7 +193,14 @@ class Settings(BaseSettings):
 
     @property
     def uses_sqlite(self) -> bool:
-        return self.database_url.startswith("sqlite")
+        return self.effective_database_url.startswith("sqlite")
+
+    @property
+    def effective_database_url(self) -> str:
+        """The connection URL actually used by the running service."""
+        if self.database_bypass:
+            return "sqlite+aiosqlite:////tmp/oppulse.db"
+        return self.database_url
 
     @property
     def model_is_live(self) -> bool:
