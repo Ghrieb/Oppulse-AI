@@ -27,8 +27,19 @@ class Base(DeclarativeBase):
 def create_engine() -> AsyncEngine:
     """The engine, for the configured database."""
     settings = get_settings()
+    database_url = settings.database_url
+    # Supabase's dashboard supplies a standard `postgresql://` URL. This
+    # service uses SQLAlchemy's async engine and ships asyncpg, so select that
+    # driver explicitly instead of SQLAlchemy's synchronous psycopg driver.
+    if database_url.startswith("postgresql://"):
+        database_url = database_url.replace(
+            "postgresql://", "postgresql+asyncpg://", 1
+        )
+    elif database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql+asyncpg://", 1)
+
     return create_async_engine(
-        settings.database_url,
+        database_url,
         echo=settings.database_echo,
         future=True,
     )
