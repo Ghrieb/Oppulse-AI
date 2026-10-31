@@ -310,7 +310,7 @@ export function OpportunityDetailPage() {
                   ))}
                 </ul>
                 {// eslint-disable-line @typescript-eslint/no-unnecessary-condition
-match?.warnings?.length > 0 ? (
+(match?.warnings?.length ?? 0) > 0 ? (
                   <>
                     <h3 className="text-sm font-semibold text-text">What to verify</h3>
                     <ul className="flex flex-col gap-1.5">

@@ -75,9 +75,14 @@ export function EligibilityBadge({ status }: { status: RequirementStatus }) {
 }
 
 /* Fit score display — shows the match percentage. */
-export function FitScore({ match }: { match: Match | null | undefined }) {
+type FitScoreMatch = Pick<Match, 'fitScore' | 'fitLabel'>;
+
+export function FitScore({ match }: {
+  match: FitScoreMatch | null | undefined;
+  size?: 'sm' | 'md';
+}) {
   if (!match) return <span className="text-text-muted">Not assessed</span>;
-  const pct = Math.round((match.fitScore ?? 0) * 100);
+  const pct = Math.round(match.fitScore);
   return (
     <div className="flex items-baseline gap-1.5">
       <span className="text-sm font-medium text-text">{pct}% match</span>
