@@ -659,72 +659,42 @@ async def _handle_discovery(
     conv_state: ConversationState,
     thread: Thread,
 ) -> tuple[list[dict[str, Any]], list[str], dict[str, Any]]:
-    """Handle opportunity discovery request - create mission and run."""
-    blocks: list[dict[str, Any]] = []
-    suggestions: list[str] = []
-    response_payload = {"stage": "discovery_started"}
+    """Run a bounded live discovery immediately in serverless deployments."""
+    from ..api.research import DiscoverRequest, discover_opportunities
 
-    # Create mission for discovery
-    mission = Mission(
-        owner_id=user.id,
-        title="Opportunity Discovery",
-        objective=body.message,
-        criteria={
-            "objective": body.message,
-            "filters": {},
-            "opportunity_types": classified.entities.get("opportunity_types", []),
-            "funding_preference": classified.entities.get("funding_preference", "any"),
-            "destinations": classified.entities.get("destinations", []),
-            "destination_countries": classified.entities.get("destination_countries", []),
-        },
-        status="active",
-        source="assistant",
+    filters = {
+        "opportunity_types": classified.entities.get("opportunity_types", []),
+        "funding_preference": classified.entities.get("funding_preference", "any"),
+        "destinations": classified.entities.get("destinations", []),
+        "destination_countries": classified.entities.get("destination_countries", []),
+    }
+    result = await discover_opportunities(
+        DiscoverRequest(objective=body.message, filters=filters, max_results=3), user, session
     )
-    session.add(mission)
-    await session.flush()
+    titles = [item.title for item in result.opportunities]
+    if titles:
+        summary = "I completed a live search. I found: " + "; ".join(titles) + "."
+    else:
+        summary = (
+            "I completed a live search, but I could not verify an official opportunity from the "
+            "sources reached. Try adding a country, funding preference, or programme type."
+        )
 
-    # Create run for the discovery mission
-    import uuid
-
-    run_id = str(uuid.uuid4())
-    run = Run(
-        id=run_id,
-        mission_id=mission.id,
-        owner_id=user.id,
-        status="queued",
-        phase="queued",
-        budget={"max_tokens": 8000, "max_cost": 10.0, "time_limit": 300},
-        checkpoint={"stage": "planning", "opportunityId": None},
-        attempt=0,
-        idempotency_key=None,
+    return (
+        [
+            {"kind": "text", "text": summary},
+            {
+                "kind": "action",
+                "label": "Review live results",
+                "description": "Open the verified opportunities and their source evidence.",
+                "action": "open_route",
+                "payload": {"route": "/opportunities"},
+                "effect": "prepares",
+            },
+        ],
+        ["Show the funding details", "Which result fits me best?", "Search another field"],
+        {"stage": "discovery_complete", "count": len(titles)},
     )
-    session.add(run)
-    await session.commit()
-
-    # Update conversation state
-    conv_state.set_active_mission(mission.id, run_id)
-
-    # Trigger assistant discovery via thread
-    from ..db.models import ThreadTurn
-
-    turn = ThreadTurn(
-        thread_id=thread.id,
-        owner_id=thread.owner_id,
-        mission_id=thread.mission_id,
-        role="user",
-        content=body.message,
-        blocks=[],
-        context={"objective": body.message, "discovery_triggered": True},
-        selected_fact_ids=[],
-        selected_document_ids=[],
-        consent_state={"allowProfileMatching": True, "externalModelProcessing": False},
-        run_id=run_id,
-    )
-    session.add(turn)
-    await session.commit()
-
-    response_payload = {"stage": "started", "run_id": run_id, "mission_id": mission.id}
-    return blocks, [], response_payload
 
 
 async def _handle_url_analysis(

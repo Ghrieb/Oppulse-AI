@@ -129,11 +129,36 @@ def _iso(value: datetime | None) -> str:
 
 def _mission_out(mission: Mission) -> MissionOut:
     monitoring = mission.monitoring or {}
+    stored_criteria = dict(mission.criteria or {})
+    # Older onboarding and assistant paths stored partial or snake_case
+    # criteria. The browser contract expects a complete camelCase search
+    # plan, so normalise it at the API boundary while those records remain.
+    criteria = {
+        "opportunityTypes": list(
+            stored_criteria.get("opportunityTypes", stored_criteria.get("opportunity_types", []))
+        ),
+        "academicInterests": list(
+            stored_criteria.get("academicInterests", stored_criteria.get("academic_interests", []))
+        ),
+        "destinations": list(stored_criteria.get("destinations", [])),
+        "destinationCountries": list(
+            stored_criteria.get("destinationCountries", stored_criteria.get("destination_countries", []))
+        ),
+        "educationLevel": stored_criteria.get(
+            "educationLevel", stored_criteria.get("education_level", "any")
+        ),
+        "fundingPreference": stored_criteria.get(
+            "fundingPreference", stored_criteria.get("funding_preference", "any")
+        ),
+        "startPeriod": str(stored_criteria.get("startPeriod", stored_criteria.get("start_period", ""))),
+        "useProfile": bool(stored_criteria.get("useProfile", stored_criteria.get("use_profile", True))),
+        "sourceScope": list(stored_criteria.get("sourceScope", stored_criteria.get("source_scope", []))),
+    }
     return MissionOut(
         id=mission.id,
         title=mission.title,
         objective=mission.objective,
-        criteria=dict(mission.criteria or {}),
+        criteria=criteria,
         status=mission.status,
         source=mission.source,
         selected_document_ids=list(mission.selected_document_ids or []),
