@@ -1,6 +1,6 @@
 import { setupWorker } from 'msw/browser';
 import { handlers } from './handlers';
-import { persistState } from './state';
+import { persistState, signInAsDemo } from './state';
 import { clearAllChaosRules, listChaosRules, setChaosRule } from './chaos';
 
 /**
@@ -11,6 +11,14 @@ import { clearAllChaosRules, listChaosRules, setChaosRule } from './chaos';
  * failures — while the responses come from fixtures.
  */
 export const worker = setupWorker(...handlers);
+
+/**
+ * Opens the fixture-backed workspace without collecting credentials.
+ * This is only called when the build is explicitly configured for mock mode.
+ */
+export function startGuestWorkspace(): void {
+  signInAsDemo();
+}
 
 /**
  * Writes the state back to the store after every change.

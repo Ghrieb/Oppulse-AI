@@ -21,9 +21,12 @@ const queryClient = createQueryClient();
  */
 async function enableMocking(): Promise<void> {
   if (!IS_MOCK_MODE) return;
-  if (!import.meta.env.DEV) return;
 
-  const { worker, exposeDevTools } = await import('./mocks/browser');
+  const { worker, exposeDevTools, startGuestWorkspace } = await import('./mocks/browser');
+  // The hosted demo deliberately opens as a guest workspace. It uses the
+  // same persisted fixture store as the local prototype, but never asks a
+  // reviewer to create an account before they can explore the product.
+  startGuestWorkspace();
   exposeDevTools();
   await worker.start({
     onUnhandledFrame: 'bypass',

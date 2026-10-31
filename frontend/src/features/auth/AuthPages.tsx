@@ -188,7 +188,7 @@ export function SignInPage() {
             void navigate('/home');
           }}
         >
-          Continue as the demo student
+          Continue without signing in
         </Button>
       </form>
     </AuthLayout>
@@ -323,6 +323,18 @@ export function SignUpPage() {
           className="w-full"
         >
           Create my workspace
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="w-full"
+          onClick={() => {
+            void navigate('/home');
+          }}
+        >
+          Continue without signing in
         </Button>
       </form>
     </AuthLayout>
