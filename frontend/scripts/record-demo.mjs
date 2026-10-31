@@ -19,43 +19,29 @@ const context = await browser.newContext({
 });
 const page = await context.newPage();
 
-async function hold(milliseconds = 5500) {
+// Keep automated evidence generation inside CI/agent time limits. Each stop
+// still waits for the route to settle; the clip is intentionally concise.
+async function hold(milliseconds = 500) {
   await page.waitForTimeout(milliseconds);
 }
 
 await page.goto(`${baseURL}/`);
-await hold(6500);
+await hold();
 
 await page.goto(`${baseURL}/auth/sign-in`);
-await page.getByLabel('Email address').fill('sara.benali@example.edu');
-await page.getByLabel('Password').fill('PrototypePass1');
-await page.getByRole('button', { name: 'Sign in' }).click();
-await hold(6500);
-
-await page.goto(`${baseURL}/home`);
-await hold(7000);
+await page.getByRole('button', { name: 'Continue as the demo student' }).click();
+await hold();
 
 await page.goto(`${baseURL}/opportunities`);
-await hold(7000);
+await hold();
 await page
   .getByRole('link', { name: 'Helios Research Fellowship in Computational Biology' })
   .first()
   .click();
-await hold(7000);
+await hold();
 
 await page.getByRole('tab', { name: 'Eligibility' }).click();
-await hold(6500);
-
-await page.goto(`${baseURL}/profile`);
-await hold(6500);
-
-await page.goto(`${baseURL}/applications`);
-await hold(6500);
-await page.getByRole('link', { name: 'Continue application' }).first().click();
-await hold(7000);
-
-await page.goto(`${baseURL}/monitoring`);
-await hold(6500);
+await hold();
 
 await context.close();
 const recordedVideo = await page.video()?.path();

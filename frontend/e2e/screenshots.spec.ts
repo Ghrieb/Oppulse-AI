@@ -25,9 +25,7 @@ test('capture desktop screens', async ({ page }) => {
   await page.waitForTimeout(1200);
   await page.screenshot({ path: `${OUTPUT}/01-sign-in.png`, fullPage: false });
 
-  await page.getByLabel('Email address').fill('sara.benali@example.edu');
-  await page.getByLabel('Password').fill('PrototypePass1');
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('button', { name: 'Continue as the demo student' }).click();
   await page.waitForTimeout(2000);
   await page.screenshot({ path: `${OUTPUT}/01b-onboarding.png`, fullPage: false });
 
@@ -117,9 +115,7 @@ test('capture mobile screens', async ({ page }) => {
   await page.screenshot({ path: `${OUTPUT}/12-mobile-landing.png`, fullPage: false });
 
   await page.goto('/auth/sign-in');
-  await page.getByLabel('Email address').fill('sara.benali@example.edu');
-  await page.getByLabel('Password').fill('PrototypePass1');
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('button', { name: 'Continue as the demo student' }).click();
   await page.waitForTimeout(2000);
   await page.screenshot({ path: `${OUTPUT}/13-mobile-onboarding.png`, fullPage: false });
 
