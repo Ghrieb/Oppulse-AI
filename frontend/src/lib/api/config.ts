@@ -8,7 +8,11 @@
 
 /** Origin of the Oppulse AI API (no trailing slash). */
 export const API_BASE_URL: string = (
-  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
+  import.meta.env.VITE_API_BASE_URL ??
+  // A Vercel deployment serves the SPA and FastAPI function from one origin.
+  // `localhost` here would point at the visitor's computer, not the deployed
+  // API, which makes every sign-in or sign-up request fail in production.
+  (typeof window === 'undefined' ? 'http://localhost:8000' : window.location.origin)
 ).replace(/\/+$/, '');
 
 /** Versioned API prefix used by every backend endpoint. */
