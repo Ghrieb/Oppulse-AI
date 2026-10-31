@@ -9,5 +9,10 @@
       "maxDuration": 60,
       "excludeFiles": "{frontend/node_modules/**,frontend/src/**,frontend/e2e/**,backend/tests/**,backend/scripts/**,archive/**,docs/**,frontend/docs/**}"
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/health", "destination": "/api/index.py" },
+    { "source": "/health/ready", "destination": "/api/index.py" }
+  ]
 }
