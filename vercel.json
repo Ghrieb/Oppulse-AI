@@ -5,6 +5,7 @@
   "outputDirectory": "frontend/dist",
   "env": {
     "OPPULSE_DATABASE_BYPASS": "true",
+    "OPPULSE_ACCESS_TOKEN_TTL_SECONDS": "86400",
     "VITE_API_MODE": "live",
     "VITE_GUEST_DEMO": "false",
     "VITE_PRODUCT_MODE": "student_testing",

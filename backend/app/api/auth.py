@@ -222,18 +222,13 @@ async def read_session(
 
 async def _resolve_user(request: Request, session: AsyncSession) -> User | None:
     """The user the request is signed in as, if any."""
-    from ..security.session import _claims_from
+    from ..security.session import _claims_from, user_from_claims
 
     claims = _claims_from(request)
     if claims is None:
         return None
 
-    user_id = claims.get("sub")
-    if not isinstance(user_id, str):
-        return None
-
-    result = await session.execute(select(User).where(User.id == user_id))
-    return result.scalar_one_or_none()
+    return await user_from_claims(session, claims)
 
 
 @router.post("/sign-in")

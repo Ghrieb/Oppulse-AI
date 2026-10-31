@@ -8,6 +8,7 @@ therefore cannot return another student's row: the guard is in the way.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import Depends, Request
@@ -15,7 +16,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import get_settings
-from ..db.models import User
+from ..db.models import Profile, ProtectedProfile, User
 from ..db.session import get_session
 from ..errors import ApiProblem, ErrorCode, forbidden, unauthorized
 from .tokens import ACCESS_COOKIE_NAME, decode_access_token
@@ -48,8 +49,7 @@ async def current_user(
     if not isinstance(user_id, str):
         raise unauthorized()
 
-    result = await session.execute(select(User).where(User.id == user_id))
-    user = result.scalar_one_or_none()
+    user = await user_from_claims(session, claims)
     if user is None:
         raise unauthorized("Your session is no longer valid. Please sign in again.")
 
@@ -59,6 +59,54 @@ async def current_user(
         email_verified=user.email_verified,
         full_name=user.full_name,
     )
+
+
+async def user_from_claims(session: AsyncSession, claims: dict[str, Any]) -> User | None:
+    """Resolve a token to a user, restoring temporary Vercel workspaces."""
+    user_id = claims.get("sub")
+    if not isinstance(user_id, str):
+        return None
+
+    result = await session.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if user is not None:
+        return user
+
+    settings = get_settings()
+    email = claims.get("email")
+    if not settings.database_bypass or not isinstance(email, str):
+        return None
+
+    # A serverless instance may start with an empty /tmp database while the
+    # browser still holds a valid signed session. Recreate only that token's
+    # minimal workspace so the student can continue the temporary review
+    # flow; durable storage returns when the Postgres setting is restored.
+    user = User(
+        id=user_id,
+        email=email,
+        full_name="Student",
+        password_hash="temporary-session",
+        email_verified=False,
+    )
+    session.add(user)
+    session.add(
+        Profile(
+            user_id=user.id,
+            full_name=user.full_name,
+            email=user.email,
+            preferences={},
+            consent={"allowProfileMatching": True, "externalModelProcessing": False},
+        )
+    )
+    session.add(
+        ProtectedProfile(
+            owner_id=user.id,
+            date_of_birth_status="not_provided",
+            date_of_birth_updated_at=datetime.now(UTC),
+        )
+    )
+    await session.commit()
+    return user
 
 
 def _claims_from(request: Request) -> dict[str, Any] | None:
@@ -99,8 +147,7 @@ async def optional_user(
     if not isinstance(user_id, str):
         return None
 
-    result = await session.execute(select(User).where(User.id == user_id))
-    user = result.scalar_one_or_none()
+    user = await user_from_claims(session, claims)
     if user is None:
         return None
 
@@ -143,4 +190,5 @@ __all__ = [
     "optional_user",
     "owned",
     "require_ownership",
+    "user_from_claims",
 ]

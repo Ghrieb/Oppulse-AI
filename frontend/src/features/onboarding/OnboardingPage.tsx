@@ -15,6 +15,7 @@ import { ONBOARDING_QUESTIONS } from '@/lib/onboarding/questions';
 import { deriveMissionPreview, hydrateAnswers, nextQuestionId } from '@/lib/onboarding/engine';
 import {
   useCompleteOnboarding,
+  useDiscoverOpportunities,
   useDocuments,
   useOnboardingDraft,
   useProfile,
@@ -61,6 +62,7 @@ export function OnboardingPage() {
   const saveDraft = useSaveOnboardingDraft();
   const uploadDocument = useUploadDocument();
   const complete = useCompleteOnboarding();
+  const discover = useDiscoverOpportunities();
 
   const [referenceUrl, setReferenceUrl] = useState('');
   const [showPreview, setShowPreview] = useState(false);
@@ -181,10 +183,25 @@ export function OnboardingPage() {
   };
 
   const onRun = () => {
-    if (complete.isPending) return;
+    if (complete.isPending || discover.isPending) return;
     complete.mutate(draft, {
       onSuccess: () => {
-        void navigate('/home');
+        if (!preview) {
+          void navigate('/home');
+          return;
+        }
+        discover.mutate(preview.objective, {
+          onSuccess: () => {
+            void navigate('/home');
+          },
+          onError: () => {
+            toast({
+              tone: 'error',
+              title: 'We could not search live opportunities',
+              description: 'Your answers are saved. Try the search again in a moment.',
+            });
+          },
+        });
       },
       onError: () => {
         toast({
@@ -405,7 +422,7 @@ export function OnboardingPage() {
               onEditAnswer={setAnswer}
               onRun={onRun}
               onBack={() => setShowPreview(false)}
-              running={complete.isPending}
+              running={complete.isPending || discover.isPending}
             />
           ) : currentQuestionId ? (
             <div className="flex flex-col gap-5">
@@ -446,7 +463,7 @@ export function OnboardingPage() {
               onEditAnswer={setAnswer}
               onRun={onRun}
               onBack={() => setShowPreview(false)}
-              running={complete.isPending}
+              running={complete.isPending || discover.isPending}
             />
           ) : null}
         </OnboardingShell>
