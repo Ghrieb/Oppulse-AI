@@ -38,7 +38,7 @@ async def test_discovery_saves_deduplicated_source_backed_cards(
     await session.commit()
 
     class Search:
-        async def search(self, _query: str, *, limit: int = 10) -> list[RetrievedSource]:
+        async def search(self, _query: str, *, limit: int = 10, search_depth: str = "basic", **kwargs) -> list[RetrievedSource]:
             assert limit == 3
             return [
                 RetrievedSource(

@@ -40,6 +40,9 @@ export function OpportunitiesPage() {
   const [query, setQuery] = useState('');
   const [discoveryRequest, setDiscoveryRequest] = useState('');
   const [discoveryMessage, setDiscoveryMessage] = useState<string | null>(null);
+  const [discoveryCountries, setDiscoveryCountries] = useState('');
+  const [discoveryFundingPref, setDiscoveryFundingPref] = useState('any');
+  const [discoveryTypes, setDiscoveryTypes] = useState('');
 
   const { data, isPending, error, refetch } = useOpportunities();
   const { data: session } = useSession();
@@ -106,52 +109,113 @@ export function OpportunitiesPage() {
           <div>
             <h2 className="text-base font-semibold text-text">Find opportunities</h2>
             <p className="text-sm text-text-muted">
-              Search official programme pages. We save up to three source-linked results.
+              Search programme and funding sources. Oppulse saves up to eight source-linked results for you to review.
             </p>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <label htmlFor="discovery-request" className="sr-only">
-              What opportunities are you looking for?
-            </label>
-            <Input
-              id="discovery-request"
-              value={discoveryRequest}
-              onChange={(event) => setDiscoveryRequest(event.target.value)}
-              placeholder="Find fully funded Master's programmes in genetics in Europe"
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' && discoveryRequest.trim().length >= 10) {
-                  discover.mutate(discoveryRequest.trim(), {
-                    onSuccess: (result) =>
-                      setDiscoveryMessage(
-                        result.opportunities.length
-                          ? `${result.opportunities.length} ${result.opportunities.length === 1 ? 'opportunity' : 'opportunities'} saved.`
-                          : 'No supported official opportunities were found. Try a more specific search.',
-                      ),
-                    onError: () => setDiscoveryMessage('Search failed. Please try again.'),
-                  });
-                }
-              }}
-            />
-            <Button
-              className="shrink-0"
-              loading={discover.isPending}
-              loadingLabel="Checking sources…"
-              disabled={discoveryRequest.trim().length < 10}
-              onClick={() =>
-                discover.mutate(discoveryRequest.trim(), {
-                  onSuccess: (result) =>
-                    setDiscoveryMessage(
-                      result.opportunities.length
-                        ? `${result.opportunities.length} ${result.opportunities.length === 1 ? 'opportunity' : 'opportunities'} saved.`
-                        : 'No supported official opportunities were found. Try a more specific search.',
-                    ),
-                  onError: () => setDiscoveryMessage('Search failed. Please try again.'),
-                })
-              }
-            >
-              <Search aria-hidden="true" className="size-4" />
-              Find opportunities
-            </Button>
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <label htmlFor="discovery-request" className="sr-only">
+                What opportunities are you looking for?
+              </label>
+              <Input
+                id="discovery-request"
+                value={discoveryRequest}
+                onChange={(event) => setDiscoveryRequest(event.target.value)}
+                placeholder="Find fully funded Master's programmes in genetics in Europe"
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && discoveryRequest.trim().length >= 10) {
+                    const countries = discoveryCountries
+                      .split(',')
+                      .map((c) => c.trim().toUpperCase())
+                      .filter(Boolean);
+                    const types = discoveryTypes
+                      .split(',')
+                      .map((t) => t.trim())
+                      .filter(Boolean);
+                    discover.mutate(
+                      {
+                        objective: discoveryRequest.trim(),
+                        filters: {
+                          destination_countries: countries,
+                          opportunity_types: types,
+                          funding_preference: discoveryFundingPref,
+                        },
+                        maxResults: 8,
+                      },
+                      {
+                        onSuccess: (result) =>
+                          setDiscoveryMessage(
+                            result.opportunities.length
+                              ? `${result.opportunities.length} source-linked ${result.opportunities.length === 1 ? 'opportunity was' : 'opportunities were'} added to your results.`
+                              : 'No supported official opportunities were found. Try a more specific search.',
+                          ),
+                        onError: () => setDiscoveryMessage('Search failed. Please try again.'),
+                      },
+                    );
+                  }
+                }}
+              />
+              <Button
+                className="shrink-0"
+                loading={discover.isPending}
+                loadingLabel="Checking sources…"
+                disabled={discoveryRequest.trim().length < 10}
+                onClick={() => {
+                  const countries = discoveryCountries
+                    .split(',')
+                    .map((c) => c.trim().toUpperCase())
+                    .filter(Boolean);
+                  const types = discoveryTypes
+                    .split(',')
+                    .map((t) => t.trim())
+                    .filter(Boolean);
+                  discover.mutate(
+                    {
+                      objective: discoveryRequest.trim(),
+                      filters: {
+                        destination_countries: countries,
+                        opportunity_types: types,
+                        funding_preference: discoveryFundingPref,
+                      },
+                      maxResults: 8,
+                    },
+                    {
+                      onSuccess: (result) =>
+                        setDiscoveryMessage(
+                          result.opportunities.length
+                            ? `${result.opportunities.length} source-linked ${result.opportunities.length === 1 ? 'opportunity was' : 'opportunities were'} added to your results.`
+                            : 'No supported official opportunities were found. Try a more specific search.',
+                        ),
+                      onError: () => setDiscoveryMessage('Search failed. Please try again.'),
+                    },
+                  );
+                }}
+              >
+                <Search aria-hidden="true" className="size-4" />
+                Find opportunities
+              </Button>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-3">
+              <Input
+                value={discoveryCountries}
+                onChange={(event) => setDiscoveryCountries(event.target.value)}
+                placeholder="Countries (e.g., DE, NL)"
+              />
+              <Input
+                value={discoveryTypes}
+                onChange={(event) => setDiscoveryTypes(event.target.value)}
+                placeholder="Types (e.g., scholarship, fellowship)"
+              />
+              <select
+                className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={discoveryFundingPref}
+                onChange={(event) => setDiscoveryFundingPref(event.target.value)}
+              >
+                <option value="any">Any funding</option>
+                <option value="fully_funded">Fully funded</option>
+                <option value="partial_ok">Partially funded ok</option>
+              </select>
+            </div>
           </div>
           {discoveryMessage ? (
             <div

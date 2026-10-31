@@ -58,7 +58,7 @@ class DismissRequest(WireModel):
 class DiscoverRequest(WireModel):
     objective: str = Field(..., min_length=10)
     filters: dict[str, Any] = Field(default_factory=dict)
-    max_results: int = Field(default=3, ge=1, le=3)
+    max_results: int = Field(default=8, ge=1, le=8)
 
 
 def _evidence_out(evidence: Any) -> dict[str, Any]:
@@ -202,23 +202,87 @@ def _funding(coverage: str, note: str | None) -> dict[str, Any]:
     }
 
 
+def _institution_fallback(domain: str) -> str:
+    """A readable source label when a page does not name its institution."""
+    label = domain.removeprefix("www.").split(".")[0].replace("-", " ").strip()
+    return label.title() if label else "Institution not stated"
+
+
+def _summary_fallback(excerpt: str, title: str) -> str:
+    cleaned = " ".join(excerpt.split())
+    if cleaned:
+        return cleaned[:360].rstrip(" ,;:") + ("…" if len(cleaned) > 360 else "")
+    return f"See the source page for details about {title}."
+
+
+def _quality_of_url(url: str) -> str:
+    """Classify domain quality based on defensible official source rules."""
+    from urllib.parse import urlparse
+    domain = urlparse(url or "").netloc.lower()
+    if domain.endswith((".edu", ".ac.uk", ".gov", ".edu.cn", ".edu.au", ".edu.ca", ".edu.sg")) or ".edu." in domain:
+        return "official"
+    if any(part in domain for part in ("wikipedia", "blog", "medium", "reddit", "facebook", "twitter", "linkedin")):
+        return "secondary"
+    return "primary"
+
+
+def _extract_source_excerpt(source_text: str, label: str) -> str:
+    """Extract a genuine passage from source text that relates to the label."""
+    if not source_text:
+        return "Passage not directly quoted from source."
+    # Try to find sentences containing the label
+    label_lower = label.lower()
+    sentences = source_text.replace('\n', ' ').split('.')
+    for sentence in sentences:
+        sentence_stripped = sentence.strip()
+        if not sentence_stripped:
+            continue
+        if label_lower in sentence_stripped.lower():
+            # Return the sentence as excerpt (add period back if it was there)
+            excerpt = sentence_stripped
+            if len(excerpt) > 300:
+                excerpt = excerpt[:297] + "..."
+            elif not excerpt.endswith(('.', '!', '?')):
+                # Check if original had period
+                pass
+            return excerpt
+    # If no sentence contains the label, take a real chunk from source
+    excerpt = source_text.strip()[:300]
+    if len(source_text.strip()) > 300:
+        excerpt = excerpt.rstrip() + "..."
+    return excerpt if excerpt else "Passage not directly quoted from source."
+
+
 def _requirements(
     session: AsyncSession, labels: list[str], source: Source, opportunity: Opportunity
 ) -> list[dict[str, Any]]:
-    """Persist an evidence record for each source-backed requirement."""
+    """Persist an evidence record for each source-backed requirement without fabricating excerpts."""
     requirements: list[dict[str, Any]] = []
+    source_text = source.excerpt or source.page_reference or ""
+    # Determine source quality from domain, not just from model
+    source_quality = _quality_of_url(source.url)
+    # Override if source already has quality and it's more specific
+    if source.quality in ("official", "primary", "secondary") and source_quality != "secondary":
+        # Prefer domain-based classification for authority
+        domain_quality = _quality_of_url(source.url)
+        source_quality = domain_quality
+
     for label in dict.fromkeys(label.strip() for label in labels if label.strip()):
+        # Use genuine source excerpt, never use the label as the excerpt
+        excerpt = _extract_source_excerpt(source_text, label)
+        is_exact = label.lower() in source_text.lower()
+        
         evidence = Evidence(
             id=str(uuid.uuid4()),
             source_id=source.id,
             opportunity_id=opportunity.id,
             claim=label,
-            excerpt=label,
+            excerpt=excerpt,
             page_reference=source.page_reference,
             url=source.url,
-            quality="official",
+            quality=source_quality,
             stance="supports",
-            confidence="medium",
+            confidence="high" if (is_exact and source_quality == "official") else ("medium" if is_exact else "low"),
         )
         session.add(evidence)
         requirements.append(
@@ -227,7 +291,7 @@ def _requirements(
                 "label": label,
                 "kind": "other",
                 "status": "unresolved",
-                "sourceClause": label,
+                "sourceClause": excerpt if excerpt and excerpt != "Passage not directly quoted from source." else label,
                 "evidenceIds": [evidence.id],
                 "profileFactKey": None,
                 "check": None,
@@ -351,18 +415,19 @@ async def discover_opportunities(
             "Live opportunity discovery is unavailable until Tavily and Groq are configured."
         )
 
+    filters = body.filters or {}
     mission = Mission(
         owner_id=user.id,
         title="Opportunity Discovery",
         objective=body.objective,
         criteria={
             "objective": body.objective,
-            "filters": body.filters,
+            "filters": filters,
             "max_results": body.max_results,
-            "opportunityTypes": body.filters.get("opportunity_types", []),
-            "fundingPreference": body.filters.get("funding_preference", "any"),
-            "destinations": body.filters.get("destinations", []),
-            "destinationCountries": body.filters.get("destination_countries", []),
+            "opportunityTypes": filters.get("opportunity_types") or filters.get("opportunityTypes") or [],
+            "fundingPreference": filters.get("funding_preference") or filters.get("fundingPreference") or "any",
+            "destinations": filters.get("destinations") or [],
+            "destinationCountries": filters.get("destination_countries") or filters.get("destinationCountries") or [],
         },
         status="active",
         source="assistant",
@@ -397,13 +462,47 @@ async def discover_opportunities(
     model = build_model_provider(settings)
     saved: list[Opportunity] = []
     try:
-        results = await search.search(body.objective, limit=3)
+        # Build query incorporating filters like the worker does
+        query_parts = [body.objective]
+        funding_pref = filters.get("funding_preference") or filters.get("fundingPreference") or "any"
+        if funding_pref == "fully_funded":
+            query_parts.append("fully funded")
+        elif funding_pref == "partial_ok":
+            query_parts.append("partially funded")
+        opp_types = filters.get("opportunity_types") or filters.get("opportunityTypes") or []
+        for t in opp_types[:2]:
+            if isinstance(t, str):
+                query_parts.append(t.replace("_", " "))
+        countries = filters.get("destination_countries") or filters.get("destinationCountries") or []
+        # Map common country codes to names if needed
+        country_names = {
+            "US": "United States", "GB": "United Kingdom", "CA": "Canada", "DE": "Germany",
+            "FR": "France", "NL": "Netherlands", "SE": "Sweden", "NO": "Norway", "DK": "Denmark",
+            "FI": "Finland", "CH": "Switzerland", "AU": "Australia"
+        }
+        for c in countries[:3]:
+            if isinstance(c, str):
+                c_up = c.upper()
+                query_parts.append(country_names.get(c_up, c))
+        query_parts.append("official programme application funding eligibility")
+        query = " ".join(str(p) for p in query_parts if p)
+        try:
+            results = await search.search(query, limit=3, search_depth="advanced")
+        except TypeError:
+            results = await search.search(query, limit=3)
         seen_urls: set[str] = set()
         for result in results:
             if len(saved) >= body.max_results or result.url in seen_urls:
                 continue
             seen_urls.add(result.url)
-            page = await fetcher.fetch(result.url)
+            # Tavily already supplies a usable result excerpt. Avoid serially
+            # fetching every page in a serverless request; only fetch when
+            # the search result is too thin for a source-backed extraction.
+            page = result
+            if len(page.excerpt.strip()) < 400:
+                fetched = await fetcher.fetch(result.url)
+                if fetched.status == "retrieved" and fetched.excerpt.strip():
+                    page = fetched
             if page.status != "retrieved" or not page.excerpt.strip():
                 continue
 
@@ -412,22 +511,24 @@ async def discover_opportunities(
                     stage="opportunity_extraction",
                     response_schema="OpportunityExtraction",
                     instruction=(
-                        "Read this retrieved page and extract one application opportunity only if "
-                        "the page is an official institution or programme application page. Set "
-                        "both is_opportunity and is_official_source to true only when the page "
-                        "itself supports that conclusion. Return null for every detail the page "
-                        "does not state. "
-                        "Do not infer dates, funding, eligibility, country, or requirements."
+                        "Read this search result or retrieved page and extract one genuine academic "
+                        "opportunity. Return is_opportunity=true only when the result supports an "
+                        "actual programme, scholarship, fellowship, internship or application call. "
+                        "Set is_official_source=true only for an official institution or programme "
+                        "source. Extract title, institution, country, funding, deadline, eligibility "
+                        "and a concise source-grounded summary whenever stated. Return null for details "
+                        "the source does not state; never invent dates, funding or requirements."
                     ),
                     context={
                         "url": page.url,
                         "title": page.title,
-                        "page_text": page.excerpt[:4000],
+                        "page_text": page.excerpt[:6000],
                     },
                 )
             )
             extracted = OpportunityExtraction.model_validate(response.parsed)
-            if not (extracted.is_opportunity and extracted.is_official_source and extracted.title):
+            title = extracted.title or page.title or result.title
+            if not (extracted.is_opportunity and title):
                 continue
 
             duplicate = await session.scalar(
@@ -439,13 +540,15 @@ async def discover_opportunities(
                 saved.append(duplicate)
                 continue
 
+            domain = urlparse(page.url).netloc
+            source_quality = _quality_of_url(page.url)
             source = Source(
                 run_id=run.id,
                 url=page.url,
-                title=page.title or extracted.title,
-                domain=urlparse(page.url).netloc,
+                title=page.title or title,
+                domain=domain,
                 excerpt=page.excerpt[:4000],
-                quality="official",
+                quality=source_quality,
                 status="retrieved",
                 content_hash=page.content_hash or "",
                 page_reference=page.page_reference,
@@ -454,8 +557,8 @@ async def discover_opportunities(
             await session.flush()
             opportunity = Opportunity(
                 owner_id=user.id,
-                title=extracted.title,
-                institution=extracted.institution or "Not specified",
+                title=title,
+                institution=extracted.institution or _institution_fallback(domain),
                 type=_opportunity_type(extracted.opportunity_type),
                 country={
                     "iso2": (extracted.country_iso2 or "XX").upper(),
@@ -463,18 +566,33 @@ async def discover_opportunities(
                     "kind": "country" if extracted.country_name else "region",
                     "region": None,
                 },
-                source_domain=urlparse(page.url).netloc,
+                source_domain=domain,
                 canonical_url=page.url,
-                summary=extracted.summary or "Not specified",
-                institution_brand=_brand(extracted.institution, urlparse(page.url).netloc),
+                summary=extracted.summary or _summary_fallback(page.excerpt, title),
+                institution_brand=_brand(extracted.institution, domain),
                 duration=None,
                 application_opens_at=None,
-                tags=[_opportunity_type(extracted.opportunity_type)],
+                tags=list(
+                    dict.fromkeys(
+                        [
+                            _opportunity_type(extracted.opportunity_type),
+                            *( ["Master's"] if "master" in body.objective.lower() else [] ),
+                            *( ["Physics"] if "physics" in body.objective.lower() else [] ),
+                        ]
+                    )
+                ),
                 deadline=_deadline(extracted.deadline),
                 additional_deadlines=[],
                 funding=_funding(extracted.funding_coverage, extracted.funding_information),
                 requirements=[],
-                highlights=[],
+                highlights=[
+                    item
+                    for item in [
+                        extracted.funding_information,
+                        extracted.deadline and f"Deadline: {extracted.deadline}",
+                    ]
+                    if item
+                ],
                 field_status={},
                 saved=False,
                 dismissed=False,

@@ -598,12 +598,16 @@ export function useDiscoverOpportunities() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (objective: string) =>
-      apiClient.post(
-        '/opportunities/discover',
-        { objective, maxResults: 3 },
-        { schema: opportunityListSchema, timeoutMs: 120_000 },
-      ),
+    mutationFn: (input: string | { objective: string; filters?: Record<string, unknown>; maxResults?: number }) => {
+      const body =
+        typeof input === 'string'
+          ? { objective: input, maxResults: 8 }
+          : { objective: input.objective, filters: input.filters ?? {}, maxResults: input.maxResults ?? 8 };
+      return apiClient.post('/opportunities/discover', body, {
+        schema: opportunityListSchema,
+        timeoutMs: 120_000,
+      });
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['opportunities'] });
     },
