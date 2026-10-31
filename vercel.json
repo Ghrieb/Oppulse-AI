@@ -4,9 +4,10 @@
   "buildCommand": "cd frontend && npm run build",
   "outputDirectory": "frontend/dist",
   "env": {
-    "VITE_API_MODE": "mock",
-    "VITE_PRODUCT_MODE": "demo",
-    "VITE_SHOW_PROTOTYPE_BANNER": "true"
+    "VITE_API_MODE": "live",
+    "VITE_GUEST_DEMO": "false",
+    "VITE_PRODUCT_MODE": "student_testing",
+    "VITE_SHOW_PROTOTYPE_BANNER": "false"
   },
   "framework": null,
   "functions": {

@@ -9,7 +9,7 @@ import { RouteErrorFallback } from './app/route-fallback';
 import { createQueryClient } from './lib/api/query-client';
 import { ToastProvider } from './components/feedback/toast';
 import { TooltipProvider } from './components/ui/tooltip';
-import { IS_MOCK_MODE } from './lib/api/config';
+import { USE_FIXTURE_BACKEND } from './lib/api/config';
 import './styles/globals.css';
 
 const queryClient = createQueryClient();
@@ -20,7 +20,7 @@ const queryClient = createQueryClient();
  * requests would escape to the network and fail.
  */
 async function enableMocking(): Promise<void> {
-  if (!IS_MOCK_MODE) return;
+  if (!USE_FIXTURE_BACKEND) return;
 
   const { worker, exposeDevTools, startGuestWorkspace } = await import('./mocks/browser');
   // The hosted demo deliberately opens as a guest workspace. It uses the

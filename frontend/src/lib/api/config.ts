@@ -19,7 +19,17 @@ export const API_BASE_URL: string = (
 export const API_PREFIX = '/api/v1';
 
 /** True when the app is running against fixtures rather than a live backend. */
-export const IS_MOCK_MODE: boolean = (import.meta.env.VITE_API_MODE ?? 'mock') === 'mock';
+export const IS_MOCK_MODE: boolean = (import.meta.env.VITE_API_MODE ?? 'live') === 'mock';
+
+/**
+ * The hosted submission is deliberately browsable without an account or a
+ * database. Set this to `false` only when the production database and auth
+ * service are ready to take over.
+ */
+export const GUEST_DEMO_MODE: boolean = import.meta.env.VITE_GUEST_DEMO === 'true';
+
+/** Whether browser requests are served by the persisted fixture workspace. */
+export const USE_FIXTURE_BACKEND: boolean = IS_MOCK_MODE || GUEST_DEMO_MODE;
 
 /** Product surface: which disclosure the app shows about its data. */
 export type ProductMode = 'demo' | 'student_testing';
@@ -34,7 +44,7 @@ export const PRODUCT_MODE: ProductMode =
 
 /** Whether to display the "sample data" banner. */
 export const SHOW_PROTOTYPE_BANNER: boolean =
-  import.meta.env.VITE_SHOW_PROTOTYPE_BANNER === 'true' || IS_MOCK_MODE;
+  import.meta.env.VITE_SHOW_PROTOTYPE_BANNER === 'true' || USE_FIXTURE_BACKEND;
 
 /** Default request timeout. Research-adjacent calls override this. */
 export const DEFAULT_TIMEOUT_MS = 15_000;
