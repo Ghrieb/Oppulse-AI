@@ -50,8 +50,8 @@ export function LandingPage() {
 
           <div className="ml-auto flex shrink-0 items-center gap-2">
             <Button asChild variant="ghost" size="sm">
-              <Link to="/home" className="whitespace-nowrap">
-                Open workspace
+              <Link to="/opportunities" className="whitespace-nowrap">
+                Browse opportunities
               </Link>
             </Button>
             <Button asChild size="sm" className="whitespace-nowrap">

@@ -185,10 +185,10 @@ export function SignInPage() {
           size="sm"
           className="w-full"
           onClick={() => {
-            void navigate('/home');
+            void navigate('/opportunities');
           }}
         >
-          Continue without signing in
+          Browse opportunities without signing in
         </Button>
       </form>
     </AuthLayout>
@@ -331,10 +331,10 @@ export function SignUpPage() {
           size="sm"
           className="w-full"
           onClick={() => {
-            void navigate('/home');
+            void navigate('/opportunities');
           }}
         >
-          Continue without signing in
+          Browse opportunities without signing in
         </Button>
       </form>
     </AuthLayout>

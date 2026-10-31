@@ -51,10 +51,10 @@ export function AgentConversation({
       )}
 
       {pending ? (
-        <div className="flex items-center gap-2 text-meta text-text-muted">
+        <div className="flex items-center gap-2 rounded-panel border border-border bg-surface-subtle px-3 py-2.5 text-meta text-text-muted">
           <OppulseAvatar size="sm" />
           <Loader2 aria-hidden="true" className="size-4 animate-spin" />
-          <span>Oppulse is working on your request.</span>
+          <span>Oppulse is checking your request and the available sources.</span>
         </div>
       ) : null}
 

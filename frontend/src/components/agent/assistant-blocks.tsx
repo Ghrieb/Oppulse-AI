@@ -40,7 +40,11 @@ export function AssistantBlocks({ blocks }: { blocks: AssistantBlock[] }) {
 function AssistantBlockView({ block }: { block: AssistantBlock }) {
   switch (block.kind) {
     case 'text':
-      return <p className="text-sm leading-relaxed whitespace-pre-line text-text">{block.text}</p>;
+      return (
+        <div className="rounded-panel border border-border bg-surface-subtle px-4 py-3 text-sm leading-relaxed whitespace-pre-line text-text">
+          {block.text}
+        </div>
+      );
 
     case 'evidence':
       return <EvidenceCard block={block} />;

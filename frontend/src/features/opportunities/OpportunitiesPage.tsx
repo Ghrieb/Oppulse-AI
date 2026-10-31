@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass } from 'lucide-react';
+import { CheckCircle2, Compass, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -135,7 +135,7 @@ export function OpportunitiesPage() {
             <Button
               className="shrink-0"
               loading={discover.isPending}
-              loadingLabel="Searching…"
+              loadingLabel="Checking sources…"
               disabled={discoveryRequest.trim().length < 10}
               onClick={() =>
                 discover.mutate(discoveryRequest.trim(), {
@@ -149,13 +149,18 @@ export function OpportunitiesPage() {
                 })
               }
             >
+              <Search aria-hidden="true" className="size-4" />
               Find opportunities
             </Button>
           </div>
           {discoveryMessage ? (
-            <p role="status" className="text-sm text-text-muted">
-              {discoveryMessage}
-            </p>
+            <div
+              role="status"
+              className="flex items-start gap-2 rounded-button border border-border bg-surface-subtle px-3 py-2.5 text-sm text-text-muted"
+            >
+              <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-success" />
+              <p>{discoveryMessage}</p>
+            </div>
           ) : null}
         </Card>
       ) : null}
