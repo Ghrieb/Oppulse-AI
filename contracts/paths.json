@@ -512,6 +512,16 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/api/v1/opportunities/discover",
+      "coverage": {
+        "kind": "hook",
+        "callers": [
+          "features/opportunities/OpportunitiesPage.tsx"
+        ]
+      }
+    },
+    {
       "method": "GET",
       "path": "/api/v1/profile",
       "coverage": {

@@ -91,6 +91,7 @@ class PreferencesOut(WireModel):
     email: EmailPreferenceOut
     timezone: str
     currency: str
+    cv_notes: list[str] = Field(default_factory=list)
 
 
 class ConsentOut(WireModel):
@@ -253,6 +254,7 @@ def _preferences_out(raw: dict[str, Any]) -> PreferencesOut:
         ),
         timezone=str(preferences.get("timezone", "UTC")),
         currency=str(preferences.get("currency", "EUR")),
+        cv_notes=list(preferences.get("cvNotes", [])),
     )
 
 

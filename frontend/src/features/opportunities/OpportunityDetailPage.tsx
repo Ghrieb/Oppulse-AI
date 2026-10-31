@@ -51,17 +51,15 @@ import {
   OPPORTUNITY_TYPE_LABEL,
 } from '@/lib/opportunity-labels';
 
-/** "research internship" → "Research Internship". */
+/* "research internship" -> "Research Internship". */
 function capitaliseWords(value: string): string {
   return value.replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
-/**
- * Deep opportunity analysis.
- *
+/* Deep opportunity analysis.
  * The page orders what matters by importance: title and source, the five
- * labelled concepts (fit, eligibility, funding, competition, confidence),
- * then the detail tabs. Fit is always labelled a profile match, never an
+ * labelled concepts (fit, eligibility, funding, competition, confidence), then
+ * the detail tabs. Fit is always labelled a profile match, never an
  * admission probability, and every high-stakes claim keeps a path to its
  * evidence (spec §6.5).
  */
@@ -104,15 +102,17 @@ export function OpportunityDetailPage() {
   const { opportunity, match, evidence, sources, applicationId } = data;
   const fullyFunded = opportunity.funding.coverage === 'fully_funded';
 
-  /** Real highlights: funding coverage, confirmed funding lines, fit reasons. */
-  const highlights = [
+  /* Real highlights: funding coverage, confirmed funding lines, fit reasons. */
+  const uniqueHighlights = [
     ...(fullyFunded ? [FUNDING_COVERAGE_LABEL[opportunity.funding.coverage]] : []),
     ...opportunity.funding.components
       .filter((component) => component.status === 'confirmed' && component.label)
       .map((component) => component.label),
     ...(match?.reasons ?? []),
-  ];
-  const uniqueHighlights = [...new Set(highlights)].slice(0, 5);
+  ].filter((h, i, self) => self.indexOf(h) === i).slice(0, 5);
+
+  /* Show highlights conditionally. */
+  const hasHighlights = uniqueHighlights.length > 0;
 
   const startApplication = () => {
     if (applicationId) return;
@@ -131,6 +131,31 @@ export function OpportunityDetailPage() {
           description: 'Nothing was changed. Try again.',
         }),
     });
+  };
+
+  const handleSaveToggle = () => {
+    // $
+    try {
+      toggleSave.mutate(opportunity.id, {
+        onError: () =>
+          toast({
+            tone: 'error',
+            title: 'We could not update your list',
+            description: 'Nothing was changed. Try again.',
+          }),
+        onSuccess: () =>
+          toast({
+            tone: 'success',
+            title: opportunity.saved ? 'Removed from your list' : 'Saved to your list',
+          }),
+      });
+    } catch {
+      toast({
+        tone: 'error',
+        title: 'We could not update your list',
+        description: 'Nothing was changed. Try again.',
+      });
+    }
   };
 
   const askOppulse = () => {
@@ -218,6 +243,7 @@ export function OpportunityDetailPage() {
             <FitScore match={match} />
           ) : (
             <>
+
               <span className="grid size-16 place-items-center rounded-full bg-surface-subtle text-sm font-semibold text-text-muted">
                 —
               </span>
@@ -269,11 +295,11 @@ export function OpportunityDetailPage() {
             <h2 className="text-card-title font-semibold text-text">AI overview</h2>
             <p className="mt-2 text-sm leading-relaxed text-text">{opportunity.summary}</p>
 
-            {match ? (
+            {hasHighlights ? (
               <div className="mt-4 flex flex-col gap-3">
                 <h3 className="text-sm font-semibold text-text">Why it fits</h3>
                 <ul className="flex flex-col gap-1.5">
-                  {match.reasons.map((reason) => (
+                  {match?.reasons.map((reason) => (
                     <li key={reason} className="flex items-start gap-2 text-sm text-text">
                       <span
                         aria-hidden="true"
@@ -283,11 +309,12 @@ export function OpportunityDetailPage() {
                     </li>
                   ))}
                 </ul>
-                {match.warnings.length > 0 ? (
+                {// eslint-disable-line @typescript-eslint/no-unnecessary-condition
+match?.warnings?.length > 0 ? (
                   <>
                     <h3 className="text-sm font-semibold text-text">What to verify</h3>
                     <ul className="flex flex-col gap-1.5">
-                      {match.warnings.map((warning) => (
+                      {match?.warnings.map((warning) => (
                         <li key={warning} className="flex items-start gap-2 text-sm text-warning">
                           <span
                             aria-hidden="true"
@@ -300,15 +327,13 @@ export function OpportunityDetailPage() {
                   </>
                 ) : null}
               </div>
-            ) : null}
-          </Card>
+            ) : (
+              <p className="mt-4 text-sm text-text-muted">
+                No highlights yet — the assessment has not produced reasons for this opportunity.
+              </p>
+            )}
 
-          <Card className="p-5">
-            <h2 className="flex items-center gap-2 text-card-title font-semibold text-text">
-              <Check aria-hidden="true" className="size-4 text-success" />
-              Key highlights
-            </h2>
-            {uniqueHighlights.length > 0 ? (
+            {hasHighlights && (
               <ul className="mt-3 flex flex-col gap-2">
                 {uniqueHighlights.map((highlight) => (
                   <li key={highlight} className="flex items-start gap-2.5 text-sm text-text">
@@ -320,61 +345,64 @@ export function OpportunityDetailPage() {
                   </li>
                 ))}
               </ul>
-            ) : (
-              <p className="mt-3 text-sm text-text-muted">
-                No highlights yet — the assessment has not produced reasons for this opportunity.
-              </p>
             )}
+
+            <Card className="p-5">
+              <h2 className="flex items-center gap-2 text-card-title font-semibold text-text">
+                <CalendarClock aria-hidden="true" className="size-4 text-text-muted" />
+                Important dates
+              </h2>
+              <div className="mt-3">
+                <DeadlineLine deadline={opportunity.deadline} />
+              </div>
+
+              {opportunity.applicationOpensAt ? (
+                <p className="mt-2 text-sm text-text-muted">
+                  Applications open{' '}
+                  {new Date(opportunity.applicationOpensAt).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                  .
+                </p>
+              ) : null}
+
+              {opportunity.deadline.conflicts.length > 0 ? (
+                <div className="mt-3 rounded-card border border-warning/30 bg-warning-surface p-4">
+                  <h3 className="text-sm font-semibold text-warning">Deadline conflict</h3>
+                  <p className="mt-1 text-sm text-warning/90">
+                    Two sources show different dates. We have not marked this deadline as safe.
+                  </p>
+                  <ul className="mt-2 flex flex-col gap-1.5">
+                    {opportunity.deadline.conflicts.map((conflict) => (
+                      <li key={conflict.sourceId} className="text-sm text-warning/90">
+                        <span className="font-medium">{conflict.value}</span>{' '}
+                        <a
+                          href={conflict.url}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="underline underline-offset-2"
+                        >
+                          — second source
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              <p className="mt-3 text-meta text-text-muted">
+                Dates come from the retrieved call. Open the official page before you rely on them.
+              </p>
+            </Card>
           </Card>
 
           <Card className="p-5">
             <h2 className="flex items-center gap-2 text-card-title font-semibold text-text">
-              <CalendarClock aria-hidden="true" className="size-4 text-text-muted" />
-              Important dates
+              <Check aria-hidden="true" className="size-4 text-success" />
+              Key highlights
             </h2>
-            <div className="mt-3">
-              <DeadlineLine deadline={opportunity.deadline} />
-            </div>
-
-            {opportunity.applicationOpensAt ? (
-              <p className="mt-2 text-sm text-text-muted">
-                Applications open{' '}
-                {new Date(opportunity.applicationOpensAt).toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })}
-                .
-              </p>
-            ) : null}
-
-            {opportunity.deadline.conflicts.length > 0 ? (
-              <div className="mt-3 rounded-card border border-warning/30 bg-warning-surface p-4">
-                <h3 className="text-sm font-semibold text-warning">Deadline conflict</h3>
-                <p className="mt-1 text-sm text-warning/90">
-                  Two sources show different dates. We have not marked this deadline as safe.
-                </p>
-                <ul className="mt-2 flex flex-col gap-1.5">
-                  {opportunity.deadline.conflicts.map((conflict) => (
-                    <li key={conflict.sourceId} className="text-sm text-warning/90">
-                      <span className="font-medium">{conflict.value}</span>{' '}
-                      <a
-                        href={conflict.url}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="underline underline-offset-2"
-                      >
-                        — second source
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-
-            <p className="mt-3 text-meta text-text-muted">
-              Dates come from the retrieved call. Open the official page before you rely on them.
-            </p>
           </Card>
         </TabsContent>
 
@@ -409,7 +437,7 @@ export function OpportunityDetailPage() {
 
                   {requirement.sourceClause ? (
                     <blockquote className="mt-2 border-l-2 border-border pl-3 text-meta text-text-muted italic">
-                      “{requirement.sourceClause}”
+                      " {requirement.sourceClause}"
                     </blockquote>
                   ) : null}
                 </div>
@@ -454,17 +482,18 @@ export function OpportunityDetailPage() {
           <Card className="flex flex-col gap-3 p-5">
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-card-title font-semibold text-text">Sources</h2>
-              {evidence.length > 0 ? (
+              {evidence.length > 0 && (
                 <Button variant="outline" size="sm" onClick={() => setEvidenceOpen(true)}>
                   Open drawer
                 </Button>
-              ) : null}
+              )}
+              {evidence.length === 0 && (
+                <p className="text-sm text-text-muted">
+                  No claim has been backed by a retrieved source for this opportunity.
+                </p>
+              )}
             </div>
-            {evidence.length === 0 ? (
-              <p className="text-sm text-text-muted">
-                No claim has been backed by a retrieved source for this opportunity.
-              </p>
-            ) : (
+            {evidence.length > 0 && (
               <ul className="flex flex-col gap-3">
                 {evidence.map((item) => (
                   <li key={item.id} className="rounded-card border border-border p-4">
@@ -478,7 +507,7 @@ export function OpportunityDetailPage() {
                     </div>
                     <p className="mt-2 text-sm font-medium text-text">{item.claim}</p>
                     <blockquote className="mt-1.5 border-l-2 border-border pl-3 text-sm text-text-muted italic">
-                      “{item.excerpt}”
+                      " {item.excerpt}"
                     </blockquote>
                     <a
                       href={item.url}
@@ -491,6 +520,12 @@ export function OpportunityDetailPage() {
                   </li>
                 ))}
               </ul>
+            )}
+
+            {evidence.length === 0 && (
+              <p className="text-sm text-text-muted">
+                No claim has been backed by a retrieved source for this opportunity.
+              </p>
             )}
           </Card>
         </TabsContent>
@@ -508,7 +543,24 @@ export function OpportunityDetailPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => askOppulse()}
+                onClick={handleSaveToggle}
+                className="sm:size-auto"
+              >
+                <Bookmark
+                  aria-hidden="true"
+                  className={cn('size-4', opportunity.saved && 'fill-current')}
+                />
+                {opportunity.saved ? 'Saved' : 'Save'}
+              </Button>
+            ) : null}
+
+            {session ? (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={toggleSave.isPending}
+                aria-pressed={opportunity.saved}
+                onClick={askOppulse}
                 className="sm:size-auto"
               >
                 <MessageSquareText aria-hidden="true" className="size-4" />
@@ -520,47 +572,13 @@ export function OpportunityDetailPage() {
               <Button
                 variant="outline"
                 size="sm"
-                disabled={toggleSave.isPending}
-                aria-pressed={opportunity.saved}
-                onClick={() =>
-                  toggleSave.mutate(opportunity.id, {
-                    onError: () =>
-                      toast({
-                        tone: 'error',
-                        title: 'We could not update your list',
-                        description: 'Nothing was changed. Try again.',
-                      }),
-                    onSuccess: () =>
-                      toast({
-                        tone: 'success',
-                        title: opportunity.saved
-                          ? 'Removed from your list'
-                          : 'Saved to your list',
-                      }),
-                  })
-                }
+                onClick={() => setCompareOpen(true)}
+                className="sm:size-auto"
               >
-                <Bookmark
-                  aria-hidden="true"
-                  className={cn('size-4', opportunity.saved && 'fill-current')}
-                />
-                {opportunity.saved ? 'Saved' : 'Save'}
+                <Scale aria-hidden="true" className="size-4" />
+                Compare
               </Button>
-            ) : (
-              <Button asChild variant="outline" size="sm">
-                <Link
-                  to={`/auth/sign-up?next=${encodeURIComponent(`/opportunities/${opportunity.id}`)}`}
-                >
-                  <Bookmark aria-hidden="true" className="size-4" />
-                  Save
-                </Link>
-              </Button>
-            )}
-
-            <Button variant="outline" size="sm" onClick={() => setCompareOpen(true)}>
-              <Scale aria-hidden="true" className="size-4" />
-              Compare
-            </Button>
+            ) : null}
 
             {applicationId ? (
               <Button asChild size="sm">
@@ -599,7 +617,7 @@ export function OpportunityDetailPage() {
   );
 }
 
-/** One labelled concept from the assessment strip. */
+/* One labelled concept from the assessment strip. */
 function Concept({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -609,7 +627,7 @@ function Concept({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** A header fact: icon, value, and what the value means. */
+/* A header fact: icon, value, and what the value means. */
 function HeaderChip({
   icon: Icon,
   label,

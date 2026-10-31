@@ -181,7 +181,9 @@ export function AgentProvider({ children }: { children: ReactNode }) {
         const response = await apiClient.post(
           '/assistant/messages',
           { message: trimmed, context, selectedText },
-          { schema: assistantResponseSchema, signal: controller.signal },
+          // Research opens pages and reads them with the model; the default
+          // 15s is a data-fetch budget, not an assistant-turn budget.
+          { schema: assistantResponseSchema, signal: controller.signal, timeoutMs: 90_000 },
         );
 
         if (controller.signal.aborted) return;
@@ -203,10 +205,15 @@ export function AgentProvider({ children }: { children: ReactNode }) {
         setMessages((current) => [...current, reply]);
       } catch (cause) {
         if (isCancellation(cause)) return;
+        // The service's error envelope is written for the student and never
+        // carries a provider body. A rate limit therefore says "try again in
+        // a minute" instead of pretending the service is down.
         setError(
           isLink
             ? 'We could not queue that link for analysis. Nothing was lost — try again.'
-            : 'We could not reach the assistant service. Nothing was lost — try again.',
+            : cause instanceof ApiError
+              ? cause.userMessage
+              : 'We could not reach the assistant service. Nothing was lost — try again.',
         );
       } finally {
         if (requestRef.current === controller) {

@@ -66,6 +66,10 @@ def build_capabilities() -> CapabilityStatus:
 
     email_mode: CapabilityMode = "live" if settings.live_email_provider else "unavailable"
 
+    extraction_mode: CapabilityMode = (
+        "live" if settings.live_model_provider and settings.model_provider_key else "mocked"
+    )
+
     capabilities = [
         Capability(
             key="data",
@@ -96,8 +100,12 @@ def build_capabilities() -> CapabilityStatus:
         Capability(
             key="extraction",
             label="Document understanding",
-            mode="mocked",
-            detail="Example facts, prepared in advance. Real extraction runs on the server.",
+            mode=extraction_mode,
+            detail=(
+                "Reads your CV and proposes an overview and key notes."
+                if extraction_mode == "live"
+                else "Example facts, prepared in advance. Real extraction runs on the server."
+            ),
         ),
         Capability(
             key="monitoring",

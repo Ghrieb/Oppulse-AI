@@ -311,9 +311,9 @@ export const assistantHandlers = [
     if (context.applicationId) {
       const checklist = applicationChecklistBlock(context.applicationId);
       if (checklist) blocks.push(checklist);
-      const reference = opportunityReferenceBlock(context.opportunityId);
+      const reference = opportunityReferenceBlock(context.opportunityId ?? undefined);
       if (reference) blocks.push(reference);
-      const institution = institutionBlock(context.opportunityId);
+      const institution = institutionBlock(context.opportunityId ?? undefined);
       if (institution) blocks.push(institution);
       blocks.push(unknownOrConflictBlock(false));
       blocks.push(
@@ -328,9 +328,9 @@ export const assistantHandlers = [
       if (evidence) blocks.push(evidence);
       const checklist = checklistBlockFor(context.opportunityId);
       if (checklist) blocks.push(checklist);
-      const reference = opportunityReferenceBlock(context.opportunityId);
+      const reference = opportunityReferenceBlock(context.opportunityId ?? undefined);
       if (reference) blocks.push(reference);
-      const institution = institutionBlock(context.opportunityId);
+      const institution = institutionBlock(context.opportunityId ?? undefined);
       if (institution) blocks.push(institution);
       const media = mediaContextBlock(context.opportunityId);
       if (media) blocks.push(media);

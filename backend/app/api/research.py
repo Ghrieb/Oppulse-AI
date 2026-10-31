@@ -9,12 +9,13 @@ not re-shape it — it decides *whose* it is and what may be done with it.
 
 from __future__ import annotations
 
+import uuid
 from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, Request
 from pydantic import Field
-from sqlalchemy import select
+from sqlalchemy import false, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..ai.rules.next_action import derive_next_action
@@ -22,13 +23,18 @@ from ..db.models import (
     Alert,
     Application,
     Draft,
+    Evidence,
     Match,
+    Mission,
     Opportunity,
     Profile,
+    Run,
     Source,
+    Thread,
+    ThreadTurn,
 )
 from ..db.session import get_session
-from ..errors import not_found, validation
+from ..errors import not_found, provider_failure, provider_unavailable, validation
 from ..security.session import CurrentUser, current_user, optional_user
 from ..wire import WireModel, iso_utc
 from .shapes import (
@@ -47,6 +53,12 @@ router = APIRouter(tags=["research"])
 
 class DismissRequest(WireModel):
     reason: str | None = Field(default=None, max_length=500)
+
+
+class DiscoverRequest(WireModel):
+    objective: str = Field(..., min_length=10)
+    filters: dict[str, Any] = Field(default_factory=dict)
+    max_results: int = Field(default=3, ge=1, le=3)
 
 
 def _evidence_out(evidence: Any) -> dict[str, Any]:
@@ -127,12 +139,141 @@ def _row(opportunity: Opportunity, match: Any) -> dict[str, Any]:
             "additionalDeadlines": opportunity.additional_deadlines,
             "funding": opportunity.funding,
             "requirements": opportunity.requirements,
+            "highlights": getattr(opportunity, "highlights", []) or [],
+            "fieldStatus": getattr(opportunity, "field_status", {}) or {},
             "saved": opportunity.saved,
             "dismissed": opportunity.dismissed,
             "createdAt": iso_utc(opportunity.created_at),
         },
         "match": _match_out(match) if match is not None else None,
     }
+
+
+_OPPORTUNITY_TYPES = {
+    "research_internship",
+    "fellowship",
+    "scholarship",
+    "summer_school",
+    "research_program",
+    "grant",
+    "course",
+    "conference",
+    "other",
+}
+
+
+def _opportunity_type(value: str) -> str:
+    normalized = value.strip().lower().replace(" ", "_")
+    return normalized if normalized in _OPPORTUNITY_TYPES else "other"
+
+
+def _brand(institution: str | None, domain: str) -> dict[str, Any]:
+    return {
+        "institutionName": institution or "Not specified",
+        "officialDomain": domain,
+        "logoUrl": None,
+        "bannerUrl": None,
+        "attribution": None,
+        "verifiedAt": None,
+        "source": "official",
+        "generated": True,
+        "iconSource": "none",
+    }
+
+
+def _deadline(value: str | None) -> dict[str, Any]:
+    return {
+        "value": value,
+        "timezone": None,
+        "status": "verified" if value else "not_found",
+        "remainingDays": None,
+        "evidenceId": None,
+        "conflicts": [],
+        "note": None if value else "Not specified",
+    }
+
+
+def _funding(coverage: str, note: str | None) -> dict[str, Any]:
+    return {
+        "coverage": coverage,
+        "components": [],
+        "estimatedGap": None,
+        "note": note or "Not specified",
+    }
+
+
+def _requirements(
+    session: AsyncSession, labels: list[str], source: Source, opportunity: Opportunity
+) -> list[dict[str, Any]]:
+    """Persist an evidence record for each source-backed requirement."""
+    requirements: list[dict[str, Any]] = []
+    for label in dict.fromkeys(label.strip() for label in labels if label.strip()):
+        evidence = Evidence(
+            id=str(uuid.uuid4()),
+            source_id=source.id,
+            opportunity_id=opportunity.id,
+            claim=label,
+            excerpt=label,
+            page_reference=source.page_reference,
+            url=source.url,
+            quality="official",
+            stance="supports",
+            confidence="medium",
+        )
+        session.add(evidence)
+        requirements.append(
+            {
+                "id": str(uuid.uuid4()),
+                "label": label,
+                "kind": "other",
+                "status": "unresolved",
+                "sourceClause": label,
+                "evidenceIds": [evidence.id],
+                "profileFactKey": None,
+                "check": None,
+                "ageRule": None,
+                "blocking": True,
+                "explanation": "Not specified",
+            }
+        )
+    return requirements
+
+
+async def _trigger_assistant_discovery(
+    session: AsyncSession, run_id: str, objective: str, owner_id: str
+) -> None:
+    """Trigger assistant discovery via a message."""
+
+    # Find or create the thread for this run
+    result = await session.execute(select(Thread).where(Thread.id == run_id))
+    thread = result.scalar_one_or_none()
+
+    if thread is None:
+        # Create thread if it doesn't exist
+        thread = Thread(
+            id=run_id,
+            owner_id=owner_id,
+            mission_id=None,
+        )
+        session.add(thread)
+        await session.flush()
+
+    # Record a turn that triggers discovery
+    turn = ThreadTurn(
+        thread_id=thread.id,
+        owner_id=thread.owner_id,
+        mission_id=thread.mission_id,
+        role="user",
+        content=objective,
+        blocks=[],
+        context={"objective": objective, "discovery_triggered": True},
+        selected_fact_ids=[],
+        selected_document_ids=[],
+        consent_state={"allowProfileMatching": True, "externalModelProcessing": False},
+        run_id=run_id,
+    )
+    session.add(turn)
+    await session.commit()
 
 
 @router.get("/opportunities", response_model=OpportunityListOut)
@@ -144,6 +285,10 @@ async def list_opportunities(
     """The opportunities, ranked against the confirmed profile."""
     query = select(Opportunity)
     parameters = request.query_params
+
+    query = (
+        query.where(Opportunity.owner_id == user.id) if user is not None else query.where(false())
+    )
 
     if parameters.get("type"):
         query = query.where(Opportunity.type == parameters["type"])
@@ -181,6 +326,191 @@ async def list_opportunities(
             for opportunity in opportunities
             if opportunity.id in by_opportunity
         ],
+        next_cursor=None,
+        has_more=False,
+    )
+
+
+@router.post("/opportunities/discover")
+async def discover_opportunities(
+    body: DiscoverRequest,
+    user: CurrentUser = Depends(current_user),
+    session: AsyncSession = Depends(get_session),
+) -> OpportunityListOut:
+    """Run one bounded live discovery and persist only supported results."""
+    from urllib.parse import urlparse
+
+    from ..ai.providers import build_fetcher, build_model_provider, build_search_provider
+    from ..ai.providers.base import ProviderError
+    from ..ai.types import ModelRequest, OpportunityExtraction
+    from ..config import get_settings
+
+    settings = get_settings()
+    if not settings.search_is_live or not settings.model_is_live:
+        raise provider_unavailable(
+            "Live opportunity discovery is unavailable until Tavily and Groq are configured."
+        )
+
+    mission = Mission(
+        owner_id=user.id,
+        title="Opportunity Discovery",
+        objective=body.objective,
+        criteria={
+            "objective": body.objective,
+            "filters": body.filters,
+            "max_results": body.max_results,
+            "opportunityTypes": body.filters.get("opportunity_types", []),
+            "fundingPreference": body.filters.get("funding_preference", "any"),
+            "destinations": body.filters.get("destinations", []),
+            "destinationCountries": body.filters.get("destination_countries", []),
+        },
+        status="active",
+        source="assistant",
+    )
+    session.add(mission)
+    await session.flush()
+
+    # Create run for the discovery mission
+    run_id = str(uuid.uuid4())
+    run = Run(
+        id=run_id,
+        mission_id=mission.id,
+        owner_id=user.id,
+        status="running",
+        phase="searching",
+        budget={
+            "max_tokens": 8000,
+            "max_cost": 10.0,
+            "time_limit": 300,
+        },
+        checkpoint={
+            "stage": "discovery",
+        },
+        attempt=0,
+        idempotency_key=None,
+    )
+    session.add(run)
+    await session.flush()
+
+    search = build_search_provider(settings)
+    fetcher = build_fetcher(settings)
+    model = build_model_provider(settings)
+    saved: list[Opportunity] = []
+    try:
+        results = await search.search(body.objective, limit=3)
+        seen_urls: set[str] = set()
+        for result in results:
+            if len(saved) >= body.max_results or result.url in seen_urls:
+                continue
+            seen_urls.add(result.url)
+            page = await fetcher.fetch(result.url)
+            if page.status != "retrieved" or not page.excerpt.strip():
+                continue
+
+            response = await model.complete(
+                ModelRequest(
+                    stage="opportunity_extraction",
+                    response_schema="OpportunityExtraction",
+                    instruction=(
+                        "Read this retrieved page and extract one application opportunity only if "
+                        "the page is an official institution or programme application page. Set "
+                        "both is_opportunity and is_official_source to true only when the page "
+                        "itself supports that conclusion. Return null for every detail the page "
+                        "does not state. "
+                        "Do not infer dates, funding, eligibility, country, or requirements."
+                    ),
+                    context={
+                        "url": page.url,
+                        "title": page.title,
+                        "page_text": page.excerpt[:4000],
+                    },
+                )
+            )
+            extracted = OpportunityExtraction.model_validate(response.parsed)
+            if not (extracted.is_opportunity and extracted.is_official_source and extracted.title):
+                continue
+
+            duplicate = await session.scalar(
+                select(Opportunity).where(
+                    Opportunity.owner_id == user.id, Opportunity.canonical_url == page.url
+                )
+            )
+            if duplicate is not None:
+                saved.append(duplicate)
+                continue
+
+            source = Source(
+                run_id=run.id,
+                url=page.url,
+                title=page.title or extracted.title,
+                domain=urlparse(page.url).netloc,
+                excerpt=page.excerpt[:4000],
+                quality="official",
+                status="retrieved",
+                content_hash=page.content_hash or "",
+                page_reference=page.page_reference,
+            )
+            session.add(source)
+            await session.flush()
+            opportunity = Opportunity(
+                owner_id=user.id,
+                title=extracted.title,
+                institution=extracted.institution or "Not specified",
+                type=_opportunity_type(extracted.opportunity_type),
+                country={
+                    "iso2": (extracted.country_iso2 or "XX").upper(),
+                    "name": extracted.country_name or "Not specified",
+                    "kind": "country" if extracted.country_name else "region",
+                    "region": None,
+                },
+                source_domain=urlparse(page.url).netloc,
+                canonical_url=page.url,
+                summary=extracted.summary or "Not specified",
+                institution_brand=_brand(extracted.institution, urlparse(page.url).netloc),
+                duration=None,
+                application_opens_at=None,
+                tags=[_opportunity_type(extracted.opportunity_type)],
+                deadline=_deadline(extracted.deadline),
+                additional_deadlines=[],
+                funding=_funding(extracted.funding_coverage, extracted.funding_information),
+                requirements=[],
+                highlights=[],
+                field_status={},
+                saved=False,
+                dismissed=False,
+            )
+            session.add(opportunity)
+            await session.flush()
+            opportunity.requirements = _requirements(
+                session, [*extracted.eligibility, *extracted.requirements], source, opportunity
+            )
+            saved.append(opportunity)
+
+        run.status = "completed"
+        run.phase = "done"
+        run.finished_at = datetime.now(UTC)
+        run.summary = {
+            "sourcesReviewed": len(seen_urls),
+            "candidatesFound": len(saved),
+            "needingVerification": 0,
+            "unreachable": 0,
+        }
+        run.checkpoint = {"stage": "done"}
+        await session.commit()
+    except ProviderError as error:
+        await session.rollback()
+        raise provider_failure(
+            error.code, "Opportunity discovery could not complete. Please try again."
+        ) from error
+    finally:
+        for provider in (search, fetcher, model):
+            close = getattr(provider, "aclose", None)
+            if close is not None:
+                await close()
+
+    return OpportunityListOut(
+        opportunities=[_row(opportunity, None)["opportunity"] for opportunity in saved],
+        matches=[],
         next_cursor=None,
         has_more=False,
     )
@@ -282,7 +612,7 @@ async def analyze_opportunity(
             {"url": ["A link is required."]},
         )
 
-    from ..db.models import Mission, Run, RunEvent
+    from ..db.models import Mission, Opportunity, Run, RunEvent
 
     mission_result = await session.execute(select(Mission).where(Mission.owner_id == user.id))
     mission = mission_result.scalars().first()
@@ -300,12 +630,56 @@ async def analyze_opportunity(
         session.add(mission)
         await session.flush()
 
+    # Create an opportunity row up front so the detail page has something to
+    # show while the run works. Fields are filled in as the run progresses.
+    from urllib.parse import urlparse
+
+    parsed = urlparse(body.url)
+    host = parsed.hostname or "unknown"
+    opportunity = Opportunity(
+        title=f"Analysis of {host}",
+        institution=host,
+        type="other",
+        country={},
+        source_domain=host,
+        canonical_url=body.url,
+        summary="",
+        institution_brand={},
+        duration=None,
+        application_opens_at=None,
+        tags=["analyzed"],
+        deadline={
+            "value": None,
+            "timezone": None,
+            "status": "pending",
+            "remainingDays": None,
+            "evidenceId": None,
+            "conflicts": [],
+            "note": None,
+        },
+        additional_deadlines=[],
+        funding={"coverage": "unknown", "components": [], "estimatedGap": None, "note": None},
+        requirements=[],
+        highlights=[],
+        field_status={
+            "deadline": "pending",
+            "requirements": "pending",
+            "funding": "pending",
+            "highlights": "pending",
+        },
+        saved=False,
+        dismissed=False,
+    )
+    session.add(opportunity)
+    await session.flush()
+
     run = Run(
         mission_id=mission.id,
         owner_id=user.id,
         status="queued",
         phase="queued",
         budget={},
+        checkpoint={"opportunityId": opportunity.id, "stage": "queued"},
     )
     session.add(run)
     await session.flush()
@@ -322,7 +696,7 @@ async def analyze_opportunity(
     mission.latest_run_id = run.id
     await session.commit()
 
-    return {"runId": run.id, "status": "queued"}
+    return {"runId": run.id, "status": "queued", "opportunityId": opportunity.id}
 
 
 @router.post("/opportunities/{id}/applications", status_code=201)

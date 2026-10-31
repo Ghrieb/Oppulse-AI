@@ -976,6 +976,32 @@
         "title": "DateOfBirthOut",
         "type": "object"
       },
+      "DiscoverRequest": {
+        "properties": {
+          "filters": {
+            "additionalProperties": true,
+            "title": "Filters",
+            "type": "object"
+          },
+          "maxResults": {
+            "default": 50,
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Maxresults",
+            "type": "integer"
+          },
+          "objective": {
+            "minLength": 10,
+            "title": "Objective",
+            "type": "string"
+          }
+        },
+        "required": [
+          "objective"
+        ],
+        "title": "DiscoverRequest",
+        "type": "object"
+      },
       "DismissRequest": {
         "properties": {
           "reason": {
@@ -2502,6 +2528,13 @@
           "currency": {
             "title": "Currency",
             "type": "string"
+          },
+          "cvNotes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Cvnotes",
+            "type": "array"
           },
           "email": {
             "$ref": "#/components/schemas/EmailPreferenceOut"
@@ -6140,6 +6173,48 @@
           }
         },
         "summary": "Compare Opportunities",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/opportunities/discover": {
+      "post": {
+        "description": "Discover new opportunities based on user request.",
+        "operationId": "discover_opportunities_api_v1_opportunities_discover_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscoverRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Discover Opportunities",
         "tags": [
           "research"
         ]

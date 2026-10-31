@@ -13,12 +13,16 @@ from collections.abc import AsyncIterator
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-os.environ.setdefault("OPPULSE_ENVIRONMENT", "local")
-os.environ.setdefault("OPPULSE_DATABASE_URL", "sqlite+aiosqlite:///:memory:")
+os.environ["OPPULSE_ENVIRONMENT"] = "local"
+os.environ["OPPULSE_DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 # The offline path is the tested path: without a key no test may reach a
 # provider, so the configured providers answer from the recorded corpus.
-os.environ.setdefault("OPPULSE_MODEL_PROVIDER", "replay")
-os.environ.setdefault("OPPULSE_SEARCH_PROVIDER", "replay")
+os.environ["OPPULSE_MODEL_PROVIDER"] = "replay"
+os.environ["OPPULSE_SEARCH_PROVIDER"] = "replay"
+os.environ["OPPULSE_MODEL_PROVIDER_KEY"] = ""
+os.environ["OPPULSE_SEARCH_PROVIDER_KEY"] = ""
+os.environ["OPPULSE_LIVE_MODEL_PROVIDER"] = "false"
+os.environ["OPPULSE_LIVE_SEARCH_PROVIDER"] = "false"
 
 from app.config import get_settings
 from app.db.session import Base, engine

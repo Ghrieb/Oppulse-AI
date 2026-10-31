@@ -38,7 +38,14 @@ class TavilySearchProvider:
         self._api_key = api_key
         self._client = httpx.AsyncClient(timeout=httpx.Timeout(30.0, connect=10.0))
 
-    async def search(self, query: str, *, limit: int = 10) -> list[RetrievedSource]:
+    async def search(
+        self,
+        query: str,
+        *,
+        limit: int = 10,
+        include_domains: list[str] | None = None,
+        search_depth: str = "basic",
+    ) -> list[RetrievedSource]:
         key = self._api_key or self._settings.search_provider_key
         if not key:
             raise ProviderError(
@@ -47,17 +54,18 @@ class TavilySearchProvider:
                 retryable=False,
             )
 
+        body: dict[str, Any] = {
+            "api_key": key,
+            "query": query,
+            "max_results": min(limit, 20),
+            "search_depth": search_depth,
+            "include_raw_content": False,
+        }
+        if include_domains:
+            body["include_domains"] = include_domains
+
         try:
-            response = await self._client.post(
-                TAVILY_URL,
-                json={
-                    "api_key": key,
-                    "query": query,
-                    "max_results": min(limit, 20),
-                    "search_depth": "basic",
-                    "include_raw_content": False,
-                },
-            )
+            response = await self._client.post(TAVILY_URL, json=body)
         except httpx.HTTPError as error:
             raise ProviderError(
                 "The search provider could not be reached.",
@@ -108,7 +116,14 @@ class ExaSearchProvider:
         self._settings = settings
         self._client = httpx.AsyncClient(timeout=httpx.Timeout(30.0, connect=10.0))
 
-    async def search(self, query: str, *, limit: int = 10) -> list[RetrievedSource]:
+    async def search(
+        self,
+        query: str,
+        *,
+        limit: int = 10,
+        include_domains: list[str] | None = None,
+        search_depth: str = "basic",
+    ) -> list[RetrievedSource]:
         key = self._settings.fallback_search_provider_key
         if not key:
             raise ProviderError(
@@ -184,16 +199,33 @@ class FallbackSearchProvider:
         self._secondary = secondary
         self.engine_used: str | None = None
 
-    async def search(self, query: str, *, limit: int = 10) -> list[RetrievedSource]:
+    async def search(
+        self,
+        query: str,
+        *,
+        limit: int = 10,
+        include_domains: list[str] | None = None,
+        search_depth: str = "basic",
+    ) -> list[RetrievedSource]:
         try:
-            results = await self._primary.search(query, limit=limit)
+            try:
+                results = await self._primary.search(
+                    query, limit=limit, include_domains=include_domains, search_depth=search_depth
+                )
+            except TypeError:
+                results = await self._primary.search(query, limit=limit)
             self.engine_used = self._primary.name
             return results
         except ProviderError as error:
             if self._secondary is None or (not error.retryable and error.code != "RATE_LIMITED"):
                 raise
 
-        results = await self._secondary.search(query, limit=limit)
+        try:
+            results = await self._secondary.search(
+                query, limit=limit, include_domains=include_domains, search_depth=search_depth
+            )
+        except TypeError:
+            results = await self._secondary.search(query, limit=limit)
         self.engine_used = self._secondary.name
         return results
 

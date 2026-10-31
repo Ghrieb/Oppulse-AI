@@ -330,6 +330,7 @@ class Thread(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
     owner_id: Mapped[str] = mapped_column(String(36), index=True)
     mission_id: Mapped[str | None] = mapped_column(String(36), index=True)
+    context: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_now, onupdate=_now
@@ -414,12 +415,15 @@ class Opportunity(Base):
     """A researched opportunity.
 
     The requirements, the evidence and the deadline are the agent's
-    conclusions, and they carry the source they came from.
+    conclusions, and they carry the source they came from. Every row is owned
+    by the student who found it, so the opportunities page only shows a
+    student's own.
     """
 
     __tablename__ = "opportunities"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
     title: Mapped[str] = mapped_column(String(240))
     institution: Mapped[str] = mapped_column(String(200))
     type: Mapped[str] = mapped_column(String(32), default="other")
@@ -435,6 +439,8 @@ class Opportunity(Base):
     additional_deadlines: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
     funding: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     requirements: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
+    highlights: Mapped[list[str]] = mapped_column(JSON, default=list)
+    field_status: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     saved: Mapped[bool] = mapped_column(Boolean, default=False)
     dismissed: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)

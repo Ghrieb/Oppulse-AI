@@ -21,6 +21,7 @@ from typing import Any
 
 from httpx import AsyncClient
 
+from app.ai.providers.base import ProviderError
 from app.ai.types import AssistantBlockAdapter
 from app.db.models import Application, Opportunity, User
 from app.db.session import session_factory
@@ -52,7 +53,17 @@ async def _sign_in(client: AsyncClient, email: str) -> None:
 
 async def _seed_opportunity(*, deadline: dict[str, Any] | None = None) -> str:
     async with session_factory() as session:
+        user = User(
+            email="seed@example.com",
+            full_name="Seed User",
+            password_hash="hashed_seed_password",
+            email_verified=True,
+        )
+        session.add(user)
+        await session.flush()
+
         opportunity = Opportunity(
+            owner_id=user.id,
             title="Helios Research Fellowship in Computational Biology",
             institution="Helios Institute for Applied Genomics",
             type="fellowship",
@@ -302,3 +313,31 @@ async def test_the_stored_history_carries_the_same_blocks(client: AsyncClient) -
     assert stored_blocks, "the assistant turn is recorded with its blocks"
     for block in stored_blocks:
         AssistantBlockAdapter.validate_python(block)
+
+
+async def test_a_rate_limit_is_reported_as_a_rate_limit(client: AsyncClient, monkeypatch) -> None:
+    """A spent quota is a 429 the student can retry - not a 503 outage.
+
+    The provider's own text is never forwarded: only the plain message the
+    service wrote is allowed to reach the browser.
+    """
+    email = "ratelimit@example.edu"
+    await _make_student(email)
+    await _sign_in(client, email)
+    opportunity_id = await _seed_opportunity()
+
+    async def limited(*args: Any, **kwargs: Any) -> Any:
+        raise ProviderError("provider body that must not leak", code="RATE_LIMITED")
+
+    monkeypatch.setattr("app.api.assistant._answer_funding_question", limited)
+
+    response = await client.post(
+        "/api/v1/assistant/messages",
+        json={"message": QUERY, "context": {}},
+    )
+
+    assert response.status_code == 429
+    error = response.json()["error"]
+    assert error["code"] == "RATE_LIMITED"
+    assert "rate limit" in error["message"].lower()
+    assert "provider body that must not leak" not in response.text

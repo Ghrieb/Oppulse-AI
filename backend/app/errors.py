@@ -130,3 +130,18 @@ def conflict(message: str) -> ApiProblem:
 def provider_unavailable(message: str) -> ApiProblem:
     """A provider that could not be reached or refused the request."""
     return ApiProblem(ErrorCode.PROVIDER_UNAVAILABLE, message)
+
+
+def provider_failure(code: str, message: str) -> ApiProblem:
+    """A provider failure, reported with the status the student can act on.
+
+    A rate limit is not an outage: it is a ``429`` the interface already
+    knows how to offer a retry for. An unusable answer is a contract
+    failure, not a service that is down. Only the remaining failures are a
+    ``503``. The message is the caller's plain text - never the provider's.
+    """
+    mapped = {
+        "RATE_LIMITED": ErrorCode.RATE_LIMITED,
+        "CONTRACT_MISMATCH": ErrorCode.CONTRACT_MISMATCH,
+    }.get(code, ErrorCode.PROVIDER_UNAVAILABLE)
+    return ApiProblem(mapped, message)

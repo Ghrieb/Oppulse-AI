@@ -48,6 +48,16 @@ class ModelProvider(Protocol):
         """Answers one request, validated against the request's schema."""
         ...
 
+    async def chat(
+        self,
+        *,
+        messages: list[dict[str, str]],
+        temperature: float,
+        max_tokens: int,
+    ) -> ModelResponse:
+        """Answers a short conversational question without a structured schema."""
+        ...
+
 
 @runtime_checkable
 class SearchProvider(Protocol):

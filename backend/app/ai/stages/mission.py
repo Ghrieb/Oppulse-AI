@@ -26,17 +26,26 @@ class MissionInterpretationStage(ProposalStage):
         goal = str(payload.get("goal", ""))
         allowed_scope = dict(payload.get("allowedScope", {}))
         confirmed_facts = list(payload.get("confirmedFacts", []))
+        prior_turns = list(payload.get("priorTurns", []))
+        student_summary = str(payload.get("studentSummary", ""))
 
         request = ModelRequest(
             stage=self.name,
             instruction=(
-                "Propose a mission for this goal. Use only the destinations, fields and "
-                "funding preference the student gave or that a confirmed fact supports."
+                "You are a student adviser continuing a conversation. Propose a mission for "
+                "this goal, building on anything the student already told you (in "
+                "priorTurns and studentSummary). Use only the destinations, fields and "
+                "funding preference the student gave or that a confirmed fact supports. "
+                "If a key constraint (degree level, geography, funding) is still missing, "
+                "say so in the objective as a short clarifying question rather than "
+                "guessing. Never re-ask what is already known."
             ),
             context={
                 "goal": goal,
                 "allowedScope": allowed_scope,
                 "confirmedFacts": confirmed_facts,
+                "priorTurns": prior_turns,
+                "studentSummary": student_summary,
             },
             response_schema="MissionCriteriaProposal",
         )

@@ -60,10 +60,21 @@ test.describe('the live service', () => {
       rows.filter({ hasText: 'Profile and opportunities' }).getByText('Live'),
     ).toBeVisible();
 
-    // No provider key is configured in this run, so the reasoning and the
-    // search are honestly reported as simulated, and monitoring as
-    // not configured.
-    await expect(rows.filter({ hasText: 'AI reasoning' }).getByText('Simulated')).toBeVisible();
+    // The menu repeats what the service reports, so the suite does not
+    // hardcode a provider state: with keys and the live flags the row says
+    // Live, and without them it says Simulated. Either way it must match
+    // the capability the API reports.
+    const apiBase = process.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+    const capabilitiesResponse = await page.request.get(`${apiBase}/api/v1/capabilities`);
+    const capabilities = (await capabilitiesResponse.json()) as {
+      capabilities: Array<{ key: string; mode: string }>;
+    };
+    const ai = capabilities.capabilities.find((capability) => capability.key === 'ai');
+    const expectedAiMode = ai?.mode === 'live' ? 'Live' : 'Simulated';
+
+    await expect(
+      rows.filter({ hasText: 'AI reasoning' }).getByText(expectedAiMode),
+    ).toBeVisible();
     await expect(
       rows.filter({ hasText: 'Change monitoring' }).getByText('Not configured'),
     ).toBeVisible();

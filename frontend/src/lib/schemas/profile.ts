@@ -102,6 +102,8 @@ export const profilePreferencesSchema = z.object({
   email: emailPreferenceSchema,
   timezone: z.string(),
   currency: z.string(),
+  /** Notes extracted from the student's CV by the AI. */
+  cvNotes: z.array(z.string()).optional().default([]),
 });
 
 /**

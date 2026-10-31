@@ -93,7 +93,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_origins=list(resolved.cors_origins),
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Accept", "Content-Type", "Authorization", "X-Request-ID"],
+        allow_headers=[
+            "Accept",
+            "Content-Type",
+            "Authorization",
+            "X-Request-ID",
+            # The frontend names each write with an Idempotency-Key so a retry
+            # cannot double-apply. Without it here, the browser's CORS
+            # preflight for that header fails and every such mutation is
+            # blocked cross-origin.
+            "Idempotency-Key",
+        ],
         expose_headers=["X-Request-ID"],
         max_age=600,
     )

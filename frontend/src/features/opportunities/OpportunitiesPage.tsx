@@ -11,6 +11,7 @@ import { OpportunityCard } from '@/components/opportunities/opportunity-card';
 import { useToast } from '@/lib/hooks/use-toast';
 import {
   useCreateApplication,
+  useDiscoverOpportunities,
   useDismissOpportunity,
   useOpportunities,
   useSession,
@@ -37,12 +38,15 @@ export function OpportunitiesPage() {
   const [funding, setFunding] = useState<string>('all');
   const [type, setType] = useState<string>('all');
   const [query, setQuery] = useState('');
+  const [discoveryRequest, setDiscoveryRequest] = useState('');
+  const [discoveryMessage, setDiscoveryMessage] = useState<string | null>(null);
 
   const { data, isPending, error, refetch } = useOpportunities();
   const { data: session } = useSession();
   const toggleSave = useToggleSaveOpportunity();
   const dismiss = useDismissOpportunity();
   const createApplication = useCreateApplication();
+  const discover = useDiscoverOpportunities();
   const { toast } = useToast();
 
   const matches = data?.matches ?? [];
@@ -94,6 +98,65 @@ export function OpportunitiesPage() {
           <Button asChild size="sm" className="shrink-0">
             <Link to="/auth/sign-up">Create my workspace</Link>
           </Button>
+        </Card>
+      ) : null}
+
+      {session ? (
+        <Card className="flex flex-col gap-3 p-4">
+          <div>
+            <h2 className="text-base font-semibold text-text">Find opportunities</h2>
+            <p className="text-sm text-text-muted">
+              Search official programme pages. We save up to three source-linked results.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <label htmlFor="discovery-request" className="sr-only">
+              What opportunities are you looking for?
+            </label>
+            <Input
+              id="discovery-request"
+              value={discoveryRequest}
+              onChange={(event) => setDiscoveryRequest(event.target.value)}
+              placeholder="Find fully funded Master's programmes in genetics in Europe"
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && discoveryRequest.trim().length >= 10) {
+                  discover.mutate(discoveryRequest.trim(), {
+                    onSuccess: (result) =>
+                      setDiscoveryMessage(
+                        result.opportunities.length
+                          ? `${result.opportunities.length} ${result.opportunities.length === 1 ? 'opportunity' : 'opportunities'} saved.`
+                          : 'No supported official opportunities were found. Try a more specific search.',
+                      ),
+                    onError: () => setDiscoveryMessage('Search failed. Please try again.'),
+                  });
+                }
+              }}
+            />
+            <Button
+              className="shrink-0"
+              loading={discover.isPending}
+              loadingLabel="Searching…"
+              disabled={discoveryRequest.trim().length < 10}
+              onClick={() =>
+                discover.mutate(discoveryRequest.trim(), {
+                  onSuccess: (result) =>
+                    setDiscoveryMessage(
+                      result.opportunities.length
+                        ? `${result.opportunities.length} ${result.opportunities.length === 1 ? 'opportunity' : 'opportunities'} saved.`
+                        : 'No supported official opportunities were found. Try a more specific search.',
+                    ),
+                  onError: () => setDiscoveryMessage('Search failed. Please try again.'),
+                })
+              }
+            >
+              Find opportunities
+            </Button>
+          </div>
+          {discoveryMessage ? (
+            <p role="status" className="text-sm text-text-muted">
+              {discoveryMessage}
+            </p>
+          ) : null}
         </Card>
       ) : null}
 

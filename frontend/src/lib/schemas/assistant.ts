@@ -15,10 +15,10 @@ import { draftTypeSchema } from './applications';
  */
 
 export const assistantContextSchema = z.object({
-  missionId: uuidSchema.optional(),
-  opportunityId: uuidSchema.optional(),
-  applicationId: uuidSchema.optional(),
-  draftId: uuidSchema.optional(),
+  missionId: uuidSchema.nullable().optional(),
+  opportunityId: uuidSchema.nullable().optional(),
+  applicationId: uuidSchema.nullable().optional(),
+  draftId: uuidSchema.nullable().optional(),
   /** Document ids the user has explicitly authorised for this message. */
   documentIds: z.array(uuidSchema).optional(),
 });

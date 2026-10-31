@@ -47,7 +47,7 @@ import { clearLocalDraft, readLocalDraft, writeLocalDraft } from './onboarding/s
  *
  * TanStack Query owns every piece of server state. Local UI state (open
  * drawers, selected tabs, pending editor text) stays in the component.
- * Optimistic mutations always roll back on failure (spec §11).
+ * Optimistic mutations always roll back on failure (spec �11).
  */
 
 export const queryKeys = {
@@ -85,7 +85,7 @@ export const queryKeys = {
  *
  * A transient failure must not sign the user out, so only a definitive
  * answer (401/403) ends the attempt. A network blip, a timeout or a rate
- * limit is retried — otherwise one unlucky request would empty the whole
+ * limit is retried � otherwise one unlucky request would empty the whole
  * workspace with no way back except a refresh.
  */
 export function useSession() {
@@ -118,7 +118,7 @@ export function useProfile() {
  * The single most useful next action.
  *
  * It is invalidated whenever the facts, opportunities or applications it
- * depends on change, because a confirmed fact can resolve — or create — a
+ * depends on change, because a confirmed fact can resolve � or create � a
  * blocker.
  */
 export function useNextAction() {
@@ -475,7 +475,7 @@ const TERMINAL_RUN_STATES = new Set(['completed', 'partial', 'failed', 'cancelle
 
 /**
  * A run's state is polled while it is in flight and the poll stops as soon
- * as the run reaches a terminal state (spec §11).
+ * as the run reaches a terminal state (spec �11).
  */
 export function useRun(runId: string | null) {
   return useQuery({
@@ -593,6 +593,23 @@ export function useOpportunities(filters: OpportunityFilters = {}) {
   });
 }
 
+/** Runs the bounded live discovery endpoint and refreshes persisted cards. */
+export function useDiscoverOpportunities() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (objective: string) =>
+      apiClient.post(
+        '/opportunities/discover',
+        { objective, maxResults: 3 },
+        { schema: opportunityListSchema, timeoutMs: 120_000 },
+      ),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+    },
+  });
+}
+
 export function useOpportunity(id: string | null) {
   return useQuery({
     queryKey: queryKeys.opportunity(id ?? 'none'),
@@ -665,9 +682,9 @@ export function useCreateApplication() {
 /**
  * Compares two to four opportunities side by side.
  *
- * A read of what the agent already found — the same eligibility, funding
+ * A read of what the agent already found � the same eligibility, funding
  * and deadline with the differences named. It never invents a ranking the
- * evidence does not support (spec §6.4).
+ * evidence does not support (spec �6.4).
  */
 export function useCompareOpportunities() {
   return useMutation({

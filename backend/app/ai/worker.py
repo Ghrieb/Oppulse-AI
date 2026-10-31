@@ -530,7 +530,11 @@ async def process_run(
     student sees is exactly what has actually happened.
     """
     from .context import as_untrusted
-    from .providers import build_fetcher, build_model_provider, build_search_provider
+    from .providers import (
+        build_fetcher,
+        build_runtime_model_provider,
+        build_runtime_search_provider,
+    )
     from .stages.explanation import EvidenceGroundedExplanationStage
     from .stages.matching import ConfirmedProfileMatchingStage
     from .stages.mission import MissionInterpretationStage
@@ -558,8 +562,8 @@ async def process_run(
         stage = "planning"
 
     corpus = run_corpus()
-    model = build_model_provider(settings, corpus)
-    search = build_search_provider(settings, corpus)
+    model = build_runtime_model_provider(settings, corpus)
+    search = build_runtime_search_provider(settings, corpus)
     fetcher = build_fetcher(settings, corpus)
 
     pass_started = time.monotonic()
@@ -681,6 +685,34 @@ async def process_run(
                 )
 
                 checkpoint["sources"] = found
+                # Keep the opportunity row in sync so the detail page shows
+                # progress instead of a blank page while the run works.
+                opp_id = (checkpoint.get("opportunityId") or run.checkpoint.get("opportunityId")) if isinstance(run.checkpoint, dict) else None
+                if opp_id:
+                    from ..db.models import Opportunity as _Opp
+
+                    opp = await session.get(_Opp, opp_id)
+                    if opp is not None:
+                        retrieved_sources = [s for s in found if s.get("status") == "retrieved"]
+                        # Deterministic highlights from the page's own text.
+                        highlights: list[str] = []
+                        for source in retrieved_sources:
+                            excerpt = str(source.get("excerpt", "") or "")
+                            for line in excerpt.split(". "):
+                                line = line.strip()
+                                if 20 < len(line) < 160 and line not in highlights:
+                                    highlights.append(line)
+                                    if len(highlights) >= 5:
+                                        break
+                            if highlights:
+                                break
+                        opp.highlights = highlights
+                        opp.field_status = {
+                            **(opp.field_status or {}),
+                            "highlights": "extracted" if highlights else "none_found",
+                            "sources": "retrieved" if retrieved_sources else "none",
+                        }
+                        await session.commit()
                 checkpoint["stage"] = "extracting"
                 run.phase = "extracting"
                 run.checkpoint = dict(checkpoint)
@@ -710,6 +742,18 @@ async def process_run(
                     candidates.extend(candidate.model_dump() for candidate in proposed)
 
                 checkpoint["requirements"] = candidates
+                opp_id = (checkpoint.get("opportunityId") or (run.checkpoint or {}).get("opportunityId"))
+                if opp_id:
+                    from ..db.models import Opportunity as _Opp
+
+                    opp = await session.get(_Opp, opp_id)
+                    if opp is not None:
+                        opp.requirements = [dict(c) for c in candidates]
+                        opp.field_status = {
+                            **(opp.field_status or {}),
+                            "requirements": "extracted" if candidates else "none_found",
+                        }
+                        await session.commit()
                 checkpoint["stage"] = "matching"
                 _emit_once(
                     session,
@@ -845,6 +889,14 @@ async def process_run(
                 )
 
             checkpoint["stage"] = "done"
+            opp_id = (checkpoint.get("opportunityId") or (run.checkpoint or {}).get("opportunityId"))
+            if opp_id:
+                from ..db.models import Opportunity as _Opp
+
+                opp = await session.get(_Opp, opp_id)
+                if opp is not None:
+                    opp.field_status = {**(opp.field_status or {}), "status": "completed"}
+                    await session.commit()
             await _complete_run(session, run, checkpoint, budget)
             return
 

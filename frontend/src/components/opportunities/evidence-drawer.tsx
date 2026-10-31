@@ -60,6 +60,7 @@ export function EvidenceDrawer({
                   <SourceUnavailableState
                     className="mt-2 rounded-button px-3 py-2.5"
                     sourceUrl={item.url}
+                    sourceTitle={source?.title ?? ''}
                   />
                 ) : null}
 
@@ -92,10 +93,12 @@ export function EvidenceDrawer({
                   <div>
                     <dt>Retrieved</dt>
                     <dd>
-                      {new Date(item.retrievedAt).toLocaleString('en-GB', {
-                        dateStyle: 'medium',
-                        timeStyle: 'short',
-                      })}
+                      {item.retrievedAt
+                        ? new Date(item.retrievedAt).toLocaleString('en-GB', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                          })
+                        : 'Not available'}
                     </dd>
                   </div>
                 </dl>

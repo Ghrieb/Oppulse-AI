@@ -1,84 +1,101 @@
 # Oppulse AI
 
-![Oppulse AI neural lens logo](frontend/public/brand/oppulse-mark.svg)
+**Find the right opportunity. Understand the requirements. Prepare with confidence.**
 
-**A student opportunity workspace that turns scattered programme information into clear, evidence-backed decisions and stronger applications.**
+Oppulse AI is a student opportunity workspace that combines AI-assisted research, structured programme analysis, and application preparation tools — helping students move from scattered information to a focused, evidence-backed plan.
 
-Oppulse AI helps students discover scholarships, fellowships, internships, research programmes and summer schools; understand whether an opportunity is realistic; see the real cost; and move from “maybe” to a focused application plan.
+> Discover → Evaluate → Understand → Prepare → Apply
 
-This project is part of the **ThirdUni Program**.
+Developed as part of the **ThirdUni Program, Cohort 1 (October 2026)**.
 
-> **Discover → Understand → Verify → Prepare → Apply → Monitor**
+---
 
-The Oppulse mark is a neural lens: connected signals represent evidence and
-opportunity discovery, while the central lens represents a student making a
-clearer decision with AI-assisted research.
+## The problem
 
-## Product promise
+Finding an opportunity is only the beginning.
 
-Students should not have to spend days comparing incomplete calls, hidden costs and unclear eligibility requirements. Oppulse brings the research into one workspace and keeps the student in control:
+Students searching for scholarships, research internships, fellowships, and graduate programmes still have to answer difficult questions on their own:
 
-- opportunity claims retain their source and retrieval context;
-- confirmed profile facts are separated from unconfirmed suggestions;
-- eligibility is decided by deterministic rules, not by persuasive prose;
-- costs, funding coverage and unresolved details remain visible;
-- AI can propose research, explanations and drafts, but never submits anything on a student's behalf;
-- every material change waits for student review and approval.
+- Am I academically eligible?
+- Does the programme accept my degree and field of study?
+- Is it fully funded, partially funded, or self-funded?
+- What language qualifications and documents are required?
+- Which deadline applies to my situation?
+- What should I prepare next?
 
-## What is included
+The answers are scattered across programme websites, application portals, PDFs, and FAQs — often inconsistent, sometimes missing entirely. Missing one requirement, or misreading a funding condition, can mean losing an opportunity.
 
-### Student workspace
+---
 
-- adaptive onboarding that starts from a goal, CV/materials or an opportunity link;
-- mission-based opportunity research;
-- ranked opportunities with institution identity, country flags, funding and evidence;
-- profile and CV review with provenance, conflicts, confirmation and privacy controls;
-- application workspaces with requirements, tasks, deadlines and progress;
-- writing studio with reviewable proposals and recoverable versions;
-- scheduled monitoring and in-app alerts;
-- a contextual assistant connected to the selected mission, opportunity or application.
+## The solution
 
-### Trust and safety by design
+Oppulse AI is not another scholarship listing site. It brings AI-assisted research, student profile context, structured opportunity information, and application preparation tools into one workspace.
 
-- unconfirmed facts do not decide eligibility;
-- protected personal details are kept outside model prompts;
-- uploaded documents are private and ownership-checked;
-- provider failures are explicit states, never silent empty results;
-- simulated, live and unavailable capabilities are disclosed separately;
-- source conflicts and unreachable pages remain visible;
-- the system never sends an application or external message without confirmation.
+**What Oppulse brings together:**
 
-## Current implementation
-
-The repository contains the frontend, the FastAPI backend, the typed contract between them, deterministic replay fixtures, evaluation tests and deployment configuration.
-
-| Area | Status |
+| Feature | Description |
 |---|---|
-| Public landing page and responsive UI | Complete |
-| Onboarding and mission creation | Complete |
-| Profile, CV and document consent flows | Complete |
-| Deterministic eligibility and next-action rules | Complete |
-| Opportunities, evidence and institution identity | Complete |
-| Application workspace and writing proposals | Complete |
-| Monitoring and in-app alerts | Complete |
-| FastAPI endpoint mirror | Complete |
-| Auth, rotating sessions and ownership checks | Complete |
-| Durable document storage seam | Complete |
-| Alembic migration and production startup path | Complete |
-| Replay/mock mode without provider credentials | Complete |
-| Groq model and web-search adapters | Ready for credentials |
-| Supabase Postgres and private Storage | Ready for provisioning |
-| Email delivery adapter | Ready for provider configuration |
-| Azure deployment | Configuration/runbook ready; resources not provisioned |
+| Personalized opportunity discovery | Students describe their goals, field, destination preferences, and funding needs. The system uses this context to guide research rather than return generic lists. |
+| Opportunity analysis | Programme information is organized into practical details: eligibility, academic requirements, language qualifications, required documents, deadlines, funding, and application procedures. |
+| Source-aware information | Important claims stay connected to their original sources. Missing, conflicting, or unverified information is identified — not presented as confirmed fact. |
+| Student profile and CV | A dedicated profile provides academic context for opportunity evaluation. Students control their information and review AI-suggested facts before they are confirmed. |
+| Application preparation | Students can organize requirements, track progress, and work on application materials in a dedicated workspace. |
+| Contextual AI assistant | The assistant helps students understand opportunities, clarify requirements, and decide what to do next — while retaining the context of their goals and selected opportunities. |
 
-“Complete” means implemented and covered by the repository's tests. Live provider and cloud rows still require external accounts, credentials, smoke tests and environment-specific provisioning.
+The goal is not to make admission decisions on behalf of students. It is to help them make better-informed decisions and prepare more effectively.
+
+---
+
+## How it works
+
+1. **Build your profile** — Add academic information, interests, goals, and relevant documents.
+2. **Describe your objective** — Explain what you are looking for or provide a programme link.
+3. **Research opportunities** — Use the available search and AI integrations to investigate relevant programmes and their official sources.
+4. **Evaluate the details** — Review eligibility, funding, deadlines, requirements, and unresolved information.
+5. **Prepare your application** — Organize documents, tasks, and application materials.
+6. **Stay organized** — Track application progress and relevant updates.
+
+---
+
+## Product screenshots
+
+The following screenshots show the current student-testing interface. They use deterministic replay data and should not be interpreted as proof that every displayed opportunity or external integration is live.
+
+| | |
+|---|---|
+| ![Landing page](frontend/docs/screenshots/00-landing.png) | ![Home workspace](frontend/docs/screenshots/02-home-workspace.png) |
+| Landing page | Home workspace |
+| ![Opportunity explorer](frontend/docs/screenshots/03-opportunities.png) | ![Opportunity analysis](frontend/docs/screenshots/04-opportunity-analysis.png) |
+| Opportunity explorer | Opportunity analysis |
+| ![Profile and CV](frontend/docs/screenshots/06b-profile-passport.png) | ![Application workspace](frontend/docs/screenshots/08-application-workspace.png) |
+| Profile and CV | Application workspace |
+| ![Writing studio](frontend/docs/screenshots/09-writing-studio.png) | ![Mobile view](frontend/docs/screenshots/13-mobile-home.png) |
+| Writing studio | Mobile view |
+
+---
+
+## Technology
+
+| Layer | Technologies |
+|---|---|
+| Frontend | React, TypeScript, Vite |
+| Styling | Tailwind CSS |
+| Backend | Python, FastAPI |
+| Database | SQLAlchemy, Alembic · SQLite (local) · Supabase Postgres (production) |
+| AI | Groq API, structured model outputs |
+| Web research | Tavily integration with a search-provider adapter |
+| Frontend testing | Vitest, MSW, Playwright |
+| Backend testing | Pytest |
+| Deployment | Vercel (frontend) · Azure App Service (backend) · configuration ready, resources not provisioned |
+
+---
 
 ## Architecture
 
-```text
+```
 React + Vite + TypeScript
         │
-        │ one typed HTTP client and one contract
+        │  one typed HTTP client · one contract
         ▼
 FastAPI + SQLAlchemy + Alembic
         │
@@ -91,18 +108,52 @@ FastAPI + SQLAlchemy + Alembic
 
 The frontend uses the same HTTP contract in every mode:
 
-- **Mock mode** — MSW serves deterministic synthetic fixtures in the browser.
-- **Replay mode** — the backend runs the agent loop without network calls or keys.
-- **Live mode** — the frontend calls the FastAPI service and the service calls only configured providers.
+| Mode | How it works |
+|---|---|
+| **Mock** | MSW serves deterministic synthetic fixtures in the browser — no backend needed. |
+| **Replay** | The backend runs the full agent loop without network calls or provider keys. |
+| **Live** | The frontend calls the FastAPI service; the service calls only configured providers. |
 
-Switching from mock to live does not require component rewrites:
+Switching from mock to live requires only two environment variables — no component rewrites:
 
 ```env
 VITE_API_MODE=live
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
+---
+
+## Implementation status
+
+| Area | Status |
+|---|---|
+| Public landing page and responsive UI | ✅ Complete |
+| Onboarding and mission creation | ✅ Complete |
+| Profile, CV and document consent flows | ✅ Complete |
+| Deterministic eligibility and next-action rules | ✅ Complete |
+| Opportunities, evidence and institution identity | ✅ Complete |
+| Application workspace and writing proposals | ✅ Complete |
+| Monitoring and in-app alerts | ✅ Complete |
+| FastAPI endpoint mirror | ✅ Complete |
+| Auth, rotating sessions and ownership checks | ✅ Complete |
+| Durable document storage seam | ✅ Complete |
+| Alembic migration and production startup path | ✅ Complete |
+| Replay / mock mode without provider credentials | ✅ Complete |
+| Groq model and Tavily web-search adapters | ✅ Validated locally with live credentials (31 October 2026) |
+| Supabase Postgres and private Storage | 🔑 Ready — awaiting provisioning |
+| Email delivery adapter | 🔑 Ready — awaiting provider configuration |
+| Azure deployment | 📋 Runbook ready — resources not provisioned |
+
+"Complete" means implemented and covered by the repository's tests. Live provider and cloud rows require external accounts, credentials, and environment-specific provisioning.
+
+---
+
 ## Run locally
+
+### Prerequisites
+
+- Node.js 18+
+- Python 3.12+ with [`uv`](https://docs.astral.sh/uv/)
 
 ### Frontend
 
@@ -113,9 +164,9 @@ Copy-Item .env.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:5173/](http://localhost:5173/).
+Open [http://localhost:5173](http://localhost:5173). The default configuration uses deterministic mock data — no backend or provider keys required.
 
-The default frontend configuration uses deterministic mock data. For the local FastAPI service:
+To connect to the local FastAPI backend instead, add to `frontend/.env.local`:
 
 ```env
 VITE_API_MODE=live
@@ -160,9 +211,11 @@ uv run mypy app
 uv run python scripts/check_contract.py
 ```
 
-## Environment and secrets
+---
 
-Only public frontend settings may use the `VITE_` prefix:
+## Environment variables
+
+**Frontend** — public settings only, safe in `VITE_` prefix:
 
 ```env
 VITE_API_MODE=mock|live
@@ -171,82 +224,83 @@ VITE_PRODUCT_MODE=demo|student_testing
 VITE_SHOW_PROTOTYPE_BANNER=false
 ```
 
-Provider keys and infrastructure credentials stay server-side:
+**Backend** — provider keys and credentials, server-side only:
 
 ```env
 OPPULSE_DATABASE_URL=...
 OPPULSE_JWT_SECRET=...
 OPPULSE_MODEL_PROVIDER_KEY=...
 OPPULSE_SEARCH_PROVIDER_KEY=...
-OPPULSE_FALLBACK_SEARCH_PROVIDER_KEY=...
 OPPULSE_SUPABASE_URL=...
 OPPULSE_SUPABASE_SERVICE_ROLE_KEY=...
 OPPULSE_EMAIL_PROVIDER_URL=...
 OPPULSE_EMAIL_PROVIDER_KEY=...
 ```
 
-Never commit `.env`, `.env.local`, database files, storage files, service-role keys, provider keys or signed URLs. Use Azure App Service settings or Key Vault for deployed environments. Keep staging and production Supabase projects, storage buckets and secrets separate.
+> **Never commit `.env`, `.env.local`, database files, service-role keys, provider keys, or signed URLs.** Use Azure App Service settings or Key Vault for deployed environments.
 
-See [docs/environments.md](docs/environments.md) for the boundary rules and [docs/azure-runbook.md](docs/azure-runbook.md) for the deployment sequence.
+See [`docs/environments.md`](docs/environments.md) for boundary rules and [`docs/azure-runbook.md`](docs/azure-runbook.md) for the full deployment sequence.
 
-## Screenshots
+---
 
-The repository includes refreshed desktop and mobile flows captured from the
-deterministic student-testing experience:
+## Repository structure
 
-- [Landing page](frontend/docs/screenshots/00-landing.png)
-- [Onboarding](frontend/docs/screenshots/01b-onboarding.png)
-- [Home workspace](frontend/docs/screenshots/02-home-workspace.png)
-- [Opportunities](frontend/docs/screenshots/03-opportunities.png)
-- [Profile and CV](frontend/docs/screenshots/06b-profile-passport.png)
-- [Applications](frontend/docs/screenshots/07-applications.png)
-- [Writing studio](frontend/docs/screenshots/09-writing-studio.png)
-- [Monitoring](frontend/docs/screenshots/10-monitoring.png)
-- [Mobile home](frontend/docs/screenshots/13-mobile-home.png)
+```
+Oppulse AI/
+├── frontend/               React + TypeScript application
+│   ├── src/                Components, features, typed API client, tests
+│   ├── e2e/                Playwright end-to-end tests
+│   ├── public/brand/       Logo and brand assets
+│   └── docs/screenshots/   Product journey evidence
+├── backend/                FastAPI service
+│   ├── app/api/            Route handlers
+│   ├── app/ai/             Provider adapters and agent stages
+│   ├── app/db/             SQLAlchemy models and session
+│   └── migrations/         Alembic migrations
+├── contracts/              Shared frontend/backend API contract
+└── docs/                   Architecture, environment and deployment docs
+```
 
-## Demo recording
+---
 
-The submission-ready student journey recording is available at
-[frontend/docs/clips/oppulse-student-journey.webm](frontend/docs/clips/oppulse-student-journey.webm).
-It uses synthetic replay data and contains no provider credentials or
-personal student information. Upload a copy to an accessible video host
-(for example, an unlisted YouTube or Google Drive video) before submitting.
+## Deployment
 
-## Deployment readiness
+The deployment path is deliberately explicit to avoid silent misconfigurations:
 
-The deployment path is deliberately explicit:
+1. Provision separate staging resources (Supabase project, Azure App Service, storage bucket).
+2. Configure the database and private document storage.
+3. Run Alembic migrations before serving traffic.
+4. Set exact CORS origins and configure secure cookies.
+5. Add provider keys through Azure Key Vault or App Service settings.
+6. Run provider smoke tests.
+7. Verify `/health`, `/health/ready`, and `/api/v1/capabilities`.
+8. Run the synthetic student journey end to end.
+9. Only then invite students to staging.
 
-1. provision separate staging resources;
-2. configure the database and private storage;
-3. install the migration before serving traffic;
-4. configure exact CORS origins and secure cookies;
-5. add provider keys through secret management;
-6. run provider smoke tests;
-7. verify `/health`, `/health/ready` and `/api/v1/capabilities`;
-8. run the synthetic student journey;
-9. only then invite students to staging.
+The repository does not provision cloud, search, or model accounts automatically — those are intentional external deployment inputs.
 
-The repository does not provision Azure, Supabase, email, search or model accounts automatically. Those are intentional external deployment inputs.
+---
 
-## Repository guide
+## What happens next
 
-| Path | Purpose |
-|---|---|
-| `frontend/src/` | React application, typed API client, UI components and tests |
-| `frontend/public/brand/` | Oppulse logo source assets and transparent PNG exports |
-| `backend/app/api/` | FastAPI routes |
-| `backend/app/ai/` | Provider adapters, agent stages and boundaries |
-| `backend/app/db/` | SQLAlchemy models and database session |
-| `backend/migrations/` | Alembic migrations |
-| `contracts/` | Frontend/backend route and entity contract |
-| `docs/` | Architecture, environment and deployment documentation |
-| `frontend/docs/screenshots/` | Product journey evidence |
-| `frontend/docs/clips/` | Submission demo recordings |
+The immediate priorities are live provider activation (Groq structured outputs and Tavily web research), Supabase Postgres provisioning for durable student data, and the first real student cohort onboarding. After that: expanded opportunity coverage across more regions and programme types, improved eligibility matching as more student profiles are added, and a mobile-first flow for students using phones as their primary device.
+
+---
 
 ## ThirdUni Program
 
-Oppulse AI is developed as part of the **ThirdUni Program**, with the goal of making academic opportunity discovery more transparent, more practical and more useful for students. The project combines product design, evidence-aware AI workflows, deterministic decision logic and a deployable full-stack foundation.
+Oppulse AI is developed as part of the **ThirdUni Program**, with the goal of making academic opportunity discovery more transparent, more practical, and more useful for students in Algeria and the wider region. The project combines product design, evidence-aware AI workflows, deterministic decision logic, and a deployable full-stack foundation.
 
-## License and project status
+---
 
-This repository is an active pre-deployment project. Cloud resources and live provider credentials are intentionally external to the repository and must be configured per environment.
+## Responsible development
+
+Oppulse AI is designed with the following principles:
+
+- Unconfirmed facts do not decide eligibility.
+- Protected personal details are kept outside model prompts.
+- Uploaded documents are private and ownership-checked.
+- Provider failures are explicit states — never silent empty results.
+- Simulated, live, and unavailable capabilities are disclosed separately.
+- The system never sends an application or external message without student confirmation.
+- Source conflicts and unreachable pages remain visible rather than suppressed.

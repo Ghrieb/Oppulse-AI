@@ -38,6 +38,7 @@ function buildProfile(overrides: Partial<Profile> = {}): Profile {
       },
       timezone: 'Africa/Algiers',
       currency: 'EUR',
+      cvNotes: [],
     },
     consent: {
       externalModelProcessing: true,

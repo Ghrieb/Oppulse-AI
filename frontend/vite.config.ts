@@ -13,6 +13,7 @@ export default defineConfig({
     },
   },
   server: {
+    host: '127.0.0.1',
     port: 5173,
     strictPort: true,
     // The frontend talks to a same-origin path prefix so that development,

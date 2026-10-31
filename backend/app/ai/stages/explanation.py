@@ -14,6 +14,13 @@ from ..providers.base import ModelProvider
 from ..types import Claim, Explanation, ModelRequest, RequirementCandidate
 from .base import ProposalStage
 
+#: The explanation only needs enough of a passage to ground one sentence.
+#: The extraction stage already read the page; sending the whole excerpt
+#: again - once per requirement and once per source - is what exhausted the
+#: free tier's tokens-per-minute budget.
+PASSAGE_CHARS = 240
+SOURCE_EXCERPT_CHARS = 400
+
 #: The phrases that turn a profile match into a promise of admission.
 ADMISSION_PROMISES = (
     "guaranteed",
@@ -56,11 +63,18 @@ class EvidenceGroundedExplanationStage(ProposalStage):
                     {
                         "id": requirement.label,
                         "clause": requirement.clause,
-                        "passage": requirement.passage,
+                        "passage": (requirement.passage or "")[:PASSAGE_CHARS],
                     }
                     for requirement in requirements
                 ],
-                "sources": sources,
+                "sources": [
+                    {
+                        "id": source.get("id"),
+                        "title": source.get("title"),
+                        "excerpt": str(source.get("excerpt", ""))[:SOURCE_EXCERPT_CHARS],
+                    }
+                    for source in sources
+                ],
             },
             response_schema="Explanation",
         )

@@ -18,6 +18,12 @@ from ..providers.base import ModelProvider
 from ..types import ModelRequest, RequirementCandidate, RetrievedSource
 from .base import ProposalStage
 
+#: How much of a page one extraction call reads. The fetcher already caps a
+#: page at 4000 characters; a shorter window keeps one assistant turn inside
+#: the free tier's tokens-per-minute budget, where every opened page costs a
+#: separate model call.
+EXCERPT_CHARS = 2000
+
 
 class RequirementExtractionStage(ProposalStage):
     """Reads requirements out of a retrieved page."""
@@ -41,7 +47,7 @@ class RequirementExtractionStage(ProposalStage):
                 "url": source.url,
                 "title": source.title,
                 # The page is data, never an instruction.
-                "excerpt": as_untrusted(source.excerpt),
+                "excerpt": as_untrusted(source.excerpt[:EXCERPT_CHARS]),
             },
             response_schema="RequirementCandidate[]",
         )

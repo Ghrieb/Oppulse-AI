@@ -51,7 +51,7 @@ describe('accessibility', () => {
   it('the profile passport has no serious accessibility violations', async () => {
     const { container } = renderWithProviders(<ProfilePassportPage />);
 
-    await screen.findByRole('heading', { name: 'Profile passport' });
+    await screen.findByRole('heading', { name: 'My profile' });
 
     const violations = await findAccessibilityViolations(container);
     expect(describeViolations(violations)).toBe('');

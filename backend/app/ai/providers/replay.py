@@ -83,6 +83,29 @@ class ReplayModelProvider:
             completion_tokens=int(answer.get("completionTokens", 0)),
         )
 
+    async def chat(
+        self,
+        *,
+        messages: list[dict[str, str]],
+        temperature: float,
+        max_tokens: int,
+    ) -> ModelResponse:
+        """Return a deterministic, useful answer in offline student-testing mode."""
+        question = next(
+            (message["content"] for message in reversed(messages) if message.get("role") == "user"),
+            "",
+        )
+        return ModelResponse(
+            content=(
+                "In this student-testing workspace, confirm the programme's official funding "
+                f"terms and deadline before you decide. Your question was: {question}"
+            ),
+            parsed={},
+            model="replay",
+            prompt_tokens=0,
+            completion_tokens=0,
+        )
+
 
 class ReplaySearchProvider:
     """A search that finds what the corpus says it would find."""
@@ -92,7 +115,7 @@ class ReplaySearchProvider:
     def __init__(self, corpus: ReplayCorpus) -> None:
         self._corpus = corpus
 
-    async def search(self, query: str, *, limit: int = 10) -> list[RetrievedSource]:
+    async def search(self, query: str, *, limit: int = 10, include_domains=None, search_depth: str = "basic") -> list[RetrievedSource]:
         results = self._corpus.search_results.get(query, [])
 
         return [

@@ -318,7 +318,7 @@ async def create_application_draft(
     """
     application = await _owned_application(session, user, id)
 
-    from ..ai.providers import build_model_provider
+    from ..ai.providers import build_runtime_model_provider
     from ..ai.providers.replay import ReplayCorpus
     from ..ai.stages.draft import DraftProposalStage
     from ..config import get_settings
@@ -347,7 +347,7 @@ async def create_application_draft(
             elif fact.excluded:
                 excluded.append(entry)
 
-    model = build_model_provider(get_settings(), ReplayCorpus())
+    model = build_runtime_model_provider(get_settings(), ReplayCorpus())
     proposal = await DraftProposalStage(model).run(
         {
             "instruction": f"Write a {body.type.replace('_', ' ')} for this application.",
@@ -481,12 +481,12 @@ async def create_proposal(
 
     draft = await _owned_draft(session, user, id)
 
-    from ..ai.providers import build_model_provider
+    from ..ai.providers import build_runtime_model_provider
     from ..ai.providers.replay import ReplayCorpus
     from ..ai.stages.draft import DraftProposalStage
     from ..config import get_settings
 
-    model = build_model_provider(get_settings(), ReplayCorpus())
+    model = build_runtime_model_provider(get_settings(), ReplayCorpus())
     proposal = await DraftProposalStage(model).run(
         {
             "instruction": body.instruction,

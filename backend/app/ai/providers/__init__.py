@@ -55,6 +55,8 @@ __all__ = [
     "build_email_provider",
     "build_fetcher",
     "build_model_provider",
+    "build_runtime_model_provider",
+    "build_runtime_search_provider",
     "build_search_provider",
 ]
 
@@ -70,6 +72,15 @@ def build_model_provider(settings: Settings, corpus: ReplayCorpus | None = None)
     if settings.model_provider == "replay":
         return ReplayModelProvider(corpus or ReplayCorpus())
     return GroqModelProvider(settings)
+
+
+def build_runtime_model_provider(
+    settings: Settings, corpus: ReplayCorpus | None = None
+) -> ModelProvider:
+    """Build the provider permitted by the effective capability flag."""
+    if not settings.live_model_provider:
+        return ReplayModelProvider(corpus or ReplayCorpus())
+    return build_model_provider(settings, corpus)
 
 
 def build_search_provider(settings: Settings, corpus: ReplayCorpus | None = None) -> SearchProvider:
@@ -93,6 +104,15 @@ def build_search_provider(settings: Settings, corpus: ReplayCorpus | None = None
     if secondary is None:
         return primary
     return FallbackSearchProvider(primary, secondary)
+
+
+def build_runtime_search_provider(
+    settings: Settings, corpus: ReplayCorpus | None = None
+) -> SearchProvider:
+    """Build the search provider permitted by the effective capability flag."""
+    if not settings.live_search_provider:
+        return ReplaySearchProvider(corpus or ReplayCorpus())
+    return build_search_provider(settings, corpus)
 
 
 def build_fetcher(settings: Settings, corpus: ReplayCorpus | None = None) -> SourceFetcher:

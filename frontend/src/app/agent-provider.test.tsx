@@ -74,6 +74,20 @@ describe('AgentProvider', () => {
     });
   });
 
+  it('shows the service message when a provider rate limit stops the turn', async () => {
+    setChaosRule({ pattern: '/assistant', mode: 'error', status: 429, delayMs: 0 });
+
+    const { user } = renderWithProviders(<Harness />);
+    await user.click(screen.getByRole('button', { name: 'Ask' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error')).toHaveTextContent(
+        'The research provider is rate limiting requests. Try again in a moment.',
+      );
+    });
+    expect(screen.getByTestId('count')).toHaveTextContent('1');
+  });
+
   it('stores the conversation so it survives a reload', async () => {
     const { user } = renderWithProviders(<Harness />);
 

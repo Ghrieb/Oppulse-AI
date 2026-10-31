@@ -18,7 +18,7 @@ export default defineConfig({
   expect: { timeout: 10_000 },
 
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://127.0.0.1:5173',
     // Uses the browser already installed on the machine, so no download is
     // required. Set PLAYWRIGHT_CHANNEL=chromium to use a managed browser.
     channel: process.env.PLAYWRIGHT_CHANNEL ?? 'chrome',
@@ -43,8 +43,10 @@ export default defineConfig({
 
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:5173',
+    url: 'http://127.0.0.1:5173',
     reuseExistingServer: true,
     timeout: 120_000,
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 });

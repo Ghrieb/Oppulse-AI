@@ -100,7 +100,17 @@ async def _seed_run(
 
 
 async def _seed_opportunity(session: AsyncSession, *, iso2: str, name: str, url: str) -> str:
+    user = User(
+        email=f"seed-{iso2}@example.com",
+        full_name="Seed User",
+        password_hash="hashed_seed_password",
+        email_verified=True,
+    )
+    session.add(user)
+
     opportunity = Opportunity(
+        id=f"{name.lower().replace(' ', '-')}-{iso2}",
+        owner_id=user.id,
         title=f"{name} research fellowship",
         institution="Test Institute",
         type="fellowship",

@@ -1,21 +1,21 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
+  LandingHero,
+  LandingProblem,
+  LandingHowItWorks,
   LandingDifferentiation,
+  LandingTwoWays,
   LandingFinalCta,
   LandingFooter,
-  LandingHero,
-  LandingHowItWorks,
-  LandingProblem,
-  LandingTwoWays,
 } from './sections';
 import { useStartOnboarding } from '@/lib/hooks/use-start-onboarding';
 
 /**
  * The public landing page.
  *
- * A visitor should understand what Oppulse does, and why they would trust
- * it, before being asked to register.
+ * A visitor should understand what Oppulse does, and why they would trust it,
+ * before being asked to register.
  */
 export function LandingPage() {
   const start = useStartOnboarding();
@@ -56,8 +56,7 @@ export function LandingPage() {
             </Button>
             <Button asChild size="sm" className="whitespace-nowrap">
               <Link to="/opportunities">
-                <span className="hidden sm:inline">Explore opportunities</span>
-                <span className="sm:hidden">Explore</span>
+                Explore opportunities
               </Link>
             </Button>
           </div>

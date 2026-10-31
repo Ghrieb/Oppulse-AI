@@ -285,6 +285,40 @@ async def upload_document(
     else:
         document.status = "needs_review"
 
+    # AI overview (only when the model provider is live and the document
+    # was actually read). A provider failure leaves the profile untouched —
+    # nothing is fabricated.
+    if extraction.pages and settings.live_model_provider and settings.model_provider_key:
+        try:
+            from ..ai.providers import build_runtime_model_provider
+            from ..ai.providers.replay import ReplayCorpus
+            from ..ai.stages.document_overview import DocumentOverviewStage
+            from ..db.models import Profile
+
+            model = build_runtime_model_provider(settings, ReplayCorpus())
+            overview = await DocumentOverviewStage(model).run(
+                {"text": "\n\n".join(page.text for page in extraction.pages)}
+            )
+            await model.aclose()
+
+            profile = (
+                await session.execute(select(Profile).where(Profile.user_id == user.id))
+            ).scalar_one_or_none()
+            if profile is None:
+                profile = Profile(user_id=user.id, full_name=user.full_name or "", email=user.email)
+                session.add(profile)
+                await session.flush()
+
+            if overview.overview:
+                profile.headline = overview.overview[:200]
+            notes = list(overview.notes or [])
+            if notes:
+                prefs = dict(profile.preferences or {})
+                prefs["cvNotes"] = notes[:10]
+                profile.preferences = prefs
+        except Exception:  # noqa: BLE001 - never fabricate an overview
+            pass
+
     session.add(
         AuditLog(
             owner_id=user.id,

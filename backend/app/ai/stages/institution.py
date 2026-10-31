@@ -31,21 +31,21 @@ class InstitutionAnswerStage(ProposalStage):
         programme = str(payload.get("programme", ""))
         summary = str(payload.get("summary", ""))
         country = str(payload.get("country", ""))
-        reached = [str(title) for title in payload.get("reached", [])]
 
         request = ModelRequest(
             stage=self.name,
             instruction=(
-                "Describe this institution and its programme from the official pages listed "
-                "as reached. List separately what a prospective applicant would want to know "
-                "that these pages do not state — do not estimate it."
+                "Describe this institution and its programme from the record below. Do not "
+                "attribute a statement to a web page: the pages that were reached are shown "
+                "separately, with their own evidence. List separately what a prospective "
+                "applicant would want to know that the record does not state - do not "
+                "estimate it."
             ),
             context={
                 "institution": institution,
                 "programme": programme,
                 "summary": summary,
                 "country": country,
-                "reached": reached,
             },
             response_schema="InstitutionProposal",
         )

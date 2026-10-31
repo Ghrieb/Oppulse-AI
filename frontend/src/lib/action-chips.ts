@@ -17,9 +17,9 @@ export interface ActionChip {
 }
 
 export function actionChipsFor(context: {
-  opportunityId?: string | undefined;
-  applicationId?: string | undefined;
-  draftId?: string | undefined;
+  opportunityId?: string | null | undefined;
+  applicationId?: string | null | undefined;
+  draftId?: string | null | undefined;
 }): ActionChip[] {
   if (context.draftId) {
     return [

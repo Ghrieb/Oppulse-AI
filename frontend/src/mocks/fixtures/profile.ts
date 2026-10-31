@@ -204,6 +204,7 @@ export const DEMO_PROFILE: Profile = {
     },
     timezone: 'Africa/Algiers',
     currency: 'EUR',
+    cvNotes: [],
   },
   consent: {
     externalModelProcessing: true,

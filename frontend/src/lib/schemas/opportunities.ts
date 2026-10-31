@@ -193,6 +193,8 @@ export const opportunitySchema = z.object({
   additionalDeadlines: z.array(programmeDeadlineSchema),
   funding: fundingSchema,
   requirements: z.array(requirementSchema),
+  highlights: z.array(z.string()).optional(),
+  fieldStatus: z.record(z.string(), z.string()).optional(),
   saved: z.boolean(),
   dismissed: z.boolean(),
   createdAt: isoDateTimeSchema,

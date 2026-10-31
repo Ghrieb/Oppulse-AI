@@ -48,6 +48,23 @@ SourceQuality = Literal["official", "primary", "secondary", "aggregator", "unkno
 #: Whether the rule behind a requirement has been confirmed.
 Verification = Literal["verified", "needs_verification", "conflicting"]
 
+#: The student's intent in a conversation turn.
+IntentType = Literal[
+    "GREETING",
+    "CASUAL",
+    "GENERAL_QUESTION",
+    "DISCOVERY",
+    "URL_ANALYSIS",
+    "FOLLOWUP",
+    "PREFERENCE_CHANGE",
+    "ELIGIBILITY_QUESTION",
+    "FUNDING_QUESTION",
+    "APPLICATION_HELP",
+    "CV_QUESTION",
+    "CLARIFICATION",
+    "OUT_OF_SCOPE",
+]
+
 
 class Proposal(BaseModel):
     """The base of everything the model produces.
@@ -133,6 +150,30 @@ class RetrievedSource(BaseModel):
     media: list[MediaContext] = Field(default_factory=list)
 
 
+class OpportunityExtraction(BaseModel):
+    """The facts a live discovery page explicitly supports.
+
+    This is deliberately small: an absent value stays ``None`` and is
+    rendered as "Not specified" by the product rather than being guessed.
+    """
+
+    is_opportunity: bool = False
+    is_official_source: bool = False
+    title: str | None = None
+    institution: str | None = None
+    country_name: str | None = None
+    country_iso2: str | None = None
+    opportunity_type: str = "other"
+    deadline: str | None = None
+    funding_coverage: Literal[
+        "fully_funded", "partial", "tuition_only", "unfunded", "unknown"
+    ] = "unknown"
+    funding_information: str | None = None
+    eligibility: list[str] = Field(default_factory=list)
+    requirements: list[str] = Field(default_factory=list)
+    summary: str | None = None
+
+
 class Claim(Candidate):
     """One statement, and the source it rests on."""
 
@@ -184,6 +225,17 @@ class InstitutionProposal(Proposal):
 
     description: str
     unverified: list[str] = Field(default_factory=list)
+
+
+class DocumentOverviewProposal(Proposal):
+    """The model's reading of an uploaded document.
+
+    Only the overview and notes are the model's. They rest on the text the
+    extractor read; nothing is invented beyond it.
+    """
+
+    overview: str = ""
+    notes: list[str] = Field(default_factory=list)
 
 
 class ModelRequest(BaseModel):

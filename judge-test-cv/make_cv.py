@@ -1,0 +1,23 @@
+from docx import Document
+doc = Document()
+doc.add_heading("Clean Judge Student", 0)
+doc.add_heading("Master of Science in Computational Biology and Bioinformatics", 1)
+doc.add_paragraph("Expected graduation: June 2027")
+doc.add_paragraph("Thesis: Machine learning approaches for ecological genomics")
+doc.add_heading("Education", 1)
+doc.add_paragraph("MSc in Computational Biology and Bioinformatics - University of Somewhere, 2025-2027")
+doc.add_paragraph("BSc in Biology - University of Somewhere, 2022-2025")
+doc.add_heading("Research Experience", 1)
+doc.add_paragraph("Research Intern - Helios Institute for Applied Genomics, 2026")
+doc.add_paragraph("Research Assistant - Ecology Genomics Lab, 2025")
+doc.add_heading("Skills", 1)
+doc.add_paragraph("Python, R, machine learning, genomics, statistics, data visualisation")
+doc.add_heading("Publications", 1)
+doc.add_paragraph("Judge, C. et al. (2026). Genomic pattern analysis in model organisms. Journal of Computational Biology.")
+doc.add_heading("Work and volunteering", 1)
+doc.add_paragraph("Graduate Teaching Assistant - University of Somewhere, 2025-2027")
+import os
+path = r"C:\Users\Hani\Desktop\ThirdUni\Oppulse AI\judge-test-cv\Clean_Judge_Student_CV.docx"
+os.makedirs(os.path.dirname(path), exist_ok=True)
+doc.save(path)
+print("saved", path, os.path.getsize(path))
